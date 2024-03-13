@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Built-By: Group 12
+Created-By: Maven WAR Plugin
+Build-Jdk: 21.0.2
+Implementation-Title: MyBuy Application
+Implementation-Version: 1.0
+Implementation-Vendor: Rutgers New Brunswick
