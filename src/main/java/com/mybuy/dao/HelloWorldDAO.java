@@ -4,7 +4,8 @@ import com.mybuy.ApplicationDB;
 import com.mybuy.model.HelloWorld;
 import java.sql.*;
 
-public class HelloWorldDAO {
+public class HelloWorldDAO implements IHelloWorldDAO {
+    @Override
     public HelloWorld getHelloMessage() {
         HelloWorld helloWorld = new HelloWorld();
         try (Connection conn = ApplicationDB.getConnection();
