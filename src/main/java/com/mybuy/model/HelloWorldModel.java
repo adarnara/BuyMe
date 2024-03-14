@@ -3,7 +3,7 @@ package com.mybuy.model;
 import com.mybuy.dao.HelloWorldDAO;
 import com.mybuy.dao.IHelloWorldDAO;
 
-// HelloWorldModel encapsulates the business logic and interacts with the DAO Interface.
+// Encapsulates the business logic and interacts with the DAO Interface.
 public class HelloWorldModel {
 
     private IHelloWorldDAO helloWorldDAO;

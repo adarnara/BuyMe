@@ -1,11 +1,10 @@
 package com.mybuy.model;
 
-// HelloWorld is a simple JavaBean that holds data.
+// Simple JavaBean that holds data.
 public class HelloWorld {
     private int id;
     private String message;
 
-    // Constructors
     public HelloWorld() {}
 
     public HelloWorld(int id, String message) {
@@ -13,7 +12,6 @@ public class HelloWorld {
         this.message = message;
     }
 
-    // Getters and Setters
     public int getId() {
         return id;
     }
