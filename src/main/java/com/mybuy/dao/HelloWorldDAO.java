@@ -9,11 +9,11 @@ public class HelloWorldDAO implements IHelloWorldDAO {
     public HelloWorld getHelloMessage() {
         try (Connection conn = ApplicationDB.getConnection();
              Statement stmt = conn.createStatement();
-             ResultSet res = stmt.executeQuery("SELECT id, helloworld FROM helloworld WHERE id = 1")) {
+             ResultSet rs = stmt.executeQuery("SELECT id, helloworld FROM helloworld WHERE id = 1")) {
 
-            if (res.next()) {
-                int id = res.getInt("id");
-                String message = res.getString("helloworld");
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                String message = rs.getString("helloworld");
                 return new HelloWorld(id, message);
             }
         } catch (SQLException e) {
