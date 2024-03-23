@@ -4,6 +4,7 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
 
+    <!-- we can remove this technically as we are using @WebServlet annotations
     <servlet>
         <servlet-name>HelloServlet</servlet-name>
         <servlet-class>com.mybuy.controller.HelloServlet</servlet-class>
@@ -12,4 +13,5 @@
         <servlet-name>HelloServlet</servlet-name>
         <url-pattern>/hello</url-pattern>
     </servlet-mapping>
+    -->
 </web-app>
