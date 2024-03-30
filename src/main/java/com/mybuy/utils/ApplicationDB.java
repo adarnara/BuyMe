@@ -1,4 +1,4 @@
-package com.mybuy;
+package com.mybuy.utils;
 
 import java.io.IOException;
 import java.io.InputStream;

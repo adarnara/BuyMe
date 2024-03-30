@@ -5,3 +5,4 @@ Build-Jdk: 21.0.2
 Implementation-Title: MyBuy Application
 Implementation-Version: 1.0
 Implementation-Vendor: CS336
+Class-Path: lib/mysql-connector-java-8.0.23.jar

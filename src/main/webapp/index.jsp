@@ -6,6 +6,5 @@
 <body>
 <h1>Welcome to MyBuy!</h1>
 <p>This is a simple Java web app.</p>
-<p><a href="hello">Say Hello</a></p>
 </body>
 </html>
