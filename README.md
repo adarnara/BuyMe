@@ -21,4 +21,4 @@ need to run catlina run (this is for tomcat server) to run the frontend and the 
 
 I suggest to use intellij or eclipse (steps for setting up on eclipse in canvas for intellij I (Adarsh) can help)
 
-Currently using Maven build pacakger to make building the .class compiled code easier but later will need to make sure to keep compiled code and war file for TA to rugit
+Currently using Maven build pacakger to make building the .class compiled code easier but later will need to make sure to keep compiled code and war file for TA to run it.
