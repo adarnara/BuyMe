@@ -30,12 +30,10 @@ public class RegisterServlet extends HttpServlet {
         boolean success = registerModel.insertUser(newUser);
 
         if (!success) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Couldn't register user. Please try again.");
+            request.setAttribute("registrationMessage", "Registration Invalid");
         } else {
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().write("Registration successful");
-            response.getWriter().flush();
-            response.getWriter().close();
+            request.setAttribute("registrationMessage", "Success");
         }
+        request.getRequestDispatcher("/WEB-INF/view/loginAndRegister.jsp").forward(request, response);
     }
 }
