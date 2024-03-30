@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Welcome to MyBuy</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/stylesheets/loginAndRegisterStyle.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -16,7 +17,11 @@
             <label for="chk" aria-hidden="true">Register</label>
             <input type="text" name="username" placeholder="User name" required="">
             <input type="email" name="email" placeholder="Email" required="">
-            <input type="password" name="password" placeholder="Password" required="">
+            <div class="input-wrapper">
+                <input type="password" name="password" id="reg-password" placeholder="Password" required="">
+                <i class='bx bx-show bx-register' onclick="togglePasswordVisibility('reg-password', this)" id="toggleRegPassword"></i>
+            </div>
+            <!-- <input type="password" name="password" placeholder="Password" required=""> -->
             <button type="submit">Sign up</button>
         </form>
     </div>
@@ -25,7 +30,11 @@
         <form action="login" method="post">
             <label for="chk" aria-hidden="true">Login</label>
             <input type="text" id="usernameOrEmail" name="usernameOrEmail" placeholder="Email or Username" required="">
-            <input type="password" name="password" placeholder="Password" required="">
+            <div class="input-wrapper">
+                <input type="password" name="password" id="login-password" placeholder="Password" required="">
+                <i class='bx bx-show bx-login' onclick="togglePasswordVisibility('login-password', this)" id="toggleLoginPassword"></i>
+            </div>
+            <!-- <input type="password" name="password" placeholder="Password" required=""> -->
             <button type="submit">Login</button>
         </form>
     </div>
@@ -44,23 +53,42 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        var registrationMessage = '<%= request.getAttribute("registrationMessage") %>';
-        var loginMessage = '<%= request.getAttribute("loginMessage") %>';
-        var registerButton = document.querySelector('.signup button[type="submit"]');
-        var loginButton = document.querySelector('.login button[type="submit"]');
+    function togglePasswordVisibility(passwordInputId, toggleIcon) {
+        let input = document.getElementById(passwordInputId);
+        let isRegister = toggleIcon.classList.contains('bx-register');
+        let isLogin = toggleIcon.classList.contains('bx-login');
+        if (input.type === "password") {
+            input.type = "text";
+            toggleIcon.classList.replace('bx-show', 'bx-hide');
+        } else {
+            input.type = "password";
+            toggleIcon.classList.replace('bx-hide', 'bx-show');
+        }
+        if (isRegister) {
+            toggleIcon.classList.add('bx-register');
+        }
+        if (isLogin) {
+            toggleIcon.classList.add('bx-login');
+        }
+    }
 
-        if (registrationMessage) {
+    document.addEventListener('DOMContentLoaded', function() {
+        let registrationMessage = '<%= request.getAttribute("registrationMessage") %>';
+        let loginMessage = '<%= request.getAttribute("loginMessage") %>';
+        let registerButton = document.querySelector('.signup button[type="submit"]');
+        let loginButton = document.querySelector('.login button[type="submit"]');
+
+        if (registrationMessage && registrationMessage !== 'null' && registrationMessage !== '') {
             registerButton.textContent = registrationMessage;
             setTimeout(function() {
                 registerButton.textContent = 'Sign up';
             }, 1000);
         }
 
-        if (loginMessage) {
+        if (loginMessage && loginMessage !== 'null' && loginMessage !== '') {
             registerButton.textContent = loginMessage;
             setTimeout(function() {
-                loginButton.textContent = 'Login';
+                registerButton.textContent = 'Sign up';
             }, 1000);
         }
     });

@@ -1,5 +1,5 @@
 body{
-    marign: 0;
+    margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
@@ -44,6 +44,41 @@ label{
 
 }
 
+
+.input-wrapper input {
+    width: 60%;
+    height: 20px;
+    background: #e0dede;
+    justify-content: center;
+    display: flex;
+    margin: 20px auto;
+    padding: 10px;
+    border:none;
+    outline:none;
+    border-radius: 5px;
+}
+
+.bx-register {
+    position: absolute;
+    right: 70px;
+    top: 50%;
+    transform: translateY(-30%);
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.bx-login {
+    position: absolute;
+    right: 70px;
+    top: 50%;
+    transform: translateY(-220%);
+    cursor: pointer;
+    font-size: 20px;
+}
+
+
+
+
 input{
     width: 60%;
     height: 20px;
@@ -61,7 +96,7 @@ input{
 button{
     width: 60%;
     height: 40px;
-    margin: 10px auto;
+    margin: 20px auto;
     justify-content: center;
     display: block;
     color: #fff;
