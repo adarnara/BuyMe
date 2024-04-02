@@ -22,6 +22,8 @@ public class HashingUtility {
     }
 
 
+
+
     public static boolean checkPassword(String providedPassword, String storedHash, String storedSalt) throws NoSuchAlgorithmException {
         String providedPasswordHashed = hashPassword(providedPassword, storedSalt);
         return providedPasswordHashed.equals(storedHash);

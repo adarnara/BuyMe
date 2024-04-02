@@ -4,7 +4,7 @@
 - Java EE 8
 - Apache Tomcat 8.5.99
 - JSP
-- Servlet
+- Servlet 4.0
 - JDK 21.0.2
 - JDBC 8.0.23
 
