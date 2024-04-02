@@ -23,22 +23,16 @@ CREATE TABLE IF NOT EXISTS Admin (
     FOREIGN KEY (CustomerRep_ID) REFERENCES CustomerRep(CustomerRep_ID)
 );
 
-DELIMITER $$
-
-CREATE TRIGGER one_row
-    BEFORE INSERT ON Admin
+CREATE TRIGGER one_row BEFORE INSERT ON Admin
     FOR EACH ROW
 BEGIN
     DECLARE admin_count INT;
-
     SELECT COUNT(*) INTO admin_count FROM Admin;
-
     IF admin_count >= 1 THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error: There can only be one admin.';
     END IF;
-END$$
+END;
 
-DELIMITER ;
 
 CREATE TABLE IF NOT EXISTS Items (
     Item_ID INT AUTO_INCREMENT,
