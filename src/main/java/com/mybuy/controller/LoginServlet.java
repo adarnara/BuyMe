@@ -25,12 +25,14 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         Login loginForm = new Login(usernameOrEmail, password);
-        boolean success = loginModel.authenticateUser(loginForm.getUsernameOrEmail(), loginForm.getPassword());
+        Login authenticatedUser = loginModel.authenticateUserLogin(loginForm.getUsernameOrEmail(), loginForm.getPassword());
 
-        if (!success) {
+        if (authenticatedUser == null) {
             request.setAttribute("loginMessage", "Invalid Credentials");
-        } else {
-            request.setAttribute("loginMessage", "Success");
+        }
+        else {
+            String message = authenticatedUser.getUserType() + " Login Success";
+            request.setAttribute("loginMessage", message);
         }
         request.getRequestDispatcher("/WEB-INF/view/loginAndRegister.jsp").forward(request, response);
     }

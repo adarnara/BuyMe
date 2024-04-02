@@ -18,7 +18,8 @@ public class ApplicationDB {
         // need to do this for some reason as was having issues with jdbc driver without it.
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
+        }
+        catch (ClassNotFoundException e) {
             e.printStackTrace();
             throw new RuntimeException("MySQL JDBC driver not found", e);
         }
@@ -37,7 +38,8 @@ public class ApplicationDB {
             URL = prop.getProperty("db.url");
             USER = prop.getProperty("db.user");
             PASSWORD = prop.getProperty("db.password");
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             ex.printStackTrace();
             throw new RuntimeException("Error loading database properties", ex);
         }

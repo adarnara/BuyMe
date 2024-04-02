@@ -19,7 +19,8 @@ public class RegisterModel {
             register.setPassword(hashedPassword);
             register.setSalt(salt);
             return registerDAO.insertUser(register);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             System.out.println("Couldn't set password");
             return false;
         }

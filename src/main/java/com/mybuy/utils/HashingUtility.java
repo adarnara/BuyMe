@@ -9,6 +9,7 @@ public class HashingUtility {
         SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
         byte[] salt = new byte[16];
         sr.nextBytes(salt);
+
         return bytesToHex(salt);
     }
 
@@ -17,6 +18,7 @@ public class HashingUtility {
     public static String hashPassword(String password, String salt) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         md.update(hexStringToByteArray(salt));
+
         byte[] hashedPassword = md.digest(password.getBytes());
         return bytesToHex(hashedPassword);
     }

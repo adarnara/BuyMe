@@ -2,16 +2,29 @@ package com.mybuy.dao;
 
 import com.mybuy.model.Login;
 import com.mybuy.utils.ApplicationDB;
-
 import java.sql.*;
 
 public class LoginDAO implements ILoginDAO {
 
     @Override
     public Login getUserByUsernameOrEmail(String usernameOrEmail) {
-        String sql = "SELECT password, salt FROM EndUser WHERE endUser_login = ? OR email_address = ?";
+        Login login = null;
+        login = getUserFromTable(usernameOrEmail, "Admin");
+        if (login == null) {
+            login = getUserFromTable(usernameOrEmail, "CustomerRep");
+            if (login == null) {
+                login = getUserFromTable(usernameOrEmail, "EndUser");
+            }
+        }
+        return login;
+    }
+
+    //This is query helper function for getUserByUsernameOrEmail()
+    private Login getUserFromTable(String usernameOrEmail, String tableName) {
+        String sqlQueryStmt = getTableString(tableName);
+
         try (Connection conn = ApplicationDB.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sqlQueryStmt)) {
 
             pstmt.setString(1, usernameOrEmail);
             pstmt.setString(2, usernameOrEmail);
@@ -21,12 +34,34 @@ public class LoginDAO implements ILoginDAO {
                     String salt = rs.getString("salt");
                     Login login = new Login(usernameOrEmail, password);
                     login.setSalt(salt);
+                    login.setUserType(tableName);
                     return login;
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Couldn't fetch login data");
+            System.out.println("Couldn't fetch login data from " + tableName + ": " + e.getMessage());
+            e.printStackTrace();
         }
         return null;
+    }
+
+    //Simpler checker for table string to get the right login column type, helper for getUserFromTable()
+    private static String getTableString(String tableName) {
+        String loginColumn;
+
+        if ("Admin".equals(tableName)) {
+            loginColumn = "admin_login";
+        }
+        else if ("CustomerRep".equals(tableName)) {
+            loginColumn = "CustomerRep_login";
+        }
+        else if ("EndUser".equals(tableName)) {
+            loginColumn = "endUser_login";
+        }
+        else {
+            throw new IllegalArgumentException("Invalid table name");
+        }
+        String sqlQueryStmt = "SELECT password, salt FROM " + tableName + " WHERE " + loginColumn + " = ? OR email_address = ?";
+        return sqlQueryStmt;
     }
 }
