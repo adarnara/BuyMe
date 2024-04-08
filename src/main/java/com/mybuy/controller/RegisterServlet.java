@@ -35,6 +35,6 @@ public class RegisterServlet extends HttpServlet {
         else {
             request.setAttribute("registrationMessage", "Registration Success");
         }
-        request.getRequestDispatcher("/WEB-INF/view/welcome.jsp").forward(request, response);
+        request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
 }

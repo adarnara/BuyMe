@@ -29,10 +29,10 @@ public class LoginServlet extends HttpServlet {
 
         if (authenticatedUser == null) {
             request.setAttribute("loginMessage", "Invalid Credentials");
-            request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
         }
         else {
-            request.getSession().setAttribute("username", authenticatedUser.getUsernameOrEmail());
+            request.getSession().setAttribute("username", authenticatedUser.getUsername());
             request.getRequestDispatcher("/WEB-INF/view/welcome.jsp").forward(request, response);
         }
     }

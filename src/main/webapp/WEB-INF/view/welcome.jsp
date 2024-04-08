@@ -32,6 +32,11 @@
             color: #fff;
             padding: 10px 20px;
             text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+        .logoutButton:hover {
+            transform: scale(1.1);
+            background-color: #342c63;
         }
     </style>
 </head>
