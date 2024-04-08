@@ -29,11 +29,11 @@ public class LoginServlet extends HttpServlet {
 
         if (authenticatedUser == null) {
             request.setAttribute("loginMessage", "Invalid Credentials");
+            request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
         }
         else {
-            String message = authenticatedUser.getUserType() + " Login Success";
-            request.setAttribute("loginMessage", message);
+            request.getSession().setAttribute("username", authenticatedUser.getUsernameOrEmail());
+            request.getRequestDispatcher("/WEB-INF/view/welcome.jsp").forward(request, response);
         }
-        request.getRequestDispatcher("/WEB-INF/view/loginAndRegister.jsp").forward(request, response);
     }
 }
