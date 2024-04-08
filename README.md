@@ -16,10 +16,20 @@ Usage of MVC architecture to provide stable architecture for code readability:
 - Form Bean: simple Java Pojo
 - Model: contains the logic for DAO layer
 - DAO: JDBC SQL query to database, has a interface to encapsulate/abstract logic
+- SHA-256 Hashing Encryption Algorithm for hashing passwords into MySQL Database.
 
 ## How to setup/run this:
-1. T
-2. from the ROOT directoy of the project *.zip*, run the following command:
+1. First configure **_config.properties_** located in *src/main/resources/* with your localhost usernmae and password for your database connection:
+```properties
+db.url=jdbc:mysql://localhost:3306/mybuy
+db.user=root
+db.password=bot67ham
+```
+change *db.user* and *db.password* to your root username or password for your MySQL database setup.
+
+2. the **_schema.sql_** is located within the *db/* folder, but we have also simply provided the **_schema.sql_** in the canvas submission.
+
+2. From the ROOT directoy of the project *.zip*, run the following command:
 ```bash
 jar -cvf BuyMe.war -C src/main/webapp/ .
 ```
@@ -82,6 +92,14 @@ and this should get you to the entry point of the website which is the login/reg
 2. This display can be toggled. So if you click **_Register_** or **_Login_** the stylesheet will move to show:
    ![register and login page](docs/Images/landingpage_login.png)
 3. So now you can either register or login. If your registration was unsuccessful:
-   ![register and login page](docs/Images/unsuccessful_registration.png)
+   ![register unsuccessful page](docs/Images/unsuccessful_registration.png)
    If your login was unsuccessful:
-   ![register and login page](docs/Images/unsuccessful_login.png)
+   ![login unsuccessful page](docs/Images/unsuccessful_login.png)
+4. Now if login is successful, you will be sent to a Welcome Page:
+   ![login unsuccessful page](docs/Images/welcome_page.png)
+   Here if you click the *logout* button, it will send you back to the register/login page.
+
+
+
+
+   
