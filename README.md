@@ -7,7 +7,7 @@
 - JDK 21.0.2
 - JDBC 8.0.23
 
-## Concept: 
+## Concept:
 
 Usage of MVC architecture to provide stable architecture for code readability:
 [https://qiita.com/matsudai/items/81884c2ac75a5e024357](https://qiita.com/matsudai/items/81884c2ac75a5e024357)
@@ -25,25 +25,30 @@ db.url=jdbc:mysql://localhost:3306/mybuy
 db.user=root
 db.password=bot67ham
 ```
-change *db.user* and *db.password* to your root username or password for your MySQL database setup.
+change *db.username* and *db.password* to your root username or password for your MySQL database setup.
 
 2. the **_schema.sql_** is located within the *db/* folder, but we have also simply provided the **_schema.sql_** in the canvas submission.
 
-2. From the ROOT directoy of the project *.zip*, run the following command:
+3. From the ROOT directory of the project *.zip*, run the following command:
 ```bash
 jar -cvf BuyMe.war -C src/main/webapp/ .
 ```
 this will allow you to create the *.war* file to later be exploded and ran using Apache Tomcat Server.
-3. Once you’ve created your *BuyMe.war* file, the next step is to deploy it. You should copy or move the file into the **_webapps/_** directory of your Tomcat server installation. 
-This action will trigger Tomcat to automatically deploy the application upon startup or while running if auto-deployment is enabled. 
-The specific location of the **_webapps/_** folder depends on your Tomcat setup and operating system.
+4. Once you’ve created your *BuyMe.war* file, the next step is to deploy it. You should copy or move the file into the **_webapps/_** directory of your Tomcat server installation.
+   This action will trigger Tomcat to automatically deploy the application upon startup or while running if auto-deployment is enabled.
+   The specific location of the **_webapps/_** folder depends on your Tomcat setup and operating system.
 
-4. Then once you have it, you can startup Tomcat and go to:
+*Might look something like this:*
+
+
+5. Then once you have it, you can startup Tomcat and go to:
 ```angular2html
 http://localhost:8080/BuyMe
 ```
 and this should get you to the entry point of the website which is the login/register page which should look something like this:
-![register and login page](docs/Images/landingpage_register.png)
+![register and login page](docs/Images/tomcat_installation_location.png)
+
+**Make sure your local sql database host instance has started and is running on port 3306 to properly interact with the website.**
 
 *Note*: once the *.war* file is exploded, you should see a tree structure similar to this:
 ```shell
@@ -100,6 +105,18 @@ and this should get you to the entry point of the website which is the login/reg
    Here if you click the *logout* button, it will send you back to the register/login page.
 
 
+## Login and Password Credentials for atleast one user:
 
+In the *schema.sql* file provided, you will see one users:
+
+**Admin:**
+```sql
+-- inserting ONE admin into the database with hashed password and salt
+-- actual password is "Admin" and "One_Admin" is username.
+INSERT INTO Admin (admin_login, email_address, password, salt)
+VALUES ("One_Admin", "onlyadmin@gmail.com", "e1d0253d7e5ce8c582aa07c01e5cdf6bbd4d97ed7edec1e3921d469e77b0ea7f", "9fcb340a561f0d91148e068d544d94de");
+```
+This password is obviously hashed using the algorithms expressed prior. The code should use the Salt stored in the database to decrypt and verify login details!
+Due to the trigger added for Admin table, this will be the only one admin to be inserted. If you try to insert or register another admin (of course you can't register on frontend for an Admin or CustomerRep. account) it will give you database error from the database objet.
 
    
