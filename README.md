@@ -48,6 +48,8 @@ http://localhost:8080/BuyMe
 and this should get you to the entry point of the website which is the login/register page which should look something like this:
 ![register and login page](docs/Images/tomcat_installation_location.png)
 
+*Note*: Keep in mind that this is for MacOS using the *brew* package manager installation path. You will neeed to place according to your operating system but path might be something similar to this general location especailly for Linux/Unix distros.
+
 **Make sure your local sql database host instance has started and is running on port 3306 to properly interact with the website.**
 
 *Note*: once the *.war* file is exploded, you should see a tree structure similar to this:
