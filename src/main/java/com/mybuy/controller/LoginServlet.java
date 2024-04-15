@@ -33,7 +33,11 @@ public class LoginServlet extends HttpServlet {
         }
         else {
             request.getSession().setAttribute("username", authenticatedUser.getUsername());
-            request.getRequestDispatcher("/WEB-INF/view/welcome.jsp").forward(request, response);
+            if (authenticatedUser.getUsername().equals("customer_rep")) {
+            	request.getRequestDispatcher("/WEB-INF/view/customerRep.jsp").forward(request, response);
+            } else {
+            	request.getRequestDispatcher("/WEB-INF/view/welcome.jsp").forward(request, response);
+            }
         }
     }
 }
