@@ -44,6 +44,7 @@
     </style>
 </head>
 <body>
+	<h1>You can edit usernames, passwords directly in the table. Click Save Changes to confirm.</h1>
     <table border="1">
         <tr>
             <th>Name</th>
@@ -59,7 +60,7 @@
         				<tr>
         					<td contenteditable="true" data-id=<%= rs.getInt("User_id") %> data-field="endUser_login" oninput="handleInput(this)"><%= rs.getString("endUser_login") %></td>
         					<td contenteditable="true" data-id=<%= rs.getInt("User_id") %> data-field="email_address" oninput="handleInput(this)"><%= rs.getString("email_address") %></td>
-        					<td contenteditable="true" data-id=<%= rs.getInt("User_id") %> data-field="password" oninput="handleInput(this)"><%= rs.getString("password") %></td>
+        					<td contenteditable="true" data-id=<%= rs.getInt("User_id") %> data-field="password" oninput="handleInput(this)"></td>
         				</tr>
         			<%
         		}
@@ -74,6 +75,10 @@
 	<form id="editForm" method="POST" action="<%= request.getContextPath() + "/updateEndUser" %>">
   		<input type="hidden" id="editedData" name="editedData" value="">
   		<button type="button" onclick="sendEditedData()">Save Changes</button>
+	</form>
+	<form method="POST" action="<%= request.getContextPath() + "/logout" %>">
+    	<input type="hidden" name="logout" value="true"/>
+    	<button type="submit" class="logoutButton">Logout</button>
 	</form>
   	<script>
   	function handleInput(td) {

@@ -26,5 +26,3 @@ public class RegisterDAO implements IRegisterDAO {
         }
     }
 }
-
-
