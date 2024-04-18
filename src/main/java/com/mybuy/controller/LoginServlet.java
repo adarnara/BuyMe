@@ -36,7 +36,7 @@ public class LoginServlet extends HttpServlet {
             if (authenticatedUser.getUsername().equals("customer_rep")) {
             	request.getRequestDispatcher("/WEB-INF/view/customerRep.jsp").forward(request, response);
             } else {
-            	request.getRequestDispatcher("/WEB-INF/view/welcome.jsp").forward(request, response);
+            	request.getRequestDispatcher("/WEB-INF/view/welcome_page.jsp").forward(request, response);
             }
         }
     }
