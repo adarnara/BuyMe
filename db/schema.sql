@@ -49,14 +49,13 @@ CREATE TABLE IF NOT EXISTS Items (
     PRIMARY KEY(Item_ID)
 );
 
-CREATE TABLE  IF NOT EXISTS EndUser (
+CREATE TABLE IF NOT EXISTS EndUser (
     User_Id INT AUTO_INCREMENT,
     endUser_login VARCHAR(15) NOT NULL UNIQUE,
     email_address VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     salt VARCHAR(255) NOT NULL,
-    isBuyer BOOLEAN DEFAULT FALSE,
-    isSeller BOOLEAN DEFAULT FALSE,
+    user_type ENUM('buyer', 'seller') NOT NULL DEFAULT 'buyer',
     BidAlert TEXT,
     PRIMARY KEY(User_Id)
 );
