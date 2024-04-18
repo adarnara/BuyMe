@@ -25,16 +25,17 @@ public class RegisterServlet extends HttpServlet {
         String username = request.getParameter("username");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+        String userType = request.getParameter("userType");
 
-        Register newUser = new Register(username, email, password);
+        Register newUser = new Register(username, email, password, userType);
         boolean success = registerModel.insertUser(newUser);
 
         if (!success) {
-            request.setAttribute("registrationMessage", "Registration Invalid");
+            request.getSession().setAttribute("registrationMessage", "Registration Invalid");
         }
         else {
-            request.setAttribute("registrationMessage", "Registration Success");
+            request.getSession().setAttribute("registrationMessage", "Registration Success");
         }
-        request.getRequestDispatcher("/index.jsp").forward(request, response);
+        response.sendRedirect("index.jsp");
     }
 }
