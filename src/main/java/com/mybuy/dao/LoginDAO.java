@@ -32,10 +32,12 @@ public class LoginDAO implements ILoginDAO {
                 if (rs.next()) {
                     String password = rs.getString("password");
                     String salt = rs.getString("salt");
+                    String userType = rs.getString("user_type");
                     String username = rs.getString("username");
                     Login login = new Login(usernameOrEmail, password);
                     login.setSalt(salt);
-                    login.setUserType(tableName);
+                    login.setUserType(userType);
+                    login.setEndUserType(userType);
                     login.setUsername(username);
                     return login;
                 }
@@ -69,7 +71,7 @@ public class LoginDAO implements ILoginDAO {
             throw new IllegalArgumentException("Invalid table name");
         }
 
-        String sqlQueryStmt = "SELECT password, salt, " + usernameColumn + " AS username FROM " + tableName + " WHERE " + loginColumn + " = ? OR email_address = ?";
+        String sqlQueryStmt = "SELECT password, salt, " + usernameColumn + " AS username, user_type FROM " + tableName + " WHERE " + loginColumn + " = ? OR email_address = ?";
         return sqlQueryStmt;
     }
 

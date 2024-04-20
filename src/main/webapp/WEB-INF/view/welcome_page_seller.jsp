@@ -14,7 +14,10 @@
   }
 %>
 <header>
-  <a href="#" class="logo">Welcome, <%= userName %></a>
+  <div class="welcome-container">
+    <a href="#" class="logo">Welcome, <%= userName %></a>
+    <p class="account-info"><span class="account-type-label">Account type:</span> Seller</p>
+  </div>
   <ul>
     <li><a href="#" class="active">Home</a></li>
     <li><a href="#">Alerts</a></li>
