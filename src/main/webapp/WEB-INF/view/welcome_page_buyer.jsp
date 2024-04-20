@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome Page</title>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/stylesheets/welcome_style.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/stylesheets/welcome_style_buyer.css">
 </head>
 <body>
 <%
