@@ -8,10 +8,12 @@ public class RegisterDAO implements IRegisterDAO {
 
     @Override
     public boolean insertUser(Register register) {
-        String sql = "INSERT INTO EndUser (endUser_login, email_address, password, salt) VALUES (?, ?, ?, ?)";
+    	
+        String sql = "INSERT INTO " + register.getType().toName() + " (" + register.getType().toName() + "_login, email_address, password, salt) VALUES (?, ?, ?, ?)";
         try (Connection conn = ApplicationDB.getConnection(); // Adarsh: Could later look into changing this to be object pooling or lazy instantiation
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        	PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
+    		System.out.println(sql);
             pstmt.setString(1, register.getUsername());
             pstmt.setString(2, register.getEmail());
             pstmt.setString(3, register.getPassword());

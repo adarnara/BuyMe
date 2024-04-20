@@ -2,6 +2,7 @@ package com.mybuy.controller;
 
 import com.mybuy.model.Register;
 import com.mybuy.model.RegisterModel;
+import com.mybuy.model.UserType;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -26,7 +27,7 @@ public class RegisterServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        Register newUser = new Register(username, email, password);
+        Register newUser = new Register(username, email, password, UserType.END_USER);
         boolean success = registerModel.insertUser(newUser);
 
         if (!success) {

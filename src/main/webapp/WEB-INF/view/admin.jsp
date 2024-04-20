@@ -5,7 +5,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Customer Rep Page</title>
+    <title>Admin Page</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/stylesheets/loginAndRegisterStyle.css">
     <style>
         body {
             margin: 0;
@@ -50,10 +51,11 @@
             <th>Name</th>
             <th>Email</th>
             <th>Password</th>
+            <th>User Type</th>
         </tr>
         <%
         	try (Connection conn = ApplicationDB.getConnection(); Statement stmt = conn.createStatement()) {
-        		String sql = "Select User_id, endUser_login, email_address, password FROM enduser";
+        		String sql = "Select User_id, endUser_login, email_address FROM enduser";
         		ResultSet rs = stmt.executeQuery(sql);
         		while(rs.next()) {
         			%>
@@ -61,21 +63,44 @@
         					<td contenteditable="true" data-id=<%= rs.getInt("User_id") %> data-field="endUser_login" data-type="endUser" oninput="handleInput(this)"><%= rs.getString("endUser_login") %></td>
         					<td contenteditable="true" data-id=<%= rs.getInt("User_id") %> data-field="email_address" data-type="endUser" oninput="handleInput(this)"><%= rs.getString("email_address") %></td>
         					<td contenteditable="true" data-id=<%= rs.getInt("User_id") %> data-field="password" data-type="endUser" oninput="handleInput(this)"></td>
+        					<td>End User</td>
         				</tr>
         			<%
         		}
-        		conn.close();
-        		stmt.close();
+        		String sql2 = "Select CustomerRep_ID, CustomerRep_login, email_address, password FROM CustomerRep";
+        		ResultSet rs2 = stmt.executeQuery(sql2);
+        		while(rs2.next()) {
+        			%>
+        				<tr>
+        					<td contenteditable="true" data-id=<%= rs2.getInt("CustomerRep_ID") %> data-field="CustomerRep_login" data-type="customerRep" oninput="handleInput(this)"><%= rs2.getString("CustomerRep_login") %></td>
+        					<td contenteditable="true" data-id=<%= rs2.getInt("CustomerRep_ID") %> data-field="email_address" data-type="customerRep" oninput="handleInput(this)"><%= rs2.getString("email_address") %></td>
+        					<td contenteditable="true" data-id=<%= rs2.getInt("CustomerRep_ID") %> data-field="password" data-type="customerRep" oninput="handleInput(this)"></td>
+        					<td>Customer Rep</td>
+        				</tr>
+        			<%
+        		}
+        		rs2.close();
         		rs.close();
+        		stmt.close();
+        		conn.close();
         	} catch (SQLException e) {
         		e.printStackTrace();
         	}
         %>
     </table>
-	<form id="editForm" method="POST" action="<%= request.getContextPath() + "/updateUser?origin=customerrep" %>">
+	<form id="editForm" method="POST" action="<%= request.getContextPath() + "/updateUser?origin=admin" %>">
   		<input type="hidden" id="editedData" name="editedData" value="">
   		<button type="button" onclick="sendEditedData()">Save Changes</button>
 	</form>
+    <div class="signup">
+        <form action="registerRep" method="post">
+            <label for="chk" aria-hidden="true">Register New Customer Rep</label>
+            <input type="text" name="username" placeholder="User name" required="">
+            <input type="email" name="email" placeholder="Email" required="">
+            <input type="password" name="password" id="reg-password" placeholder="Password" required="">
+            <button type="submit">Register</button>
+        </form>
+    </div>
 	<form method="POST" action="<%= request.getContextPath() + "/logout" %>">
     	<input type="hidden" name="logout" value="true"/>
     	<button type="submit" class="logoutButton">Logout</button>
