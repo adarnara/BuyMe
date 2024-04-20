@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Welcome Page</title>
   <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/stylesheets/welcome_style_seller.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet"/>
 </head>
 <body>
 <%
@@ -20,7 +21,7 @@
   </div>
   <ul>
     <li><a href="#" class="active">Home</a></li>
-    <li><a href="#">Alerts</a></li>
+    <li><a href="#">Create Auction</a></li>
     <li><a href="#">Contact</a></li>
     <li><a href="#" onclick="document.getElementById('logout-form').submit(); return false;">Logout</a></li>
   </ul>
@@ -37,13 +38,52 @@
   <img src="${pageContext.request.contextPath}/Images/mountains_front.png" id="mountains_front">
 </section>
 <div class="sec" id="sec">
-  <h2>Test</h2>
-  <p>
-    Item 1.
-    <br><br>Item 2.<br><br>Item 3.</p>
+  <div class="header-search-container">
+    <h2>Test</h2>
+    <div class="search-container">
+      <input type="text" id="search-input" class="search-input" placeholder="Search auctions" />
+      <a href="#" class="search-icon" id="search-icon"><i class="ri-search-line"></i></a>
+    </div>
+  </div>
+  <div class="item-list">
+    <p>Item 1.<br><br>Item 2.<br><br>Item 3.</p>
+  </div>
 </div>
 
 <script>
+
+
+
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const searchIcon = document.getElementById('search-icon');
+    const searchContainer = searchIcon.closest('.search-container');
+    const searchInput = document.getElementById('search-input');
+
+    searchIcon.addEventListener('click', (event) => {
+      event.preventDefault();
+      if (searchContainer.classList.contains('expanded')) {
+        searchContainer.classList.remove('expanded');
+      }
+      else {
+        searchContainer.classList.add('expanded');
+        setTimeout(() => searchInput.focus(), 500);
+      }
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!searchContainer.contains(event.target) && searchContainer.classList.contains('expanded')) {
+        searchContainer.classList.remove('expanded');
+      }
+    });
+
+    searchInput.addEventListener('transitionend', (event) => {
+      if (event.propertyName === 'width' && !searchContainer.classList.contains('expanded')) {
+        searchInput.value = '';
+      }
+    });
+  });
+
+
   let stars = document.getElementById('stars');
   let moon = document.getElementById('moon');
   let mountains_behind = document.getElementById('mountains_behind');
