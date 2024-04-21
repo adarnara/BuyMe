@@ -12,8 +12,8 @@
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            justify-content: flex-start;
+            align-items: flex-start;
             flex-direction: column;
             height: 100vh;
             font-family: 'Jost', sans-serif;
@@ -64,6 +64,13 @@
         					<td contenteditable="true" data-id=<%= rs.getInt("User_id") %> data-field="email_address" data-type="endUser" oninput="handleInput(this)"><%= rs.getString("email_address") %></td>
         					<td contenteditable="true" data-id=<%= rs.getInt("User_id") %> data-field="password" data-type="endUser" oninput="handleInput(this)"></td>
         					<td>End User</td>
+        					<td>	
+        						<form id="deleteForm" method="POST" action="<%= request.getContextPath() + "/delete?origin=admin" %>">
+  									<input type="hidden" name="id" value="<%= rs.getInt("User_id") %>">
+  									<input type="hidden" name="type" value="endUser">
+  									<button type="button" onclick="submitDeleteForm(this);">Delete User</button>
+								</form>
+							</td>
         				</tr>
         			<%
         		}
@@ -76,6 +83,13 @@
         					<td contenteditable="true" data-id=<%= rs2.getInt("CustomerRep_ID") %> data-field="email_address" data-type="customerRep" oninput="handleInput(this)"><%= rs2.getString("email_address") %></td>
         					<td contenteditable="true" data-id=<%= rs2.getInt("CustomerRep_ID") %> data-field="password" data-type="customerRep" oninput="handleInput(this)"></td>
         					<td>Customer Rep</td>
+        					<td>	
+        						<form id="deleteForm" method="POST" action="<%= request.getContextPath() + "/delete?origin=admin" %>">
+  									<input type="hidden" name="id" value="<%= rs2.getInt("CustomerRep_ID") %>">
+  									<input type="hidden" name="type" value="customerRep">
+  									<button type="button" onclick="submitDeleteForm(this);">Delete User</button>
+								</form>
+							</td>
         				</tr>
         			<%
         		}
@@ -124,6 +138,10 @@
   		  		
   		document.getElementById('editedData').value = JSON.stringify(data);
   		document.getElementById('editForm').submit();
+  	}
+  	
+  	function submitDeleteForm(button) {
+  	    button.closest('form').submit();
   	}
   	</script>
 </body>

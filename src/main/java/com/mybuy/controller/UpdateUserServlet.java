@@ -31,11 +31,7 @@ public class UpdateUserServlet extends HttpServlet {
         	updateUserModel.updateUser(user);
         }
         String origin = request.getParameter("origin");
-        if ("admin".equals(origin)) {
-            request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
-        } else {
-            request.getRequestDispatcher("/WEB-INF/view/customerRep.jsp").forward(request, response);
-        }
+        request.getRequestDispatcher("/WEB-INF/view/" + origin + ".jsp").forward(request, response);
     }
     
 }

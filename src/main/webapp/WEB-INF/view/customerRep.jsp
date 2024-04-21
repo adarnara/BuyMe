@@ -61,6 +61,13 @@
         					<td contenteditable="true" data-id=<%= rs.getInt("User_id") %> data-field="endUser_login" data-type="endUser" oninput="handleInput(this)"><%= rs.getString("endUser_login") %></td>
         					<td contenteditable="true" data-id=<%= rs.getInt("User_id") %> data-field="email_address" data-type="endUser" oninput="handleInput(this)"><%= rs.getString("email_address") %></td>
         					<td contenteditable="true" data-id=<%= rs.getInt("User_id") %> data-field="password" data-type="endUser" oninput="handleInput(this)"></td>
+        					<td>	
+        						<form id="deleteForm" method="POST" action="<%= request.getContextPath() + "/delete?origin=customerRep" %>">
+  									<input type="hidden" name="id" value="<%= rs.getInt("User_id") %>">
+  									<input type="hidden" name="type" value="endUser">
+  									<button type="button" onclick="submitDeleteForm(this);">Delete User</button>
+								</form>
+							</td>
         				</tr>
         			<%
         		}
@@ -99,6 +106,10 @@
   		  		
   		document.getElementById('editedData').value = JSON.stringify(data);
   		document.getElementById('editForm').submit();
+  	}
+  	
+  	function submitDeleteForm(button) {
+  	    button.closest('form').submit();
   	}
   	</script>
 </body>

@@ -34,10 +34,11 @@ public class LoginServlet extends HttpServlet {
         }
         else {
             request.getSession().setAttribute("username", authenticatedUser.getUsername());
-            if (authenticatedUser.getUserType() == UserType.CUSTOMER_REP) {
-            	request.getRequestDispatcher("/WEB-INF/view/customerRep.jsp").forward(request, response);
-            } else if (authenticatedUser.getUsername().equals("admin")) {
+            
+            if (authenticatedUser.getUserType() == UserType.ADMIN) {
             	request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
+            } else if (authenticatedUser.getUserType() == UserType.CUSTOMER_REP) {
+            	request.getRequestDispatcher("/WEB-INF/view/customerRep.jsp").forward(request, response);
             } else {
             	request.getRequestDispatcher("/WEB-INF/view/welcome.jsp").forward(request, response);
             }

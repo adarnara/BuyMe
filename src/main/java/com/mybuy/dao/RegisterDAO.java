@@ -13,7 +13,6 @@ public class RegisterDAO implements IRegisterDAO {
         try (Connection conn = ApplicationDB.getConnection(); // Adarsh: Could later look into changing this to be object pooling or lazy instantiation
         	PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-    		System.out.println(sql);
             pstmt.setString(1, register.getUsername());
             pstmt.setString(2, register.getEmail());
             pstmt.setString(3, register.getPassword());
