@@ -26,18 +26,17 @@ public class PlaceBidServlet extends HttpServlet {
             double bidAmount = Double.parseDouble(request.getParameter("bidAmount"));
 
             Bid bid = new Bid(userId, auctionId, bidAmount);
-            boolean bidPlaced = bidModel.placeBid(bid);
+            String result = bidModel.placeBid(bid);
 
-            if (bidPlaced) {
-                response.getWriter().println("Bid placed successfully.");
-            } else {
-                response.getWriter().println("Unable to place bid.");
-            }
-        } catch (NumberFormatException e) {
+            response.getWriter().println(result);
+        }
+        catch (NumberFormatException e) {
             response.getWriter().println("Invalid bid data: " + e.getMessage());
-        } catch (NullPointerException e) {
+        }
+        catch (NullPointerException e) {
             response.getWriter().println("Missing parameter: " + e.getMessage());
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             response.getWriter().println("An error occurred: " + e.getMessage());
         }
     }
