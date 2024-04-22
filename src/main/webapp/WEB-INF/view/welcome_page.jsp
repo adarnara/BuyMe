@@ -34,10 +34,17 @@
     <img src="${pageContext.request.contextPath}/Images/mountains_front.png" id="mountains_front">
 </section>
 <div class="sec" id="sec">
-    <h2>Test</h2>
-    <p>
-        Item 1.
-        <br><br>Item 2.<br><br>Item 3.</p>
+    <% if(request.getAttribute("userType").equals("buyer")) { %>
+        <h2>Buyer Section</h2>
+        <p>
+            This is content for buyers.
+        </p>
+    <% } else { %>
+        <h2>Seller Section</h2>
+        <p>
+            This is content for sellers.
+        </p>
+    <% } %>
 </div>
 
 <script>

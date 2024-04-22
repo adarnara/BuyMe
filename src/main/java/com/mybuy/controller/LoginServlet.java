@@ -36,6 +36,8 @@ public class LoginServlet extends HttpServlet {
             if (authenticatedUser.getUsername().equals("customer_rep")) {
             	request.getRequestDispatcher("/WEB-INF/view/customerRep.jsp").forward(request, response);
             } else {
+                String endUserType = loginModel.getEndUserType(authenticatedUser.getUsername());
+                request.setAttribute("userType", endUserType);
             	request.getRequestDispatcher("/WEB-INF/view/welcome_page.jsp").forward(request, response);
             }
         }
