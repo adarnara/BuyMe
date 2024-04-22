@@ -16,7 +16,7 @@ public class BidDAO implements IBidDAO {
             conn = ApplicationDB.getConnection();
             conn.setAutoCommit(false);
 
-            String sqlQuery = "SELECT a.Currtusent_Price, a.auction_status, MAX(b.Bid_Amount) AS User_Highest_Bid " +
+            String sqlQuery = "SELECT a.Current_Price, a.auction_status, a.Bid_Increment, MAX(b.Bid_Amount) AS User_Highest_Bid " +
                     "FROM Auction a LEFT JOIN Bid b ON a.Auction_ID = b.Auction_ID AND b.User_Id = ? " +
                     "WHERE a.Auction_ID = ? GROUP BY a.Auction_ID";
             pstmtQuery = conn.prepareStatement(sqlQuery);
@@ -25,16 +25,18 @@ public class BidDAO implements IBidDAO {
             ResultSet rs = pstmtQuery.executeQuery();
 
             double currentHighestBid = 0;
+            double bidIncrement = 0;
             double userHighestBid = 0;
             String auctionStatus = null;
             if (rs.next()) {
                 currentHighestBid = rs.getDouble("Current_Price");
+                bidIncrement = rs.getDouble("Bid_Increment");
                 userHighestBid = rs.getDouble("User_Highest_Bid");
                 auctionStatus = rs.getString("auction_status");
             }
 
             if ("active".equalsIgnoreCase(auctionStatus) &&
-                    bid.getBidAmount() > currentHighestBid &&
+                    bid.getBidAmount() >= (currentHighestBid + bidIncrement) &&
                     bid.getBidAmount() > userHighestBid) {
 
                 String sqlInsert = "INSERT INTO Bid (Bid_Date, Bid_time, Bid_Amount, Auction_ID, User_Id) VALUES (CURDATE(), CURTIME(), ?, ?, ?)";
@@ -52,8 +54,10 @@ public class BidDAO implements IBidDAO {
 
                 conn.commit();
                 return true;
+            } else {
+                conn.rollback();
+                return false;
             }
-            return false;
         } catch (SQLException e) {
             System.out.println("SQL exception during bid placement: " + e.getMessage());
             try {
