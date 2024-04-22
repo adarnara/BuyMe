@@ -21,16 +21,14 @@ public class AutoBidModel {
             scheduler.scheduleAutoBid(() -> {
                 try {
                     double[] auctionDetails = autoBidDAO.fetchAuctionDetails(autoBid.getAuctionId());
-                    if (auctionDetails != null) {
+                    if (auctionDetails != null && auctionDetails[2] != autoBid.getUserId()) { // Ensure current highest bidder is not the autoBid user
                         double currentPrice = auctionDetails[0];
                         double bidIncrement = auctionDetails[1];
                         double nextBid = currentPrice + bidIncrement;
-
                         if (nextBid <= autoBid.getMaxAutoBidAmount()) {
                             autoBidDAO.placeAutoBid(autoBid, nextBid);
+                            autoBidDAO.updateCurrentPrice(autoBid.getAuctionId(), nextBid);
                         }
-                    } else {
-                        System.err.println("Auction is not active; auto-bidding halted for auction ID: " + autoBid.getAuctionId());
                     }
                 } catch (SQLException e) {
                     System.err.println("Error in auto-bidding: " + e.getMessage());
