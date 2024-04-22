@@ -6,10 +6,10 @@ public class Auction {
     private double currentPrice;
     private Date closingDate;
     private Date closingTime;
-    private double bidIncrement;
+    private double bidIncrement; // TODO TAKE OUT BID INCREMENT
     private double initialPrice;
     private double minimum;
-    private double upperLimit;
+    private double upperLimit; // TODO TAKE OUT UPPER LIMIT
     private String winner;
     private int userId;
     private int itemId;

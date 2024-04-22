@@ -142,10 +142,18 @@ section img#mountains_front{
     color: #fff;
 }
 
+.auction-grid{
+    padding-bottom: 20px;
+}
+
 .card{
     --bs-card-bg: #342c63;
 }
 
 .card-title{
     color: #fff;
+}
+
+.error{
+    color: red;
 }

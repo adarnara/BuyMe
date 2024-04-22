@@ -45,22 +45,63 @@
         </p>
     <% } else { %>
         <h2><%= userName %>'s Auctions</h2>
-        <div class="row row-cols-1 row-cols-md-2 g-4">
-        <% List<Auction> auctions = (List<Auction>) request.getAttribute("auctions"); %>
+        <div class="row row-cols-1 row-cols-md-2 g-4 auction-grid">
+            <% List<Auction> auctions = (List<Auction>) request.getAttribute("auctions"); %>
 
-        <% if (auctions != null && !auctions.isEmpty()) { %>
-        <% for (Auction auction : auctions) { %>
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Auction #<%= auction.getAuctionId() %></h5>
-                        <p class="card-text">Current price: <%= auction.getCurrentPrice() %></p>
+            <% if (auctions != null && !auctions.isEmpty()) { %>
+            <% for (Auction auction : auctions) { %>
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Auction #<%= auction.getAuctionId() %></h5>
+                            <p class="card-text">Current price: <%= auction.getCurrentPrice() %></p>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+            <% } %>
+        </div>
+
+        <!-- Button to open new auction modal -->
+        <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#auction-modal">Create New Auction</button>
+
+        <!-- New auction modal -->
+        <div class="modal fade" id="auction-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Create a New Auction</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="new-auction-form">
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" id="initialPrice" placeholder="10" required>
+                                <label for="initialPrice">Initial price</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" id="minimumPrice" placeholder="5" required>
+                                <label for="minimumPrice">Hidden minimum price</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="date" class="form-control" id="closingDate" placeholder="01/01/2025" required>
+                                <label for="closingDate">Auction closing date</label>
+                                <div class="error"></div>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="time" class="form-control" id="closingTime" placeholder="12:00" required>
+                                <label for="closingTime">Auction closing time</label>
+                                <div class="error"></div>
+                            </div>
+
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-outline-primary">Submit</button>
+                        </form>
                     </div>
                 </div>
             </div>
-        <% } %>
-        <% } %>
         </div>
+
     <% } %>
 </div>
 
@@ -72,6 +113,11 @@
     let btn = document.getElementById('btn');
     let header = document.querySelector('header');
     let main_message = document.getElementById('main-message');
+    let newAuctionForm = document.getElementById('new-auction-form');
+    let initialPrice = document.getElementById('initialPrice');
+    let minimumPrice = document.getElementById('minimumPrice');
+    let closingDate = document.getElementById('closingDate');
+    let closingTime = document.getElementById('closingTime');
 
     window.addEventListener('scroll', function (){
         let value = window.scrollY;
@@ -84,6 +130,73 @@
         main_message.style.marginRight = value * 4 + 'px';
         main_message.style.marginTop = value * 1.5 + 'px';
     });
+
+    newAuctionForm.addEventListener('submit', e => {
+        e.preventDefault();
+        console.log("In auction form event listener");
+        if(validateInputs()) {
+            // TODO add logic to submit form
+        }
+    });
+
+    const setError = (element, message) => {
+        let inputControl = element.parentElement;
+        let errorDisplay = inputControl.querySelector('.error');
+
+        errorDisplay.innerText = message;
+        errorDisplay.classList.add('error');
+        element.classList.add('is-invalid');
+    }
+
+    const validateInputs = () => {
+        const closingDateValue = new Date(closingDate.value);
+        const closingTimeValue = closingTime.value.split(':');
+        closingDateValue.setDate(closingDateValue.getDate() + 1);
+
+        const hours = parseInt(closingTimeValue[0]);
+        const minutes = parseInt(closingTimeValue[1]);
+        closingDateValue.setHours(hours, minutes, 0, 0);
+
+        const currentDateValue = new Date();
+
+        if(currentDateValue < closingDateValue) {
+            return true;
+        } else if(currentDateValue.getMonth() === closingDateValue.getMonth() && currentDateValue.getDay() === closingDateValue.getDay() && currentDateValue.getFullYear() === closingDateValue.getFullYear()) {
+            // if same day but future time
+            if(currentDateValue.getHours() < closingDateValue.getHours() || currentDateValue.getHours() === closingDateValue.getHours() && currentDateValue.getMinutes() < closingDateValue.getMinutes()) {
+                return true;
+            } else {
+                setError(closingTime, "Please choose a future time or date.");
+            }
+        } else {
+            setError(closingDate, "Please choose a future date.");
+            return false;
+        }
+    };
+
+    closingDate.addEventListener('change', () => {
+        resetForm(closingDate);
+    })
+
+    closingTime.addEventListener('change', () => {
+        resetForm(closingTime);
+    })
+
+    const resetForm = (element) => {
+        let inputControl = element.parentElement;
+        let errorDisplay = inputControl.querySelector('.error');
+        console.log("In reset form function");
+
+        if(element.classList.contains('is-invalid')) {
+            errorDisplay.innerText = "";
+            errorDisplay.classList.remove('error');
+            element.classList.remove('is-invalid');
+        }
+    };
+
+</script>
+
+<script>
 
 </script>
 
