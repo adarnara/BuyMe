@@ -21,7 +21,7 @@ public class AutoBidModel {
             scheduler.scheduleAutoBid(() -> {
                 try {
                     double[] auctionDetails = autoBidDAO.fetchAuctionDetails(autoBid.getAuctionId());
-                    if (auctionDetails != null && auctionDetails[2] != autoBid.getUserId()) { // Ensure current highest bidder is not the autoBid user
+                    if (auctionDetails != null && auctionDetails[2] != autoBid.getUserId()) {
                         double currentPrice = auctionDetails[0];
                         double bidIncrement = auctionDetails[1];
                         double nextBid = currentPrice + bidIncrement;

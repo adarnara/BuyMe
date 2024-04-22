@@ -122,10 +122,12 @@ public class BidDAO implements IBidDAO {
     public boolean placeBid(Bid bid) throws SQLException {
         Connection conn = null;
         PreparedStatement pstmt = null;
+        PreparedStatement updateAuctionStmt = null;
         try {
             conn = ApplicationDB.getConnection();
             conn.setAutoCommit(false);
-            String sqlInsert = "INSERT INTO Bid (User_Id, Auction_ID, Bid_Amount) VALUES (?, ?, ?)";
+
+            String sqlInsert = "INSERT INTO Bid (User_Id, Auction_ID, Bid_Amount, Bid_Date, Bid_Time) VALUES (?, ?, ?, CURRENT_DATE, CURRENT_TIME)";
             pstmt = conn.prepareStatement(sqlInsert);
             pstmt.setInt(1, bid.getUserId());
             pstmt.setInt(2, bid.getAuctionId());
@@ -133,6 +135,11 @@ public class BidDAO implements IBidDAO {
             int result = pstmt.executeUpdate();
 
             if (result > 0) {
+                String updateAuctionSql = "UPDATE Auction SET Current_Price = ? WHERE Auction_ID = ?";
+                updateAuctionStmt = conn.prepareStatement(updateAuctionSql);
+                updateAuctionStmt.setDouble(1, bid.getBidAmount());
+                updateAuctionStmt.setInt(2, bid.getAuctionId());
+                updateAuctionStmt.executeUpdate();
                 conn.commit();
                 return true;
             } else {
@@ -147,6 +154,9 @@ public class BidDAO implements IBidDAO {
         } finally {
             if (pstmt != null) {
                 pstmt.close();
+            }
+            if (updateAuctionStmt != null) {
+                updateAuctionStmt.close();
             }
             if (conn != null) {
                 conn.setAutoCommit(true);
