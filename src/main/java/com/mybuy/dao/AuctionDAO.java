@@ -5,7 +5,9 @@ import com.mybuy.utils.ApplicationDB;
 import java.sql.*;
 import java.util.Date;
 
-public class AuctionDAO {
+public class AuctionDAO implements IAuctionDAO {
+
+    @Override
     public Auction getAuctionById(int auctionID) {
         Auction auction = null;
         String tableName = "Auction";

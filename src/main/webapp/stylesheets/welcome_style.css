@@ -141,3 +141,11 @@ section img#mountains_front{
     font-size: 1em;
     color: #fff;
 }
+
+.card{
+    --bs-card-bg: #342c63;
+}
+
+.card-title{
+    color: #fff;
+}

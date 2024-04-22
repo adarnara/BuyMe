@@ -1,8 +1,11 @@
 package com.mybuy.dao;
 
+import com.mybuy.model.Auction;
 import com.mybuy.model.Login;
 import com.mybuy.utils.ApplicationDB;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginDAO implements ILoginDAO {
 
@@ -73,5 +76,57 @@ public class LoginDAO implements ILoginDAO {
         return sqlQueryStmt;
     }
 
+    @Override
+    public String getEndUserType(String username) {
+        String tableName = "EndUser";
+        String sql = "SELECT * FROM " + tableName + " WHERE endUser_login = ?";
 
+        try (Connection conn = ApplicationDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, username);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("user_type");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching end user by username: " + e.getMessage());
+        }
+        return "";
+    }
+
+    @Override
+    public List<Auction> getAuctions(String username) {
+        String auctionTable = "Auction";
+        String endUserTable = "EndUser";
+        String sql = "SELECT * FROM " + auctionTable + " AS a " +
+                "INNER JOIN " + endUserTable + " AS eu ON a.User_Id = eu.User_Id " +
+                "WHERE eu.endUser_login = ?";
+        List<Auction> auctions = new ArrayList<>();
+
+        try (Connection conn = ApplicationDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, username);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while(rs.next()) {
+                    Auction auction = new Auction(
+                            rs.getInt("Auction_ID"),
+                            rs.getDate("Auction_Closing_Date"),
+                            rs.getTime("Auction_Closing_Time"),
+                            rs.getDouble("Bid_Increment"),
+                            rs.getDouble("Initial_Price"),
+                            rs.getInt("User_Id"),
+                            rs.getInt("Item_ID")
+                    );
+                    auctions.add(auction);
+                }
+                return auctions;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching list of auctions by username: " + e.getMessage());
+        }
+        return null;
+    }
 }
