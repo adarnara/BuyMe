@@ -129,3 +129,10 @@ CREATE TABLE IF NOT EXISTS Category (
 -- actual password is "Admin" and "One_Admin" is username.
 INSERT INTO Admin (admin_login, email_address, password, salt)
 VALUES ("One_Admin", "onlyadmin@gmail.com", "e1d0253d7e5ce8c582aa07c01e5cdf6bbd4d97ed7edec1e3921d469e77b0ea7f", "9fcb340a561f0d91148e068d544d94de");
+
+-- example values to test auction
+INSERT INTO Items (Item_ID)
+VALUES (1)
+
+INSERT INTO Auction (Auction_ID, Auction_Closing_Date, Auction_Closing_Time, Bid_Increment, Initial_Price, User_Id, Item_ID)
+VALUES (1, '2022-04-26 13:30:00', '2022-04-26 13:30:00', 2.00, 40.50, 1, 1)
