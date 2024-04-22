@@ -13,7 +13,6 @@ public class Login {
         this.password = password;
     }
 
-    // Existing getters and setters
     public String getUsernameOrEmail() {
         return usernameOrEmail;
     }

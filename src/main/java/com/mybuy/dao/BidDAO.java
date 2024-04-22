@@ -7,51 +7,132 @@ import java.sql.*;
 public class BidDAO implements IBidDAO {
 
     @Override
-    public boolean placeBid(Bid bid) {
+    public Bid fetchCurrentHighestBid(int auctionId) throws SQLException {
         Connection conn = null;
-        PreparedStatement pstmtQuery = null;
-        PreparedStatement pstmtInsert = null;
-        PreparedStatement pstmtUpdateAuction = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Bid highestBid = null;
         try {
             conn = ApplicationDB.getConnection();
             conn.setAutoCommit(false);
+            String sqlQuery = "SELECT MAX(Bid_Amount) AS Highest_Bid FROM Bid WHERE Auction_ID = ?";
+            pstmt = conn.prepareStatement(sqlQuery);
+            pstmt.setInt(1, auctionId);
+            rs = pstmt.executeQuery();
 
-            String sqlQuery = "SELECT a.Current_Price, a.auction_status, a.Bid_Increment, MAX(b.Bid_Amount) AS User_Highest_Bid " +
-                    "FROM Auction a LEFT JOIN Bid b ON a.Auction_ID = b.Auction_ID AND b.User_Id = ? " +
-                    "WHERE a.Auction_ID = ? GROUP BY a.Auction_ID";
-            pstmtQuery = conn.prepareStatement(sqlQuery);
-            pstmtQuery.setInt(1, bid.getUserId());
-            pstmtQuery.setInt(2, bid.getAuctionId());
-            ResultSet rs = pstmtQuery.executeQuery();
-
-            double currentHighestBid = 0;
-            double bidIncrement = 0;
-            double userHighestBid = 0;
-            String auctionStatus = null;
             if (rs.next()) {
-                currentHighestBid = rs.getDouble("Current_Price");
-                bidIncrement = rs.getDouble("Bid_Increment");
-                userHighestBid = rs.getDouble("User_Highest_Bid");
-                auctionStatus = rs.getString("auction_status");
+                double amount = rs.getDouble("Highest_Bid");
+                if (!rs.wasNull()) {
+                    highestBid = new Bid(-1, auctionId, amount);
+                }
             }
+            conn.commit();
+            return highestBid;
+        } catch (SQLException e) {
+            if (conn != null) conn.rollback();
+            throw e;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (conn != null) {
+                conn.setAutoCommit(true);
+                conn.close();
+            }
+        }
+    }
 
-            if ("active".equalsIgnoreCase(auctionStatus) &&
-                    bid.getBidAmount() >= (currentHighestBid + bidIncrement) &&
-                    bid.getBidAmount() > userHighestBid) {
+    @Override
+    public double fetchUserHighestBid(int auctionId, int userId) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        double userHighestBid = 0;
+        try {
+            conn = ApplicationDB.getConnection();
+            conn.setAutoCommit(false);
+            String sqlQuery = "SELECT MAX(Bid_Amount) AS User_Highest_Bid FROM Bid WHERE Auction_ID = ? AND User_Id = ?";
+            pstmt = conn.prepareStatement(sqlQuery);
+            pstmt.setInt(1, auctionId);
+            pstmt.setInt(2, userId);
+            rs = pstmt.executeQuery();
 
-                String sqlInsert = "INSERT INTO Bid (Bid_Date, Bid_time, Bid_Amount, Auction_ID, User_Id) VALUES (CURDATE(), CURTIME(), ?, ?, ?)";
-                pstmtInsert = conn.prepareStatement(sqlInsert);
-                pstmtInsert.setDouble(1, bid.getBidAmount());
-                pstmtInsert.setInt(2, bid.getAuctionId());
-                pstmtInsert.setInt(3, bid.getUserId());
-                pstmtInsert.executeUpdate();
+            if (rs.next()) {
+                userHighestBid = rs.getDouble("User_Highest_Bid");
+            }
+            conn.commit();
+            return userHighestBid;
+        } catch (SQLException e) {
+            if (conn != null) conn.rollback();
+            throw e;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (conn != null) {
+                conn.setAutoCommit(true);
+                conn.close();
+            }
+        }
+    }
 
-                String sqlUpdateAuction = "UPDATE Auction SET Current_Price = ? WHERE Auction_ID = ?";
-                pstmtUpdateAuction = conn.prepareStatement(sqlUpdateAuction);
-                pstmtUpdateAuction.setDouble(1, bid.getBidAmount());
-                pstmtUpdateAuction.setInt(2, bid.getAuctionId());
-                pstmtUpdateAuction.executeUpdate();
+    @Override
+    public double fetchAuctionBidIncrement(int auctionId) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        double bidIncrement = 0;
+        try {
+            conn = ApplicationDB.getConnection();
+            conn.setAutoCommit(false);
+            String sqlQuery = "SELECT Bid_Increment FROM Auction WHERE Auction_ID = ?";
+            pstmt = conn.prepareStatement(sqlQuery);
+            pstmt.setInt(1, auctionId);
+            rs = pstmt.executeQuery();
 
+            if (rs.next()) {
+                bidIncrement = rs.getDouble("Bid_Increment");
+            }
+            conn.commit();
+            return bidIncrement;
+        } catch (SQLException e) {
+            if (conn != null) conn.rollback();
+            throw e;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (conn != null) {
+                conn.setAutoCommit(true);
+                conn.close();
+            }
+        }
+    }
+
+    @Override
+    public boolean placeBid(Bid bid) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = ApplicationDB.getConnection();
+            conn.setAutoCommit(false);
+            String sqlInsert = "INSERT INTO Bid (User_Id, Auction_ID, Bid_Amount) VALUES (?, ?, ?)";
+            pstmt = conn.prepareStatement(sqlInsert);
+            pstmt.setInt(1, bid.getUserId());
+            pstmt.setInt(2, bid.getAuctionId());
+            pstmt.setDouble(3, bid.getBidAmount());
+            int result = pstmt.executeUpdate();
+
+            if (result > 0) {
                 conn.commit();
                 return true;
             } else {
@@ -59,29 +140,18 @@ public class BidDAO implements IBidDAO {
                 return false;
             }
         } catch (SQLException e) {
-            System.out.println("SQL exception during bid placement: " + e.getMessage());
-            try {
-                if (conn != null) conn.rollback();
-            } catch (SQLException ex) {
-                System.out.println("SQL exception on rollback: " + ex.getMessage());
+            if (conn != null) {
+                conn.rollback();
             }
-            return false;
+            throw e;
         } finally {
-            commitToDB(pstmtQuery, pstmtInsert, pstmtUpdateAuction, conn);
-        }
-    }
-
-    private static void commitToDB(PreparedStatement pstmtQuery, PreparedStatement pstmtInsert, PreparedStatement pstmtUpdateAuction, Connection conn) {
-        try {
-            if (pstmtQuery != null) pstmtQuery.close();
-            if (pstmtInsert != null) pstmtInsert.close();
-            if (pstmtUpdateAuction != null) pstmtUpdateAuction.close();
+            if (pstmt != null) {
+                pstmt.close();
+            }
             if (conn != null) {
                 conn.setAutoCommit(true);
                 conn.close();
             }
-        } catch (SQLException e) {
-            System.out.println("SQL exception on closing resources: " + e.getMessage());
         }
     }
 }
