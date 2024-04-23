@@ -3,6 +3,7 @@ package com.mybuy.dao;
 import com.mybuy.model.Auction;
 import com.mybuy.model.Login;
 import com.mybuy.utils.ApplicationDB;
+import com.mybuy.model.UserType;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,19 +29,22 @@ public class LoginDAO implements ILoginDAO {
         String sqlQueryStmt = getTableString(tableName);
 
         try (Connection conn = ApplicationDB.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sqlQueryStmt)) {
+            PreparedStatement pstmt = conn.prepareStatement(sqlQueryStmt)) {
 
             pstmt.setString(1, usernameOrEmail);
             pstmt.setString(2, usernameOrEmail);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
+                    String username = rs.getString("username");
                     String password = rs.getString("password");
                     String salt = rs.getString("salt");
-                    String username = rs.getString("username");
-                    Login login = new Login(usernameOrEmail, password);
-                    login.setSalt(salt);
-                    login.setUserType(tableName);
-                    login.setUsername(username);
+                    Login login = new Login(usernameOrEmail, username, password, salt);
+                    if (tableName.equals("EndUser")) {
+                        String userType = rs.getString("user_type");
+                        login.setUserType(UserType.fromString(userType));
+                    } else {
+                    	login.setUserType(UserType.fromString(tableName));
+                    }
                     return login;
                 }
             }
@@ -56,24 +60,28 @@ public class LoginDAO implements ILoginDAO {
     private static String getTableString(String tableName) {
         String loginColumn;
         String usernameColumn;
+        String userTypeColumn;
 
         if ("Admin".equals(tableName)) {
             loginColumn = "admin_login";
             usernameColumn = "admin_login";
+            userTypeColumn = " ";
         }
         else if ("CustomerRep".equals(tableName)) {
             loginColumn = "CustomerRep_login";
             usernameColumn = "CustomerRep_login";
+            userTypeColumn = " ";
         }
         else if ("EndUser".equals(tableName)) {
             loginColumn = "endUser_login";
             usernameColumn = "endUser_login";
+            userTypeColumn = ", user_type ";
         }
         else {
             throw new IllegalArgumentException("Invalid table name");
         }
-
-        String sqlQueryStmt = "SELECT password, salt, " + usernameColumn + " AS username FROM " + tableName + " WHERE " + loginColumn + " = ? OR email_address = ?";
+        
+        String sqlQueryStmt = "SELECT password, salt, " + usernameColumn + " AS username" + userTypeColumn + "FROM " + tableName + " WHERE " + loginColumn + " = ? OR email_address = ?";
         return sqlQueryStmt;
     }
 

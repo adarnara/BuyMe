@@ -3,6 +3,7 @@ package com.mybuy.controller;
 import com.mybuy.model.Auction;
 import com.mybuy.model.Login;
 import com.mybuy.model.LoginModel;
+import com.mybuy.model.UserType;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -37,8 +38,9 @@ public class LoginServlet extends HttpServlet {
                 if(endUserType.equals("seller")) {
                     List<Auction> auctions = loginModel.getAuctions(session.getAttribute("username").toString());
                     request.setAttribute("auctions", auctions);
+                    request.getRequestDispatcher("/WEB-INF/view/welcome_page_seller.jsp").forward(request, response);
                 }
-                request.getRequestDispatcher("/WEB-INF/view/welcome_page.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/view/welcome_page_buyer.jsp").forward(request, response);
             }
         } else {
             request.getRequestDispatcher("/index.jsp").forward(request, response);
@@ -59,24 +61,38 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         Login loginForm = new Login(usernameOrEmail, password);
+        System.out.println("1");
         Login authenticatedUser = loginModel.authenticateUserLogin(loginForm.getUsernameOrEmail(), loginForm.getPassword());
-
+        System.out.println("2");
+        
         if (authenticatedUser == null) {
+        	System.out.println("fucked");
             request.setAttribute("loginMessage", "Invalid Credentials");
             request.getRequestDispatcher("/index.jsp").forward(request, response);
         }
         else {
             request.getSession().setAttribute("username", authenticatedUser.getUsername());
-            if (authenticatedUser.getUsername().equals("customer_rep")) {
+            switch(authenticatedUser.getUserType()) {
+            case BUYER:
+                System.out.println("onward to Buyer page!");
+                request.getRequestDispatcher("/WEB-INF/view/welcome_page_buyer.jsp").forward(request, response);
+            	break;
+            case SELLER:
+                System.out.println("onward to Seller page!");
+                List<Auction> auctions = loginModel.getAuctions(authenticatedUser.getUsername());
+                request.setAttribute("auctions", auctions);
+                request.getRequestDispatcher("/WEB-INF/view/welcome_page_seller.jsp").forward(request, response);
+                break;
+            case ADMIN:
+            	request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
+            	break;
+            case CUSTOMER_REP:
             	request.getRequestDispatcher("/WEB-INF/view/customerRep.jsp").forward(request, response);
-            } else {
-                String endUserType = loginModel.getEndUserType(authenticatedUser.getUsername());
-                request.setAttribute("userType", endUserType);
-                if(endUserType.equals("seller")) {
-                    List<Auction> auctions = loginModel.getAuctions(authenticatedUser.getUsername());
-                    request.setAttribute("auctions", auctions);
-                }
-            	request.getRequestDispatcher("/WEB-INF/view/welcome_page.jsp").forward(request, response);
+            	break;
+            default:
+            	System.out.println("Weird shit happened here");
+            	request.getRequestDispatcher("/index.jsp").forward(request, response);
+            	break;
             }
         }
     }
