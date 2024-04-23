@@ -33,7 +33,7 @@ public class AutoBidDAO implements IAutoBidDAO {
     public double[] fetchAuctionDetails(int auctionId) throws SQLException {
         try (Connection conn = ApplicationDB.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(
-                     "SELECT LastBid.Current_Price, Auction.Bid_Increment, LastBid.User_Id FROM (SELECT User_Id, Bid_Amount AS Current_Price FROM Bid WHERE Auction_ID = ? ORDER BY Bid_ID DESC LIMIT 1) AS LastBid JOIN Auction ON Auction.Auction_ID = ? WHERE Auction.auction_status = 'active'")) {
+                     "SELECT COALESCE(LastBid.Current_Price, Auction.Initial_Price) AS Current_Price, Auction.Bid_Increment, COALESCE(LastBid.User_Id, 0) AS User_Id FROM Auction LEFT JOIN (SELECT User_Id, Auction_ID, Bid_Amount AS Current_Price FROM Bid WHERE Auction_ID = ? ORDER BY Bid_ID DESC LIMIT 1) AS LastBid ON Auction.Auction_ID = LastBid.Auction_ID WHERE Auction.Auction_ID = ? AND Auction.auction_status = 'active'")) {
             pstmt.setInt(1, auctionId);
             pstmt.setInt(2, auctionId);
             ResultSet rs = pstmt.executeQuery();
@@ -47,6 +47,7 @@ public class AutoBidDAO implements IAutoBidDAO {
             }
         }
     }
+
 
 
     public void updateCurrentPrice(int auctionId, double newPrice) throws SQLException {
