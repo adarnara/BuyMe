@@ -76,12 +76,14 @@
                     <div class="modal-body">
                         <form id="new-auction-form" method="post">
                             <div class="form-floating mb-3">
-                                <input type="number" class="form-control" id="initialPrice" placeholder="10" name="initialPrice" required>
+                                <input type="text" class="form-control" id="initialPrice" placeholder="10" name="initialPrice" required>
                                 <label for="initialPrice">Initial price</label>
+                                <div class="error"></div>
                             </div>
                             <div class="form-floating mb-3">
-                                <input type="number" class="form-control" id="minimumPrice" placeholder="5" name="minimumPrice" required>
+                                <input type="text" class="form-control" id="minimumPrice" placeholder="5" name="minimumPrice" required>
                                 <label for="minimumPrice">Hidden minimum price</label>
+                                <div class="error"></div>
                             </div>
                             <div class="form-floating mb-3">
                                 <input type="date" class="form-control" id="closingDate" placeholder="01/01/2025" name="closingDate" required>
@@ -134,7 +136,7 @@
 
     newAuctionForm.addEventListener('submit', async e => {
         e.preventDefault();
-        if(validateInputs()) {
+        if(validateTime() && validatePrice()) {
             console.log(newAuctionForm.submit());
         }
     });
@@ -148,7 +150,7 @@
         element.classList.add('is-invalid');
     }
 
-    const validateInputs = () => {
+    const validateTime = () => {
         const closingDateValue = new Date(closingDate.value);
         const closingTimeValue = closingTime.value.split(':');
         closingDateValue.setDate(closingDateValue.getDate() + 1);
@@ -174,6 +176,44 @@
         }
     };
 
+    const validatePrice = () => {
+        const initialPriceValue = parseFloat(initialPrice.value.trim());
+        const minimumPriceValue = parseFloat(minimumPrice.value.trim());
+
+        if (isNaN(initialPriceValue)) {
+            setError(initialPrice, "Please enter a valid initial price.");
+            return false;
+        } else if(isNaN(minimumPriceValue)) {
+            setError(minimumPrice, "Please enter a valid minimum price.");
+            return false;
+        }
+
+        console.log(initialPriceValue);
+        console.log(minimumPriceValue);
+        if(initialPriceValue <= 0) {
+            setError(initialPrice, "Initial price must be greater than zero.");
+            return false;
+        } else if(minimumPriceValue <= 0) {
+            setError(minimumPrice, "Minimum price must be greater than zero.");
+            return false;
+        }
+
+        if(!isValidDecimalPlaces(initialPriceValue)) {
+            setError(initialPrice, "Initial price must have up to two decimal places.");
+            return false;
+        } else if(!isValidDecimalPlaces(minimumPriceValue)) {
+            setError(minimumPrice, "Minimum price must have up to two decimal places.");
+            return false;
+        }
+
+        return true;
+    }
+
+    const isValidDecimalPlaces = (number) => {
+        const decimalPlaces = (number.toString().split('.')[1] || '').length;
+        return decimalPlaces <= 2;
+    }
+
     closingDate.addEventListener('change', () => {
         resetForm(closingDate);
     })
@@ -182,13 +222,20 @@
         resetForm(closingTime);
     })
 
+    initialPrice.addEventListener('change', () => {
+        resetForm(initialPrice);
+    })
+
+    minimumPrice.addEventListener('change', () => {
+        resetForm(minimumPrice);
+    })
+
     const resetForm = (element) => {
         let inputControl = element.parentElement;
         let errorDisplay = inputControl.querySelector('.error');
 
         if(element.classList.contains('is-invalid')) {
             errorDisplay.innerText = "";
-            errorDisplay.classList.remove('error');
             element.classList.remove('is-invalid');
         }
     };
