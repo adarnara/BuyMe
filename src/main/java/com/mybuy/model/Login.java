@@ -5,7 +5,7 @@ public class Login {
     private String username;
     private String password;
     private String salt;
-    private String userType;
+    private UserType type;
 
     public Login(String usernameOrEmail, String password) {
         this.usernameOrEmail = usernameOrEmail;
@@ -32,14 +32,13 @@ public class Login {
         this.salt = salt;
     }
 
-    public String getUserType() {
-
-        return userType;
+    public UserType getUserType() {
+        return type;
     }
 
-    public void setUserType(String userType) {
+    public void setUserType(UserType type) {
 
-        this.userType = userType;
+        this.type = type;
     }
 
     public String getUsername() {

@@ -2,6 +2,7 @@ package com.mybuy.controller;
 
 import com.mybuy.model.Login;
 import com.mybuy.model.LoginModel;
+import com.mybuy.model.UserType;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +34,10 @@ public class LoginServlet extends HttpServlet {
         }
         else {
             request.getSession().setAttribute("username", authenticatedUser.getUsername());
-            if (authenticatedUser.getUsername().equals("customer_rep")) {
+            
+            if (authenticatedUser.getUserType() == UserType.ADMIN) {
+            	request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
+            } else if (authenticatedUser.getUserType() == UserType.CUSTOMER_REP) {
             	request.getRequestDispatcher("/WEB-INF/view/customerRep.jsp").forward(request, response);
             } else {
             	request.getRequestDispatcher("/WEB-INF/view/welcome.jsp").forward(request, response);

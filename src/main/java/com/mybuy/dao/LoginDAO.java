@@ -2,6 +2,7 @@ package com.mybuy.dao;
 
 import com.mybuy.model.Login;
 import com.mybuy.utils.ApplicationDB;
+import com.mybuy.model.UserType;
 import java.sql.*;
 
 public class LoginDAO implements ILoginDAO {
@@ -35,7 +36,7 @@ public class LoginDAO implements ILoginDAO {
                     String username = rs.getString("username");
                     Login login = new Login(usernameOrEmail, password);
                     login.setSalt(salt);
-                    login.setUserType(tableName);
+                    login.setUserType(UserType.fromString(tableName));
                     login.setUsername(username);
                     return login;
                 }
