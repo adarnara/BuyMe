@@ -44,13 +44,18 @@ END$$
 
 DELIMITER ;
 
+
+-- Make sure for Category/Items you are using MySQL 5.6 above and you are using InnoDB which is the Engine supporting FULLTEXT indexes.
+
 CREATE TABLE IF NOT EXISTS Category (
                                         Category_ID INT AUTO_INCREMENT,
                                         Category_Name VARCHAR(50),
                                         Parent_Category_ID INT,
-                                        PRIMARY KEY(Category_ID),
+                                        PRIMARY KEY (Category_ID),
+                                        FULLTEXT (Category_Name),
                                         FOREIGN KEY (Parent_Category_ID) REFERENCES Category(Category_ID) ON UPDATE CASCADE ON DELETE SET NULL
-);
+) ENGINE=InnoDB;
+
 
 
 CREATE TABLE IF NOT EXISTS Items (
@@ -60,9 +65,10 @@ CREATE TABLE IF NOT EXISTS Items (
                                      color_variants VARCHAR(50),
                                      Category_ID INT,
                                      image_url VARCHAR(255),
-                                     PRIMARY KEY(Item_ID),
+                                     PRIMARY KEY (Item_ID),
+                                     FULLTEXT (brand, name),
                                      FOREIGN KEY (Category_ID) REFERENCES Category(Category_ID) ON UPDATE CASCADE ON DELETE SET NULL
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS EndUser (
                                        User_Id INT AUTO_INCREMENT,
@@ -95,7 +101,6 @@ CREATE TABLE IF NOT EXISTS Auction (
                                        Bid_Increment DOUBLE,
                                        Initial_Price DOUBLE,
                                        Minimum DOUBLE,
-                                       Upper_Limit DOUBLE,
                                        Winner VARCHAR(50),
                                        auction_status ENUM('active', 'completed', 'cancelled') NOT NULL DEFAULT 'active',
                                        User_Id INT NOT NULL,
@@ -111,8 +116,8 @@ CREATE TABLE IF NOT EXISTS Auction (
 
 CREATE TABLE IF NOT EXISTS Bid (
                                    Bid_ID INT AUTO_INCREMENT,
-                                   Bid_Date DATE,
-                                   Bid_time TIME,
+                                   Bid_Date DATE DEFAULT CURRENT_DATE,
+                                   Bid_Time TIME DEFAULT CURRENT_TIME,
                                    Bid_Amount DOUBLE,
                                    Auction_ID INT NOT NULL,
                                    User_Id INT NOT NULL,
@@ -120,6 +125,7 @@ CREATE TABLE IF NOT EXISTS Bid (
                                    FOREIGN KEY (Auction_ID) REFERENCES Auction(Auction_ID) ON UPDATE CASCADE ON DELETE CASCADE,
                                    FOREIGN KEY (User_Id) REFERENCES EndUser(User_Id) ON UPDATE CASCADE
 );
+
 
 
 CREATE TABLE IF NOT EXISTS ItemsSubattributes (
@@ -139,8 +145,12 @@ CREATE TABLE IF NOT EXISTS Posts (
 
 
 
-DELIMITER ;;;
-CREATE DEFINER=`root`@`` FUNCTION `LEVENSHTEIN`(s1 VARCHAR(255), s2 VARCHAR(255)) RETURNS int(11) DETERMINISTIC
+DELIMITER $$
+
+DROP FUNCTION IF EXISTS `LEVENSHTEIN`$$
+CREATE FUNCTION `LEVENSHTEIN`(`s1` VARCHAR(255) CHARACTER SET utf8, `s2` VARCHAR(255) CHARACTER SET utf8)
+    RETURNS INT
+    DETERMINISTIC
 BEGIN
     DECLARE s1_len, s2_len, i, j, c, c_temp, cost INT;
     DECLARE s1_char CHAR;
@@ -152,35 +162,51 @@ BEGIN
         RETURN s2_len;
     ELSEIF s2_len = 0 THEN
         RETURN s1_len;
-    ELSE
-        WHILE j <= s2_len DO
-                SET cv1 = CONCAT(cv1, UNHEX(HEX(j))), j = j + 1;
-            END WHILE;
-        WHILE i <= s1_len DO
-                SET s1_char = SUBSTRING(s1, i, 1), c = i, cv0 = UNHEX(HEX(i)), j = 1;
-                WHILE j <= s2_len DO
-                        SET c = c + 1;
-                        IF s1_char = SUBSTRING(s2, j, 1) THEN SET cost = 0; ELSE SET cost = 1; END IF;
-                        SET c_temp = CONV(HEX(SUBSTRING(cv1, j, 1)), 16, 10) + cost;
-                        IF c > c_temp THEN SET c = c_temp; END IF;
-                        SET c_temp = CONV(HEX(SUBSTRING(cv1, j+1, 1)), 16, 10) + 1;
-                        IF c > c_temp THEN SET c = c_temp; END IF;
-                        SET cv0 = CONCAT(cv0, UNHEX(HEX(c))), j = j + 1;
-                    END WHILE;
-                SET cv1 = cv0, i = i + 1;
-            END WHILE;
     END IF;
+    WHILE j <= s2_len DO
+            SET cv1 = CONCAT(cv1, CHAR(j)),
+                j = j + 1;
+        END WHILE;
+    WHILE i <= s1_len DO
+            SET s1_char = SUBSTRING(s1, i, 1), c = i, cv0 = CHAR(i), j = 1;
+            WHILE j <= s2_len DO
+                    SET c = c + 1;
+                    IF s1_char = SUBSTRING(s2, j, 1) THEN
+                        SET cost = 0; ELSE SET cost = 1;
+                    END IF;
+                    SET c_temp = ORD(SUBSTRING(cv1, j, 1)) + cost;
+                    IF c > c_temp THEN SET c = c_temp; END IF;
+                    SET c_temp = ORD(SUBSTRING(cv1, j+1, 1)) + 1;
+                    IF c > c_temp THEN
+                        SET c = c_temp;
+                    END IF;
+                    SET cv0 = CONCAT(cv0, CHAR(c)), j = j + 1;
+                END WHILE;
+            SET cv1 = cv0, i = i + 1;
+        END WHILE;
     RETURN c;
-END;;;
+END$$
 
-DELIMITER ;;;
-CREATE DEFINER=`root`@`` FUNCTION `LEVENSHTEIN_RATIO`(s1 VARCHAR(255), s2 VARCHAR(255)) RETURNS int(11) DETERMINISTIC
+DROP FUNCTION IF EXISTS `LEVENSHTEIN_RATIO`$$
+CREATE FUNCTION `LEVENSHTEIN_RATIO`(`s1` VARCHAR(255) CHARACTER SET utf8, `s2` VARCHAR(255) CHARACTER SET utf8)
+    RETURNS INT
+    DETERMINISTIC
 BEGIN
     DECLARE s1_len, s2_len, max_len INT;
     SET s1_len = LENGTH(s1), s2_len = LENGTH(s2);
-    IF s1_len > s2_len THEN SET max_len = s1_len; ELSE SET max_len = s2_len; END IF;
+    IF s1_len > s2_len THEN
+        SET max_len = s1_len;
+    ELSE
+        SET max_len = s2_len;
+    END IF;
     RETURN ROUND((1 - LEVENSHTEIN(s1, s2) / max_len) * 100);
-END;;;
+END$$
+
+DELIMITER ;
+
+
+SELECT LEVENSHTEIN_RATIO('Laptops', 'macboofdafdsfadsfsadffadsfadsfdsaffadsfadsfk pro 16-inch');
+
 
 
 INSERT INTO Admin (admin_login, email_address, password, salt)
