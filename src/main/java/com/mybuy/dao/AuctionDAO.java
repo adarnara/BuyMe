@@ -32,12 +32,12 @@ public class AuctionDAO implements IAuctionDAO {
     private Auction extractAuctionFromResultSet(ResultSet rs) throws SQLException {
         int auctionId = rs.getInt("Auction_ID");
         double initialPrice = rs.getDouble("Initial_Price");
+        double currentPrice = rs.getDouble("Current_Price");
         Date closingDate = rs.getDate("Auction_Closing_Date");
         Date closingTime = rs.getTime("Auction_Closing_Time");
-        double bidIncrement = rs.getDouble("Bid_Increment");
         int userId = rs.getInt("User_Id");
         int itemId = rs.getInt("Item_ID");
 
-        return new Auction(auctionId, closingDate, closingTime, bidIncrement, initialPrice, userId, itemId);
+        return new Auction(auctionId, closingDate, closingTime, initialPrice, currentPrice, userId, itemId);
     }
 }

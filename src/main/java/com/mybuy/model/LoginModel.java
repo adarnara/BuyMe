@@ -45,4 +45,12 @@ public class LoginModel {
     public List<Auction> getAuctions(String username) {
         return loginDAO.getAuctions(username);
     }
+
+    public int getUserId(String username) {
+        return loginDAO.getUserId(username);
+    }
+
+    public int addAuction(Auction auction) {
+        return loginDAO.addAuction(auction);
+    }
 }

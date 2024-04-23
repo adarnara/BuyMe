@@ -6,21 +6,29 @@ public class Auction {
     private double currentPrice;
     private Date closingDate;
     private Date closingTime;
-    private double bidIncrement; // TODO TAKE OUT BID INCREMENT
     private double initialPrice;
     private double minimum;
-    private double upperLimit; // TODO TAKE OUT UPPER LIMIT
     private String winner;
     private int userId;
     private int itemId;
 
-    public Auction(int auctionId, Date closingDate, Date closingTime, double bidIncrement, double initialPrice, int userId, int itemId) {
+    public Auction(int auctionId, Date closingDate, Date closingTime, double initialPrice, double currentPrice, int userId, int itemId) {
         this.auctionId = auctionId;
+        this.initialPrice = initialPrice;
+        this.currentPrice = currentPrice;
+        this.closingDate = closingDate;
+        this.closingTime = closingTime;
+        this.userId = userId;
+        this.itemId = itemId;
+    }
+
+    // Creating new Auction
+    public Auction(Date closingDate, Date closingTime, double initialPrice, double minimum, int userId, int itemId) {
         this.initialPrice = initialPrice;
         this.currentPrice = initialPrice;
         this.closingDate = closingDate;
         this.closingTime = closingTime;
-        this.bidIncrement = bidIncrement;
+        this.minimum = minimum;
         this.userId = userId;
         this.itemId = itemId;
     }
@@ -31,10 +39,6 @@ public class Auction {
 
     public void setMinimum(double minimum) {
         this.minimum = minimum;
-    }
-
-    public void setUpperLimit(double upperLimit) {
-        this.upperLimit = upperLimit;
     }
 
     public void setWinner(String winner) {
@@ -57,20 +61,12 @@ public class Auction {
         return closingTime;
     }
 
-    public double getBidIncrement() {
-        return bidIncrement;
-    }
-
     public double getInitialPrice() {
         return initialPrice;
     }
 
     public double getMinimum() {
         return minimum;
-    }
-
-    public double getUpperLimit() {
-        return upperLimit;
     }
 
     public String getWinner() {

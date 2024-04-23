@@ -76,10 +76,8 @@ CREATE TABLE IF NOT EXISTS Auction (
     Current_Price DOUBLE,
     Auction_Closing_Date DATE,
     Auction_Closing_time TIME,
-    Bid_Increment DOUBLE,
     Initial_Price DOUBLE,
     Minimum DOUBLE,
-    Upper_Limit DOUBLE,
     Winner VARCHAR(50),
     User_Id INT NOT NULL,
     Item_ID INT NOT NULL,
@@ -132,8 +130,5 @@ VALUES ("One_Admin", "onlyadmin@gmail.com", "e1d0253d7e5ce8c582aa07c01e5cdf6bbd4
 
 -- example values to test auction
 -- TODO: TAKE OUT
-INSERT INTO Items (Item_ID)
+INSERT INTO Items(Item_ID)
 VALUES (1)
-
-INSERT INTO Auction (Auction_ID, Auction_Closing_Date, Auction_Closing_Time, Bid_Increment, Initial_Price, User_Id, Item_ID)
-VALUES (1, '2022-04-26 13:30:00', '2022-04-26 13:30:00', 2.00, 40.50, 1, 1)

@@ -9,7 +9,7 @@
     <h1>Auction Details</h1>
     <div class="auction-details">
         <p><span>Auction ID:</span> ${auction.auctionId}</p>
-        <p><span>Initial Price:</span> ${auction.initialPrice}</p>
+        <p><span>Current Price:</span> ${auction.currentPrice}</p>
         <p><span>Closing Date:</span> ${auction.auctionClosingDate}</p>
         <p><span>Closing Time:</span> ${auction.auctionClosingTime}</p>
         <!-- Add more auction details as needed -->

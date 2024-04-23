@@ -74,25 +74,26 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="new-auction-form">
+                        <form id="new-auction-form" method="post">
                             <div class="form-floating mb-3">
-                                <input type="number" class="form-control" id="initialPrice" placeholder="10" required>
+                                <input type="number" class="form-control" id="initialPrice" placeholder="10" name="initialPrice" required>
                                 <label for="initialPrice">Initial price</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input type="number" class="form-control" id="minimumPrice" placeholder="5" required>
+                                <input type="number" class="form-control" id="minimumPrice" placeholder="5" name="minimumPrice" required>
                                 <label for="minimumPrice">Hidden minimum price</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input type="date" class="form-control" id="closingDate" placeholder="01/01/2025" required>
+                                <input type="date" class="form-control" id="closingDate" placeholder="01/01/2025" name="closingDate" required>
                                 <label for="closingDate">Auction closing date</label>
                                 <div class="error"></div>
                             </div>
                             <div class="form-floating mb-3">
-                                <input type="time" class="form-control" id="closingTime" placeholder="12:00" required>
+                                <input type="time" class="form-control" id="closingTime" placeholder="12:00" name="closingTime" required>
                                 <label for="closingTime">Auction closing time</label>
                                 <div class="error"></div>
                             </div>
+                            <input type="hidden" name="modalSubmit" value="true">
 
                             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-outline-primary">Submit</button>
@@ -131,11 +132,10 @@
         main_message.style.marginTop = value * 1.5 + 'px';
     });
 
-    newAuctionForm.addEventListener('submit', e => {
+    newAuctionForm.addEventListener('submit', async e => {
         e.preventDefault();
-        console.log("In auction form event listener");
         if(validateInputs()) {
-            // TODO add logic to submit form
+            console.log(newAuctionForm.submit());
         }
     });
 
@@ -185,7 +185,6 @@
     const resetForm = (element) => {
         let inputControl = element.parentElement;
         let errorDisplay = inputControl.querySelector('.error');
-        console.log("In reset form function");
 
         if(element.classList.contains('is-invalid')) {
             errorDisplay.innerText = "";

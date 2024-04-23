@@ -8,5 +8,7 @@ import java.util.List;
 public interface ILoginDAO {
     Login getUserByUsernameOrEmail(String usernameOrEmail);
     String getEndUserType(String username);
+    int getUserId(String username);
     List<Auction> getAuctions(String username);
+    int addAuction(Auction auction);
 }
