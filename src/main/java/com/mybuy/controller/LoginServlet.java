@@ -26,21 +26,36 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         Login loginForm = new Login(usernameOrEmail, password);
+        System.out.println("1");
         Login authenticatedUser = loginModel.authenticateUserLogin(loginForm.getUsernameOrEmail(), loginForm.getPassword());
-
+        System.out.println("2");
+        
         if (authenticatedUser == null) {
+        	System.out.println("fucked");
             request.setAttribute("loginMessage", "Invalid Credentials");
             request.getRequestDispatcher("/index.jsp").forward(request, response);
         }
         else {
             request.getSession().setAttribute("username", authenticatedUser.getUsername());
-            
-            if (authenticatedUser.getUserType() == UserType.ADMIN) {
+            switch(authenticatedUser.getUserType()) {
+            case BUYER:
+                System.out.println("onward to Buyer page!");
+                request.getRequestDispatcher("/WEB-INF/view/welcome_page_buyer.jsp").forward(request, response);
+            	break;
+            case SELLER:
+                System.out.println("onward to Seller page!");
+                request.getRequestDispatcher("/WEB-INF/view/welcome_page_seller.jsp").forward(request, response);
+                break;
+            case ADMIN:
             	request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
-            } else if (authenticatedUser.getUserType() == UserType.CUSTOMER_REP) {
+            	break;
+            case CUSTOMER_REP:
             	request.getRequestDispatcher("/WEB-INF/view/customerRep.jsp").forward(request, response);
-            } else {
-            	request.getRequestDispatcher("/WEB-INF/view/welcome.jsp").forward(request, response);
+            	break;
+            default:
+            	System.out.println("Weird shit happened here");
+            	request.getRequestDispatcher("/index.jsp").forward(request, response);
+            	break;
             }
         }
     }

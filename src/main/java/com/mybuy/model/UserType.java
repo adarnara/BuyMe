@@ -1,7 +1,7 @@
 package com.mybuy.model;
 
 public enum UserType {
-	CUSTOMER_REP, END_USER, ADMIN;
+	CUSTOMER_REP, END_USER, ADMIN, BUYER, SELLER;
 	
     public static UserType fromString(String value) {
         if (value != null) {

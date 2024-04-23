@@ -85,7 +85,7 @@ and this should get you to the entry point of the website which is the login/reg
 │   ├── lib
 │   │   └── mysql-connector-java-8.0.23.jar
 │   ├── view
-│   │   └── welcome.jsp
+│   │   └── welcome_page_buyer.jsp
 │   └── web.xml
 ├── index.jsp
 └── stylesheets
