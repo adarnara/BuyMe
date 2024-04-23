@@ -12,14 +12,22 @@ body{
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
     min-height: 100vh;
     font-family: 'Jost' , sans-serif;
     background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
 }
 
 .container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+    min-width: 100vh;
+}
+
+.auction-card{
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;

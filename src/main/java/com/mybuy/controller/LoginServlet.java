@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,6 +23,26 @@ public class LoginServlet extends HttpServlet {
     @Override
     public void init() {
         loginModel = new LoginModel();
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if(session != null && session.getAttribute("username") != null) {
+            if (session.getAttribute("username").equals("customer_rep")) {
+                request.getRequestDispatcher("/WEB-INF/view/customerRep.jsp").forward(request, response);
+            } else {
+                String endUserType = loginModel.getEndUserType(session.getAttribute("username").toString());
+                request.setAttribute("userType", endUserType);
+                if(endUserType.equals("seller")) {
+                    List<Auction> auctions = loginModel.getAuctions(session.getAttribute("username").toString());
+                    request.setAttribute("auctions", auctions);
+                }
+                request.getRequestDispatcher("/WEB-INF/view/welcome_page.jsp").forward(request, response);
+            }
+        } else {
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+        }
     }
 
     @Override
