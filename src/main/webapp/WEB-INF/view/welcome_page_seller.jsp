@@ -42,6 +42,7 @@
 </section>
 <div class="sec" id="sec">
   <div class="header-search-container">
+    <h2><%= userName %>'s Auctions</h2>
     <div class="search-container">
       <input type="text" id="search-input" class="search-input" placeholder="Search auctions" />
       <a href="#" class="search-icon" id="search-icon"><i class="ri-search-line"></i></a>
@@ -49,7 +50,6 @@
   </div>
 
   <!-- Auction cards -->
-  <h2><%= userName %>'s Auctions</h2>
   <div class="row row-cols-1 row-cols-md-2 g-4 auction-grid">
     <% List<Auction> auctions = (List<Auction>) request.getAttribute("auctions"); %>
 

@@ -192,7 +192,7 @@ section img#mountains_front{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 90px; /* Adarsh: edit here for spacing between item lists (just text for now) and the header */
+    margin-bottom: 45px; /* Adarsh: edit here for spacing between item lists (just text for now) and the header */
 }
 
 
