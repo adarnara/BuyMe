@@ -2,7 +2,15 @@ package com.mybuy.model;
 
 import com.mybuy.dao.ILoginDAO;
 import com.mybuy.dao.LoginDAO;
+import com.mybuy.utils.ApplicationDB;
 import com.mybuy.utils.HashingUtility;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginModel {
 
@@ -28,5 +36,21 @@ public class LoginModel {
             }
         }
         return null;
+    }
+
+    public String getEndUserType(String username) {
+        return loginDAO.getEndUserType(username);
+    }
+
+    public List<Auction> getAuctions(String username) {
+        return loginDAO.getAuctions(username);
+    }
+
+    public int getUserId(String username) {
+        return loginDAO.getUserId(username);
+    }
+
+    public int addAuction(Auction auction) {
+        return loginDAO.addAuction(auction);
     }
 }

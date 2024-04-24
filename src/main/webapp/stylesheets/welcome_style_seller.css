@@ -148,13 +148,11 @@ section img#mountains_front{
 }
 
 .sec {
-
     position: relative;
     padding: 100px;
     background: #1c0522;
     display: flex;
     flex-direction: column;
-
 }
 
 .sec h2{
@@ -165,178 +163,112 @@ section img#mountains_front{
 }
 
 .sec p {
-
     font-size: 1em;
     color: #fff;
     top: 50%;
     transform: translateY(-50%);
     width: 100%;
-
 }
 
 
+.auction-grid{
+    padding-bottom: 20px;
+}
+
+.card{
+    --bs-card-bg: #342c63;
+}
+
+.card-title{
+    color: #fff;
+}
+
+.error{
+    color: red;
+}
+
 
 .header-search-container {
-
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 90px; /* Adarsh: edit here for spacing between item lists (just text for now) and the header */
-
 }
 
 
 
 .header-content {
-
     display: flex;
-
     justify-content: space-between;
-
     align-items: center;
-
     width: 100%;
-
 }
-
-
-
-
 
 .search-icon a {
-
     text-decoration: none;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     width: 40px;
-
     height: 40px;
-
     background: #fff;
-
     color: #2b1055;
-
     border-radius: 50%;
-
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-
 }
-
-
 
 .item-list p {
-
     font-size: 1em;
-
     color: #fff;
-
 }
-
-
 
 .search-icon a i {
-
     font-size: 1.5em;
-
 }
-
-
 
 .search-container {
-
     position: relative;
-
     display: flex;
-
     align-items: center;
-
 }
-
-
 
 .search-input {
-
     position: absolute;
-
     right: 50px;
-
     width: 0;
-
     padding: 10px 40px 10px 10px;
-
     border: none;
-
     border-radius: 20px;
-
     background-color: #fff;
-
     transition: width 0.5s, opacity 0.5s ease-in-out, padding 0.5s ease-in-out;
-
     opacity: 0;
-
     z-index: -1;
-
     overflow: hidden;
-
 }
-
-
 
 .search-container.expanded .search-input {
-
     width: 250px;
-
     opacity: 1;
-
     z-index: 1;
-
     right: 0;
-
     padding: 10px;
-
 }
-
-
 
 .search-icon {
-
     background: #fff;
-
     color: #2b1055;
-
     border-radius: 50%;
-
     width: 40px;
-
     height: 40px;
-
     display: flex;
-
     justify-content: center;
-
     align-items: center;
-
     transition: right 0.5s ease-in-out;
-
     z-index: 2;
-
     cursor: pointer;
-
 }
-
-
 
 .search-container.expanded .search-icon {
-
     position: absolute;
-
     right: 0;
-
 }
-
-
