@@ -94,7 +94,6 @@ CREATE TABLE IF NOT EXISTS Question (
 );
 
 CREATE TABLE IF NOT EXISTS Auction (
-
                                        Auction_ID INT AUTO_INCREMENT,
                                        Current_Price DOUBLE,
                                        Auction_Closing_Date DATE,
@@ -102,7 +101,7 @@ CREATE TABLE IF NOT EXISTS Auction (
                                        Bid_Increment DOUBLE,
                                        Initial_Price DOUBLE,
                                        Minimum DOUBLE,
-                                       Winner VARCHAR(50),
+                                       Winner INT,
                                        auction_status ENUM('active', 'completed', 'cancelled') NOT NULL DEFAULT 'active',
                                        User_Id INT NOT NULL,
                                        Item_ID INT NOT NULL,
@@ -110,7 +109,8 @@ CREATE TABLE IF NOT EXISTS Auction (
                                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                                        PRIMARY KEY(Auction_ID),
                                        FOREIGN KEY (Item_ID) REFERENCES Items(Item_ID) ON UPDATE CASCADE ON DELETE SET NULL,
-                                       FOREIGN KEY (User_Id) REFERENCES EndUser(User_Id) ON UPDATE CASCADE
+                                       FOREIGN KEY (User_Id) REFERENCES EndUser(User_Id) ON UPDATE CASCADE,
+                                       FOREIGN KEY (Winner) REFERENCES EndUser(User_Id)
 );
 
 
