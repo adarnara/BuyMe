@@ -28,7 +28,6 @@ public class Login {
         this.type = type;
     }
 
-    // Existing getters and setters
     public String getUsernameOrEmail() {
         return usernameOrEmail;
     }
