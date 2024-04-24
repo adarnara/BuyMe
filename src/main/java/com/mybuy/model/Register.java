@@ -5,13 +5,13 @@ public class Register {
     private String email;
     private String password;
     private String salt;
-    private String userType;
-
-    public Register(String username, String email, String password, String userType) {
+    private UserType type;
+    
+    public Register(String username, String email, String password, UserType type) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.userType = userType;
+        this.type = type;
     }
 
     public String getUsername() {
@@ -37,8 +37,12 @@ public class Register {
     public void setSalt(String salt) {
         this.salt = salt;
     }
-
-    public String getUserType() {
-        return userType;
+    
+    public UserType getType() {
+    	return type;
+    }
+    
+    public void setType(UserType type) {
+    	this.type = type;
     }
 }

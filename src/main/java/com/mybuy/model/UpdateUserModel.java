@@ -1,18 +1,18 @@
 package com.mybuy.model;
 
-import com.mybuy.dao.IUpdateEndUserDAO;
-import com.mybuy.dao.UpdateEndUserDAO;
+import com.mybuy.dao.IUpdateUserDAO;
+import com.mybuy.dao.UpdateUserDAO;
 import com.mybuy.utils.HashingUtility;
 
-public class UpdateEndUserModel {
+public class UpdateUserModel {
 	
-	private IUpdateEndUserDAO updateEndUserDAO;
+	private IUpdateUserDAO updateUserDAO;
 	
-	public UpdateEndUserModel() {
-		this.updateEndUserDAO = new UpdateEndUserDAO();
+	public UpdateUserModel() {
+		this.updateUserDAO = new UpdateUserDAO();
 	}
 	
-	public boolean updateUser(UpdateEndUser update) {
+	public boolean updateUser(UpdateUser update) {
 		try {
 			if (update.getField().equals("password")) {
 				String salt = HashingUtility.generateSalt();
@@ -21,7 +21,7 @@ public class UpdateEndUserModel {
 				update.setSalt(salt);
 			}
 			System.out.println("got2");
-			return updateEndUserDAO.updateUser(update);
+			return updateUserDAO.updateUser(update);
 		} catch (Exception e) {
 			System.out.println(e);
 			return false;

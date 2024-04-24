@@ -94,6 +94,7 @@ CREATE TABLE IF NOT EXISTS Question (
 );
 
 CREATE TABLE IF NOT EXISTS Auction (
+
                                        Auction_ID INT AUTO_INCREMENT,
                                        Current_Price DOUBLE,
                                        Auction_Closing_Date DATE,

@@ -1,11 +1,13 @@
+<%@ page import="com.mybuy.model.Auction" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Welcome Page</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/stylesheets/welcome_style_buyer.css"/>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet"/>
-
 </head>
 <body>
 <%
@@ -52,6 +54,13 @@
 </div>
 
 <script>
+    let stars = document.getElementById('stars');
+    let moon = document.getElementById('moon');
+    let mountains_behind = document.getElementById('mountains_behind');
+    let mountains_front = document.getElementById('mountains_front');
+    let btn = document.getElementById('btn');
+    let header = document.querySelector('header');
+    let main_message = document.getElementById('main-message');
 
     document.addEventListener('DOMContentLoaded', (event) => {
         const searchIcon = document.getElementById('search-icon');
@@ -82,17 +91,6 @@
         });
     });
 
-
-
-
-    let stars = document.getElementById('stars');
-    let moon = document.getElementById('moon');
-    let mountains_behind = document.getElementById('mountains_behind');
-    let mountains_front = document.getElementById('mountains_front');
-    let btn = document.getElementById('btn');
-    let header = document.querySelector('header');
-    let main_message = document.getElementById('main-message');
-
     window.addEventListener('scroll', function (){
         let value = window.scrollY;
         stars.style.left = value * 0.25 + 'px';
@@ -106,5 +104,10 @@
     });
 
 </script>
+
+<script>
+
+</script>
+
 </body>
 </html>

@@ -7,31 +7,31 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import com.google.gson.Gson;
-import com.mybuy.model.UpdateEndUserModel;
-import com.mybuy.model.UpdateEndUser;
+import com.mybuy.model.UpdateUserModel;
+import com.mybuy.model.UpdateUser;
 
 
-@WebServlet(name = "UpdateEndUserServlet", urlPatterns = {"/updateEndUser"})
-public class UpdateEndUserServlet extends HttpServlet {
+@WebServlet(name = "UpdateUserServlet", urlPatterns = {"/updateUser"})
+public class UpdateUserServlet extends HttpServlet {
 	
-    private UpdateEndUserModel updateEndUserModel;
+    private UpdateUserModel updateUserModel;
 
     @Override
     public void init() throws ServletException {
         super.init();
-        updateEndUserModel = new UpdateEndUserModel();
+        updateUserModel = new UpdateUserModel();
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String editedDataJson = request.getParameter("editedData");
         Gson gson = new Gson();
-        UpdateEndUser[] editedData = gson.fromJson(editedDataJson, UpdateEndUser[].class);
-        for (UpdateEndUser endUser : editedData) {
-        	System.out.println("got1");
-        	updateEndUserModel.updateUser(endUser);
+        UpdateUser[] editedData = gson.fromJson(editedDataJson, UpdateUser[].class);
+        for (UpdateUser user : editedData) {
+        	updateUserModel.updateUser(user);
         }
-        request.getRequestDispatcher("/WEB-INF/view/customerRep.jsp").forward(request, response);
+        String origin = request.getParameter("origin");
+        request.getRequestDispatcher("/WEB-INF/view/" + origin + ".jsp").forward(request, response);
     }
     
 }
