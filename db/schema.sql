@@ -127,8 +127,3 @@ CREATE TABLE IF NOT EXISTS Category (
 -- actual password is "Admin" and "One_Admin" is username.
 INSERT INTO Admin (admin_login, email_address, password, salt)
 VALUES ("One_Admin", "onlyadmin@gmail.com", "e1d0253d7e5ce8c582aa07c01e5cdf6bbd4d97ed7edec1e3921d469e77b0ea7f", "9fcb340a561f0d91148e068d544d94de");
-
--- example values to test auction
--- TODO: TAKE OUT
-INSERT INTO Items(Item_ID)
-VALUES (1)
