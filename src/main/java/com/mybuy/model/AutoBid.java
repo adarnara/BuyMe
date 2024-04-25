@@ -4,11 +4,13 @@ public class AutoBid {
     private int userId;
     private int auctionId;
     private double maxAutoBidAmount;
+    private Double userBidIncrement;
 
-    public AutoBid(int userId, int auctionId, double maxAutoBidAmount) {
+    public AutoBid(int userId, int auctionId, double maxAutoBidAmount, Double userBidIncrement) {
         this.userId = userId;
         this.auctionId = auctionId;
         this.maxAutoBidAmount = maxAutoBidAmount;
+        this.userBidIncrement = userBidIncrement;
     }
 
     public int getUserId() {
@@ -21,5 +23,9 @@ public class AutoBid {
 
     public double getMaxAutoBidAmount() {
         return maxAutoBidAmount;
+    }
+
+    public Double getUserBidIncrement() {
+        return userBidIncrement;
     }
 }

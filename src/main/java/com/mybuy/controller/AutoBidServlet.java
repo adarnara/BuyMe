@@ -24,8 +24,9 @@ public class AutoBidServlet extends HttpServlet {
             int userId = Integer.parseInt(request.getParameter("userId"));
             int auctionId = Integer.parseInt(request.getParameter("auctionId"));
             double maxAutoBidAmount = Double.parseDouble(request.getParameter("maxAutoBidAmount"));
+            Double userBidIncrement = request.getParameter("bidIncrement") != null ? Double.parseDouble(request.getParameter("bidIncrement")) : null;
 
-            AutoBid autoBid = new AutoBid(userId, auctionId, maxAutoBidAmount);
+            AutoBid autoBid = new AutoBid(userId, auctionId, maxAutoBidAmount, userBidIncrement);
             boolean result = autoBidModel.processAutoBid(autoBid);
 
             response.getWriter().println(result ? "AutoBid process initiated successfully." : "Failed to place AutoBid.");
