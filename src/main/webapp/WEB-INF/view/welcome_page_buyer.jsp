@@ -67,6 +67,10 @@
         const searchContainer = searchIcon.closest('.search-container');
         const searchInput = document.getElementById('search-input');
 
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', "${pageContext.request.contextPath}" + '/auctionWinner', true);
+        xhr.send();
+
         searchIcon.addEventListener('click', (event) => {
             event.preventDefault();
             if (searchContainer.classList.contains('expanded')) {

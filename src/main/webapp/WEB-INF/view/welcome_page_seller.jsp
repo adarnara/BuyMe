@@ -98,8 +98,8 @@
               <div class="error"></div>
             </div>
             <div class="form-floating mb-3">
-              <input type="text" class="form-control" id="minimumPrice" placeholder="5" name="minimumPrice" required>
-              <label for="minimumPrice">Hidden minimum price</label>
+              <input type="text" class="form-control" id="minimumPrice" placeholder="5" name="minimumPrice">
+              <label for="minimumPrice">Hidden minimum price (not required)</label>
               <div class="error"></div>
             </div>
             <div class="form-floating mb-3">
@@ -245,8 +245,11 @@
     }
 
     const initialPriceValue = parseFloat(initialPrice.value.trim());
-    const minimumPriceValue = parseFloat(minimumPrice.value.trim());
     const bidIncrementValue = parseFloat(bidIncrement.value.trim());
+    let minimumPriceValue = null;
+    if(minimumPrice.value !== "") {
+      minimumPriceValue = parseFloat(minimumPrice.value.trim());
+    }
 
     if (isNaN(initialPriceValue)) {
       setError(initialPrice, "Please enter a valid initial price.");
@@ -254,7 +257,7 @@
     } else if(isNaN(bidIncrementValue)) {
       setError(bidIncrement, "Please enter a valid bid increment.");
       return false;
-    } else if(isNaN(minimumPriceValue)) {
+    } else if(minimumPriceValue != null && isNaN(minimumPriceValue)) {
       setError(minimumPrice, "Please enter a valid minimum price.");
       return false;
     }
@@ -265,7 +268,7 @@
     } else if(bidIncrementValue <= 0) {
       setError(bidIncrement, "Bid increment must be greater than zero.");
       return false;
-    } else if(minimumPriceValue <= 0) {
+    } else if(minimumPriceValue != null && minimumPriceValue <= 0) {
       setError(minimumPrice, "Minimum price must be greater than zero.");
       return false;
     }
@@ -276,7 +279,7 @@
     } else if(!isValidDecimalPlaces(bidIncrementValue)) {
       setError(bidIncrement, "Bid increment must have up to two decimal places.");
       return false;
-    } else if(!isValidDecimalPlaces(minimumPriceValue)) {
+    } else if(minimumPriceValue != null && !isValidDecimalPlaces(minimumPriceValue)) {
       setError(minimumPrice, "Minimum price must have up to two decimal places.");
       return false;
     }

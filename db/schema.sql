@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS Auction (
     Auction_Closing_time TIME NOT NULL,
     Bid_Increment DOUBLE NOT NULL,
     Initial_Price DOUBLE NOT NULL,
-    Minimum DOUBLE NOT NULL,
+    Minimum DOUBLE,
     Winner INT,
     auction_status ENUM ('active', 'completed', 'cancelled') NOT NULL DEFAULT 'active',
     User_Id INT NOT NULL,

@@ -102,6 +102,10 @@ public class LoginServlet extends HttpServlet {
         String closingDateStr = request.getParameter("closingDate");
         String closingTimeStr = request.getParameter("closingTime");
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        double minimumPriceValue = 0;
+        if(!request.getParameter("minimumPrice").isEmpty()) {
+            minimumPriceValue = Double.parseDouble(request.getParameter("minimumPrice"));
+        }
 
         try {
             Date closingDate = dateFormat.parse(closingDateStr + " " + closingTimeStr);
@@ -111,7 +115,7 @@ public class LoginServlet extends HttpServlet {
                     closingDate,
                     Double.parseDouble(request.getParameter("initialPrice")),
                     Double.parseDouble(request.getParameter("bidIncrement")),
-                    Double.parseDouble(request.getParameter("minimumPrice")),
+                    minimumPriceValue,
                     userId,
                     1 // TODO: update
             );
