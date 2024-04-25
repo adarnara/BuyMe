@@ -7,6 +7,7 @@ public class Auction {
     private double currentPrice;
     private Date closingDate;
     private Date closingTime;
+    private double bidIncrement;
     private double minimum;
     private int winner;
     private int userId;
@@ -15,12 +16,13 @@ public class Auction {
     private String winnerUsername;
 
     // Retrieving auction details
-    public Auction(int auctionId, double initialPrice, double currentPrice, Date closingDate, Date closingTime, double minimum, int winner, int userId, int itemId, String status) {
+    public Auction(int auctionId, double initialPrice, double currentPrice, Date closingDate, Date closingTime, double bidIncrement, double minimum, int winner, int userId, int itemId, String status) {
         this.auctionId = auctionId;
         this.initialPrice = initialPrice;
         this.currentPrice = currentPrice;
         this.closingDate = closingDate;
         this.closingTime = closingTime;
+        this.bidIncrement = bidIncrement;
         this.minimum = minimum;
         this.winner = winner;
         this.userId = userId;
@@ -29,9 +31,10 @@ public class Auction {
     }
 
     // Creating new Auction
-    public Auction(Date closingDate, Date closingTime, double initialPrice, double minimum, int userId, int itemId) {
+    public Auction(Date closingDate, Date closingTime, double initialPrice, double bidIncrement, double minimum, int userId, int itemId) {
         this.initialPrice = initialPrice;
         this.currentPrice = initialPrice;
+        this.bidIncrement = bidIncrement;
         this.closingDate = closingDate;
         this.closingTime = closingTime;
         this.minimum = minimum;
@@ -46,7 +49,6 @@ public class Auction {
     public void setMinimum(double minimum) {
         this.minimum = minimum;
     }
-
 
     public int getAuctionId() {
         return auctionId;
@@ -85,11 +87,15 @@ public class Auction {
     public int getWinner() {
         return winner;
     }
-
     public void setWinnerUsername(String winnerUsername) {
         this.winnerUsername = winnerUsername;
     }
     public String getWinnerUsername() {
         return winnerUsername;
     }
+
+    public double getBidIncrement() {
+        return bidIncrement;
+    }
+
 }

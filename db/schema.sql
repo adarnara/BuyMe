@@ -79,12 +79,12 @@ CREATE TABLE IF NOT EXISTS Question (
     );
 CREATE TABLE IF NOT EXISTS Auction (
     Auction_ID INT AUTO_INCREMENT,
-    Current_Price DOUBLE,
-    Auction_Closing_Date DATE,
-    Auction_Closing_time TIME,
-    Bid_Increment DOUBLE,
-    Initial_Price DOUBLE,
-    Minimum DOUBLE,
+    Current_Price DOUBLE NOT NULL,
+    Auction_Closing_Date DATE NOT NULL,
+    Auction_Closing_time TIME NOT NULL,
+    Bid_Increment DOUBLE NOT NULL,
+    Initial_Price DOUBLE NOT NULL,
+    Minimum DOUBLE NOT NULL,
     Winner INT,
     auction_status ENUM ('active', 'completed', 'cancelled') NOT NULL DEFAULT 'active',
     User_Id INT NOT NULL,

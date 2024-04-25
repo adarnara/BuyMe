@@ -110,9 +110,10 @@ public class LoginServlet extends HttpServlet {
                     closingDate,
                     closingDate,
                     Double.parseDouble(request.getParameter("initialPrice")),
+                    Double.parseDouble(request.getParameter("bidIncrement")),
                     Double.parseDouble(request.getParameter("minimumPrice")),
                     userId,
-                    1
+                    1 // TODO: update
             );
 
             int newAuctionID = loginModel.addAuction(newAuction);

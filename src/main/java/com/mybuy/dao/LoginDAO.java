@@ -149,6 +149,7 @@ public class LoginDAO implements ILoginDAO {
                             rs.getDouble("Current_Price"),
                             rs.getDate("Auction_Closing_Date"),
                             rs.getTime("Auction_Closing_Time"),
+                            rs.getDouble("Bid_Increment"),
                             rs.getDouble("Minimum"),
                             rs.getInt("Winner"),
                             rs.getInt("User_Id"),
@@ -171,18 +172,19 @@ public class LoginDAO implements ILoginDAO {
     @Override
     public int addAuction(Auction auction) {
         String auctionTable = "Auction";
-        String sql = "INSERT INTO " + auctionTable + " (Current_Price, Initial_Price, Auction_Closing_Date, Auction_Closing_time, Minimum, User_Id, Item_ID) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO " + auctionTable + " (Current_Price, Auction_Closing_Date, Auction_Closing_time, Bid_Increment, Initial_Price, Minimum, User_Id, Item_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = ApplicationDB.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
                 pstmt.setDouble(1, auction.getInitialPrice());
-                pstmt.setDouble(2, auction.getInitialPrice());
-                pstmt.setDate(3, new java.sql.Date(auction.getAuctionClosingDate().getTime()));
-                pstmt.setTime(4, new java.sql.Time(auction.getAuctionClosingTime().getTime()));
-                pstmt.setDouble(5, auction.getMinimum());
-                pstmt.setInt(6, auction.getUserId());
-                pstmt.setInt(7, 1); // TODO change with item ID
+                pstmt.setDate(2, new java.sql.Date(auction.getAuctionClosingDate().getTime()));
+                pstmt.setTime(3, new java.sql.Time(auction.getAuctionClosingTime().getTime()));
+                pstmt.setDouble(4, auction.getBidIncrement());
+                pstmt.setDouble(5, auction.getInitialPrice());
+                pstmt.setDouble(6, auction.getMinimum());
+                pstmt.setInt(7, auction.getUserId());
+                pstmt.setInt(8, 1); // TODO change with item ID
 
                 int rowsInserted = pstmt.executeUpdate();
 

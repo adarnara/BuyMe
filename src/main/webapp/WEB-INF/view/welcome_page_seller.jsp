@@ -61,6 +61,9 @@
             <div class="card-body">
               <h5 class="card-title">Auction #<%= auction.getAuctionId() %></h5>
               <p class="card-text">Current price: <%= auction.getCurrentPrice() %></p>
+              <p class="card-text">Item name</p>
+              <p class="card-text">Brand</p>
+              <p class="card-text">Category name</p>
             </div>
           </div>
         </div>
@@ -85,6 +88,11 @@
             <div class="form-floating mb-3">
               <input type="text" class="form-control" id="initialPrice" placeholder="10" name="initialPrice" required>
               <label for="initialPrice">Initial price</label>
+              <div class="error"></div>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" id="bidIncrement" placeholder="5" name="bidIncrement" required>
+              <label for="bidIncrement">Bid increment</label>
               <div class="error"></div>
             </div>
             <div class="form-floating mb-3">
@@ -168,14 +176,15 @@
 
   let newAuctionForm = document.getElementById('new-auction-form');
   let initialPrice = document.getElementById('initialPrice');
+  let bidIncrement = document.getElementById('bidIncrement');
   let minimumPrice = document.getElementById('minimumPrice');
   let closingDate = document.getElementById('closingDate');
   let closingTime = document.getElementById('closingTime');
 
   newAuctionForm.addEventListener('submit', async e => {
     e.preventDefault();
-    if(validateTime() && validatePrice()) {
-      console.log(newAuctionForm.submit());
+    if(validatePrice() && validateTime()) {
+      newAuctionForm.submit();
     }
   });
 
@@ -215,21 +224,37 @@
   };
 
   const validatePrice = () => {
+    if (initialPrice.value.trim().includes(',')) {
+      setError(initialPrice, "Please remove any commas from price.");
+      return false;
+    } else if(bidIncrement.value.trim().includes(',')) {
+      setError(bidIncrement, "Please remove any commas from price.");
+      return false;
+    } else if(minimumPrice.value.trim().includes(',')) {
+      setError(minimumPrice, "Please remove any commas from price.");
+      return false;
+    }
+
     const initialPriceValue = parseFloat(initialPrice.value.trim());
     const minimumPriceValue = parseFloat(minimumPrice.value.trim());
+    const bidIncrementValue = parseFloat(bidIncrement.value.trim());
 
     if (isNaN(initialPriceValue)) {
       setError(initialPrice, "Please enter a valid initial price.");
+      return false;
+    } else if(isNaN(bidIncrementValue)) {
+      setError(bidIncrement, "Please enter a valid bid increment.");
       return false;
     } else if(isNaN(minimumPriceValue)) {
       setError(minimumPrice, "Please enter a valid minimum price.");
       return false;
     }
 
-    console.log(initialPriceValue);
-    console.log(minimumPriceValue);
     if(initialPriceValue <= 0) {
       setError(initialPrice, "Initial price must be greater than zero.");
+      return false;
+    } else if(bidIncrementValue <= 0) {
+      setError(bidIncrement, "Bid increment must be greater than zero.");
       return false;
     } else if(minimumPriceValue <= 0) {
       setError(minimumPrice, "Minimum price must be greater than zero.");
@@ -238,6 +263,9 @@
 
     if(!isValidDecimalPlaces(initialPriceValue)) {
       setError(initialPrice, "Initial price must have up to two decimal places.");
+      return false;
+    } else if(!isValidDecimalPlaces(bidIncrementValue)) {
+      setError(bidIncrement, "Bid increment must have up to two decimal places.");
       return false;
     } else if(!isValidDecimalPlaces(minimumPriceValue)) {
       setError(minimumPrice, "Minimum price must have up to two decimal places.");
@@ -266,6 +294,10 @@
 
   minimumPrice.addEventListener('change', () => {
     resetForm(minimumPrice);
+  })
+
+  bidIncrement.addEventListener('change', () => {
+    resetForm(bidIncrement);
   })
 
   const resetForm = (element) => {
