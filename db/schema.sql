@@ -37,7 +37,7 @@ BEGIN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error: There can only be one admin.';
 END IF;
 END$$ DELIMITER;
-	-- Make sure for Category/Items you are using MySQL 5.6 above and you are using InnoDB which is the Engine supporting FULLTEXT indexes.
+-- Make sure for Category/Items you are using MySQL 5.6 above and you are using InnoDB which is the Engine supporting FULLTEXT indexes.
 CREATE TABLE IF NOT EXISTS Category (
     Category_ID INT AUTO_INCREMENT,
     Category_Name VARCHAR(50),
@@ -74,8 +74,8 @@ CREATE TABLE IF NOT EXISTS Question (
     CustomerRep_ID INT NOT NULL,
     User_Id INT NOT NULL,
     PRIMARY KEY (question_ID),
-    FOREIGN KEY (CustomerRep_ID) REFERENCES CustomerRep (CustomerRep_ID) ON UPDATE CASCADE ON DELETE SET NULL,
-    FOREIGN KEY (User_Id) REFERENCES EndUser (User_Id) ON UPDATE CASCADE ON DELETE SET NULL
+    FOREIGN KEY (CustomerRep_ID) REFERENCES CustomerRep (CustomerRep_ID) ON UPDATE CASCADE,
+    FOREIGN KEY (User_Id) REFERENCES EndUser (User_Id) ON UPDATE CASCADE
     );
 CREATE TABLE IF NOT EXISTS Auction (
     Auction_ID INT AUTO_INCREMENT,
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS Auction (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (Auction_ID),
-    FOREIGN KEY (Item_ID) REFERENCES Items (Item_ID) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (Item_ID) REFERENCES Items (Item_ID) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (User_Id) REFERENCES EndUser (User_Id) ON UPDATE CASCADE,
     FOREIGN KEY (Winner) REFERENCES EndUser (User_Id)
     );
@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS Posts (
     User_Id INT,
     PRIMARY KEY (Item_ID, User_Id),
     FOREIGN KEY (Item_ID) REFERENCES Items (Item_ID) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (User_Id) REFERENCES EndUser (User_Id) ON UPDATE CASCADE ON DELETE SET NULL
+    FOREIGN KEY (User_Id) REFERENCES EndUser (User_Id) ON UPDATE CASCADE
     );
 DELIMITER $$ DROP FUNCTION IF EXISTS `LEVENSHTEIN` $$ CREATE FUNCTION `LEVENSHTEIN` (`s1` VARCHAR(255) CHARACTER
     SET utf8, `s2` VARCHAR(255) CHARACTER
