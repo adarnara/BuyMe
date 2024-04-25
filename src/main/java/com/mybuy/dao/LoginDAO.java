@@ -129,9 +129,12 @@ public class LoginDAO implements ILoginDAO {
     public List<Auction> getAuctions(String username) {
         String auctionTable = "Auction";
         String endUserTable = "EndUser";
-        String sql = "SELECT * FROM " + auctionTable + " AS a " +
+        String sql = "SELECT a.*, eu_winner.endUser_login AS winner_username " +
+                "FROM " + auctionTable + " AS a " +
                 "INNER JOIN " + endUserTable + " AS eu ON a.User_Id = eu.User_Id " +
+                "LEFT JOIN " + endUserTable + " AS eu_winner ON a.Winner = eu_winner.User_Id " +
                 "WHERE eu.endUser_login = ?";
+
         List<Auction> auctions = new ArrayList<>();
 
         try (Connection conn = ApplicationDB.getConnection();
@@ -142,13 +145,19 @@ public class LoginDAO implements ILoginDAO {
                 while(rs.next()) {
                     Auction auction = new Auction(
                             rs.getInt("Auction_ID"),
-                            rs.getDate("Auction_Closing_Date"),
-                            rs.getTime("Auction_Closing_Time"),
                             rs.getDouble("Initial_Price"),
                             rs.getDouble("Current_Price"),
+                            rs.getDate("Auction_Closing_Date"),
+                            rs.getTime("Auction_Closing_Time"),
+                            rs.getDouble("Minimum"),
+                            rs.getInt("Winner"),
                             rs.getInt("User_Id"),
-                            rs.getInt("Item_ID")
+                            rs.getInt("Item_ID"),
+                            rs.getString("auction_status")
                     );
+                    if(auction.getWinner() != 0) {
+                        auction.setWinnerUsername(rs.getString("winner_username"));
+                    }
                     auctions.add(auction);
                 }
                 return auctions;
