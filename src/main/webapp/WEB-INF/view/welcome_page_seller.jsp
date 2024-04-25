@@ -1,5 +1,6 @@
 <%@ page import="com.mybuy.model.Auction" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.text.NumberFormat" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -50,6 +51,7 @@
   </div>
 
   <!-- Auction cards -->
+  <% NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(); %>
   <div class="row row-cols-1 row-cols-md-2 g-4 auction-grid">
     <% List<Auction> auctions = (List<Auction>) request.getAttribute("auctions"); %>
 
@@ -60,7 +62,7 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Auction #<%= auction.getAuctionId() %></h5>
-              <p class="card-text">Current price: <%= auction.getCurrentPrice() %></p>
+              <p class="card-text">Current price: <%= currencyFormat.format(auction.getCurrentPrice()) %></p>
               <p class="card-text">Item name</p>
               <p class="card-text">Brand</p>
               <p class="card-text">Category name</p>
@@ -132,8 +134,11 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Auction #<%= auction.getAuctionId() %></h5>
-            <p class="card-text">Final price: <%= auction.getCurrentPrice() %></p>
+            <p class="card-text">Final price: <%= currencyFormat.format(auction.getCurrentPrice()) %></p>
             <p class="card-text">Winner: <%= auction.getWinnerUsername() %></p>
+            <p class="card-text">Item name</p>
+            <p class="card-text">Brand</p>
+            <p class="card-text">Category name</p>
           </div>
         </div>
       </div>

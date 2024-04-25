@@ -36,11 +36,10 @@ public class AuctionServlet extends HttpServlet {
 
                 req.setAttribute("auction", auction);
 
+                System.out.println(req.getAttribute("auction"));
                 req.getRequestDispatcher("/WEB-INF/view/auction_page.jsp").forward(req, resp);
-                return;
             } else {
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Auction ID not provided");
-                return;
             }
         } else {
             // User is not authenticated, redirect to the login page

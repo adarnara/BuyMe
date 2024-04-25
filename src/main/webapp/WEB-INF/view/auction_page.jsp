@@ -1,3 +1,7 @@
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="com.mybuy.model.Auction" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Locale" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -21,14 +25,18 @@
     </nav>
 </header>
 
+<% NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(); %>
+<% SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a"); %>
+<% SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.US); %>
+<% Auction auction = (Auction) request.getAttribute("auction"); %>
 <div class="container">
     <div class="auction-card">
         <h1>Auction Details</h1>
         <div class="auction-details">
             <p><span>Auction ID:</span> ${auction.auctionId}</p>
-            <p><span>Current Price:</span> ${auction.currentPrice}</p>
-            <p><span>Closing Date:</span> ${auction.auctionClosingDate}</p>
-            <p><span>Closing Time:</span> ${auction.auctionClosingTime}</p>
+            <p><span>Current Price:</span> <%= currencyFormat.format(auction.getCurrentPrice()) %></p>
+            <p><span>Closing Date:</span> <%= dateFormat.format(auction.getAuctionClosingDate()) %></p>
+            <p><span>Closing Time:</span> <%= timeFormat.format(auction.getAuctionClosingTime()) %> </p>
             <!-- Add more auction details as needed -->
         </div>
     </div>
