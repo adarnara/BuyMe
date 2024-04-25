@@ -43,7 +43,8 @@ public class AuctionWinnerServlet extends HttpServlet {
         startTimer();
     }
 
-    private void run() {
+    private synchronized void run() {
+        // TODO: double check that this will run if you leave home page
         auctionWinnerModel.getEndedAuctionsAndWinners();
     }
 }
