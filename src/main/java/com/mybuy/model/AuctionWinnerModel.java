@@ -13,6 +13,18 @@ public class AuctionWinnerModel {
 
     public void getEndedAuctionsAndWinners() {
         List<Auction> auctions = auctionWinnerDAO.getEndedAuctions();
-        System.out.println(auctions);
+
+        if(auctions.isEmpty()) {
+            return;
+        }
+
+        for (Auction auction: auctions) {
+            Bid bid = auctionWinnerDAO.getHighestBid(auction.getAuctionId());
+
+            // TODO: add alert to seller for no bids - give option to extend auction or cancel auction?
+            if(bid == null) {
+                return;
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.mybuy.dao;
 
 import com.mybuy.model.Auction;
+import com.mybuy.model.Bid;
 import com.mybuy.utils.ApplicationDB;
 
 import java.sql.Connection;
@@ -14,12 +15,11 @@ public class AuctionWinnerDAO implements IAuctionWinnerDAO {
     @Override
     public List<Auction> getEndedAuctions() {
         List<Auction> endedAuctions = new ArrayList<>();
-        String auctionTable = "Auction";
-        String sql = "SELECT * FROM " + auctionTable +" WHERE Auction_Closing_Date < CURDATE() OR (Auction_Closing_Date = CURDATE() AND Auction_Closing_Time < CURTIME())";
+        String sql = "SELECT * FROM Auction WHERE (Auction_Closing_Date < CURDATE() OR (Auction_Closing_Date = CURDATE() AND Auction_Closing_Time < CURTIME())) AND auction_status = 'active';";
 
         try (Connection conn = ApplicationDB.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
+            // TODO: double check for situations with no past auctions
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     Auction auction = new Auction(
@@ -45,4 +45,32 @@ public class AuctionWinnerDAO implements IAuctionWinnerDAO {
 
         return endedAuctions;
     }
+
+    @Override
+    public Bid getHighestBid(int auctionId) {
+        String sql = "SELECT * FROM Bid WHERE Auction_ID = ? ORDER BY Bid_Amount DESC LIMIT 1";
+
+        try (Connection conn = ApplicationDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, auctionId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    Bid bid = new Bid(
+                            rs.getInt("User_Id"),
+                            rs.getInt("Auction_ID"),
+                            rs.getDouble("Bid_Amount")
+                    );
+
+                    return bid;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting ended auctions: " + e.getMessage());
+        }
+
+        return null;
+    }
+
+
 }
