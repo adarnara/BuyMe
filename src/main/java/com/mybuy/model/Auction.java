@@ -3,23 +3,29 @@ import java.util.Date;
 
 public class Auction {
     private int auctionId;
+    private double initialPrice;
     private double currentPrice;
     private Date closingDate;
     private Date closingTime;
-    private double initialPrice;
     private double minimum;
-    private String winner;
+    private int winner;
     private int userId;
     private int itemId;
+    private String status;
+    private String winnerUsername;
 
-    public Auction(int auctionId, Date closingDate, Date closingTime, double initialPrice, double currentPrice, int userId, int itemId) {
+    // Retrieving auction details
+    public Auction(int auctionId, double initialPrice, double currentPrice, Date closingDate, Date closingTime, double minimum, int winner, int userId, int itemId, String status) {
         this.auctionId = auctionId;
         this.initialPrice = initialPrice;
         this.currentPrice = currentPrice;
         this.closingDate = closingDate;
         this.closingTime = closingTime;
+        this.minimum = minimum;
+        this.winner = winner;
         this.userId = userId;
         this.itemId = itemId;
+        this.status = status;
     }
 
     // Creating new Auction
@@ -41,9 +47,6 @@ public class Auction {
         this.minimum = minimum;
     }
 
-    public void setWinner(String winner) {
-        this.winner = winner;
-    }
 
     public int getAuctionId() {
         return auctionId;
@@ -69,15 +72,24 @@ public class Auction {
         return minimum;
     }
 
-    public String getWinner() {
-        return winner;
-    }
-
     public int getUserId() {
         return userId;
     }
 
+    public String getStatus() { return status; };
+
     public int getItemId() {
         return itemId;
+    }
+
+    public int getWinner() {
+        return winner;
+    }
+
+    public void setWinnerUsername(String winnerUsername) {
+        this.winnerUsername = winnerUsername;
+    }
+    public String getWinnerUsername() {
+        return winnerUsername;
     }
 }

@@ -181,6 +181,7 @@ section img#mountains_front{
 
 .card-title{
     color: #fff;
+    padding-bottom: 10px;
 }
 
 .error{
@@ -192,7 +193,7 @@ section img#mountains_front{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 45px; /* Adarsh: edit here for spacing between item lists (just text for now) and the header */
+    margin-bottom: 20px; /* Adarsh: edit here for spacing between item lists (just text for now) and the header */
 }
 
 
@@ -271,4 +272,12 @@ section img#mountains_front{
 .search-container.expanded .search-icon {
     position: absolute;
     right: 0;
+}
+
+.closed-auctions{
+    padding-top: 40px;
+}
+
+p.card-text{
+    margin-bottom: 2px;
 }

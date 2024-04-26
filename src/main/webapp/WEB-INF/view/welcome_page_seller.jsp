@@ -42,7 +42,7 @@
 </section>
 <div class="sec" id="sec">
   <div class="header-search-container">
-    <h2><%= userName %>'s Auctions</h2>
+    <h2><%= userName %>'s Active Auctions</h2>
     <div class="search-container">
       <input type="text" id="search-input" class="search-input" placeholder="Search auctions" />
       <a href="#" class="search-icon" id="search-icon"><i class="ri-search-line"></i></a>
@@ -55,14 +55,16 @@
 
     <% if (auctions != null && !auctions.isEmpty()) { %>
     <% for (Auction auction : auctions) { %>
-    <div class="col">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Auction #<%= auction.getAuctionId() %></h5>
-          <p class="card-text">Current price: <%= auction.getCurrentPrice() %></p>
+      <% if(auction.getStatus().equals("active")) { %>
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Auction #<%= auction.getAuctionId() %></h5>
+              <p class="card-text">Current price: <%= auction.getCurrentPrice() %></p>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      <% } %>
     <% } %>
     <% } %>
   </div>
@@ -107,6 +109,29 @@
           </form>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div class="closed-auctions">
+    <h2><%= userName %>'s Completed Auctions</h2>
+
+    <!-- Auction cards -->
+    <div class="row row-cols-1 row-cols-md-2 g-4 auction-grid">
+      <% if (auctions != null && !auctions.isEmpty()) { %>
+      <% for (Auction auction : auctions) { %>
+      <% if(auction.getStatus().equals("completed")) { %>
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Auction #<%= auction.getAuctionId() %></h5>
+            <p class="card-text">Final price: <%= auction.getCurrentPrice() %></p>
+            <p class="card-text">Winner: <%= auction.getWinnerUsername() %></p>
+          </div>
+        </div>
+      </div>
+      <% } %>
+      <% } %>
+      <% } %>
     </div>
   </div>
 </div>
