@@ -36,7 +36,7 @@ BEGIN
     IF admin_count >= 1 THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error: There can only be one admin.';
 END IF;
-END$$ DELIMITER;
+DELIMITER ;
 -- Make sure for Category/Items you are using MySQL 5.6 above and you are using InnoDB which is the Engine supporting FULLTEXT indexes.
 CREATE TABLE IF NOT EXISTS Category (
     Category_ID INT AUTO_INCREMENT,
@@ -120,69 +120,74 @@ CREATE TABLE IF NOT EXISTS Posts (
     FOREIGN KEY (Item_ID) REFERENCES Items (Item_ID) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (User_Id) REFERENCES EndUser (User_Id) ON UPDATE CASCADE
     );
-DELIMITER $$ DROP FUNCTION IF EXISTS `LEVENSHTEIN` $$ CREATE FUNCTION `LEVENSHTEIN` (`s1` VARCHAR(255) CHARACTER
-    SET utf8, `s2` VARCHAR(255) CHARACTER
-    SET utf8)
-    RETURNS INT DETERMINISTIC
+DELIMITER $$
+
+DROP FUNCTION IF EXISTS `LEVENSHTEIN`$$
+
+CREATE FUNCTION `LEVENSHTEIN`(`s1` VARCHAR(255) CHARACTER SET utf8, `s2` VARCHAR(255) CHARACTER SET utf8)
+RETURNS INT
+DETERMINISTIC
 BEGIN
-DECLARE
-s1_len, s2_len, i, j, c, c_temp,
-	COST INT;
-DECLARE
-s1_char CHAR;
-DECLARE
-cv0,
-	cv1 VARBINARY (256);
-	SET s1_len = CHAR_LENGTH(s1), s2_len = CHAR_LENGTH(s2), cv1 = 0x00, j = 1, i = 1, c = 0;
-	IF s1 = s2 THEN
-		RETURN 0;
-		ELSEIF s1_len = 0 THEN
-		RETURN s2_len;
-		ELSEIF s2_len = 0 THEN
-		RETURN s1_len;
-END IF;
-	WHILE j <= s2_len DO SET cv1 = CONCAT(cv1, CHAR(j)), j = j + 1;
-END WHILE;
-	WHILE i <= s1_len DO SET s1_char = SUBSTRING(s1, i, 1), c = i, cv0 = CHAR(i), j = 1;
-	WHILE j <= s2_len DO SET c = c + 1;
-	IF s1_char = SUBSTRING(s2, j, 1) THEN
-		SET
-		COST = 0;
-ELSE
-		SET
-		COST = 1;
-END IF;
-	SET c_temp = ORD(SUBSTRING(cv1, j, 1)) +
-		COST;
-	IF c > c_temp THEN
-		SET c = c_temp;
-END IF;
-	SET c_temp = ORD(SUBSTRING(cv1, j + 1, 1)) + 1;
-	IF c > c_temp THEN
-		SET c = c_temp;
-END IF;
-	SET cv0 = CONCAT(cv0, CHAR(c)), j = j + 1;
-END WHILE;
-	SET cv1 = cv0, i = i + 1;
-END WHILE;
-RETURN c;
-END$$ DROP FUNCTION IF EXISTS `LEVENSHTEIN_RATIO` $$ CREATE FUNCTION `LEVENSHTEIN_RATIO` (`s1` VARCHAR(255) CHARACTER
-    SET utf8, `s2` VARCHAR(255) CHARACTER
-    SET utf8)
-    RETURNS INT DETERMINISTIC
-BEGIN
-DECLARE
-s1_len, s2_len, max_len INT;
-	SET s1_len = LENGTH(s1), s2_len = LENGTH(s2);
-	IF s1_len > s2_len THEN
-		SET max_len = s1_len;
-ELSE
-		SET max_len = s2_len;
-END IF;
-RETURN ROUND((1 - LEVENSHTEIN (s1, s2) / max_len) * 100);
-END$$ DELIMITER;
-SELECT
-    LEVENSHTEIN_RATIO ('Laptops',
-                       'macboofdafdsfadsfsadffadsfadsfdsaffadsfadsfk pro 16-inch');
+    DECLARE s1_len, s2_len, i, j, c, c_temp, cost INT;
+    DECLARE s1_char CHAR;
+    DECLARE cv0, cv1 VARBINARY(256);
+    SET s1_len = CHAR_LENGTH(s1), s2_len = CHAR_LENGTH(s2), cv1 = 0x00, j = 1, i = 1, c = 0;
+    IF s1 = s2 THEN
+        RETURN 0;
+    ELSEIF s1_len = 0 THEN
+        RETURN s2_len;
+    ELSEIF s2_len = 0 THEN
+        RETURN s1_len;
+    END IF;
+    WHILE j <= s2_len DO
+        SET cv1 = CONCAT(cv1, CHAR(j));
+        SET j = j + 1;
+    END WHILE;
+    WHILE i <= s1_len DO
+        SET s1_char = SUBSTRING(s1, i, 1);
+        SET c = i;
+        SET cv0 = CHAR(i);
+        SET j = 1;
+        WHILE j <= s2_len DO
+            SET c = c + 1;
+            IF s1_char = SUBSTRING(s2, j, 1) THEN
+                SET cost = 0;
+            ELSE
+                SET cost = 1;
+            END IF;
+            SET c_temp = ORD(SUBSTRING(cv1, j, 1)) + cost;
+            IF c > c_temp THEN 
+                SET c = c_temp;
+            END IF;
+            SET c_temp = ORD(SUBSTRING(cv1, j + 1, 1)) + 1;
+            IF c > c_temp THEN
+                SET c = c_temp;
+            END IF;
+            SET cv0 = CONCAT(cv0, CHAR(c));
+            SET j = j + 1;
+        END WHILE;
+        SET cv1 = cv0;
+        SET i = i + 1;
+    END WHILE;
+    RETURN c;
+END$$
+
+
+DROP FUNCTION IF EXISTS `LEVENSHTEIN_RATIO`$$
+CREATE FUNCTION `LEVENSHTEIN_RATIO`(`s1` VARCHAR(255) CHARACTER SET utf8, `s2` VARCHAR(255) CHARACTER SET utf8)
+    RETURNS INT
+    DETERMINISTIC
+BEGIN 
+    DECLARE s1_len, s2_len, max_len INT; 
+    SET s1_len = LENGTH(s1), s2_len = LENGTH(s2); 
+    IF s1_len > s2_len THEN  
+        SET max_len = s1_len;  
+    ELSE  
+        SET max_len = s2_len;  
+    END IF; 
+    RETURN ROUND((1 - LEVENSHTEIN(s1, s2) / max_len) * 100); 
+END$$
+
+DELIMITER ;
 INSERT INTO Admin (admin_login, email_address, PASSWORD, salt)
 VALUES("One_Admin", "onlyadmin@gmail.com", "e1d0253d7e5ce8c582aa07c01e5cdf6bbd4d97ed7edec1e3921d469e77b0ea7f", "9fcb340a561f0d91148e068d544d94de");
