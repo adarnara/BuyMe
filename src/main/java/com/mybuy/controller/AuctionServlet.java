@@ -14,7 +14,6 @@ import java.io.IOException;
 
 @WebServlet(name = "AuctionServlet", urlPatterns = {"/auction/*"})
 public class AuctionServlet extends HttpServlet {
-    private AuctionDAO auctionDAO;
     private AuctionModel auctionModel;
 
     @Override
@@ -37,10 +36,8 @@ public class AuctionServlet extends HttpServlet {
                 req.setAttribute("auction", auction);
 
                 req.getRequestDispatcher("/WEB-INF/view/auction_page.jsp").forward(req, resp);
-                return;
             } else {
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Auction ID not provided");
-                return;
             }
         } else {
             // User is not authenticated, redirect to the login page

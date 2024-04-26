@@ -35,12 +35,13 @@ public class AuctionDAO implements IAuctionDAO {
         double currentPrice = rs.getDouble("Current_Price");
         Date closingDate = rs.getDate("Auction_Closing_Date");
         Date closingTime = rs.getTime("Auction_Closing_Time");
+        double bidIncrement = rs.getDouble("Bid_Increment");
         double minimum = rs.getDouble("Minimum");
         int winnerId = rs.getInt("Winner");
         int userId = rs.getInt("User_Id");
         int itemId = rs.getInt("Item_ID");
         String status = rs.getString("auction_status");
 
-        return new Auction(auctionId,  initialPrice, currentPrice, closingDate, closingTime, minimum, winnerId, userId, itemId, status);
+        return new Auction(auctionId,  initialPrice, currentPrice, closingDate, closingTime, bidIncrement, minimum, winnerId, userId, itemId, status);
     }
 }
