@@ -1,6 +1,7 @@
 package com.mybuy.dao;
 
 import com.mybuy.model.Auction;
+import com.mybuy.model.AuctionWinner;
 import com.mybuy.model.Bid;
 import com.mybuy.utils.ApplicationDB;
 
@@ -19,7 +20,6 @@ public class AuctionWinnerDAO implements IAuctionWinnerDAO {
 
         try (Connection conn = ApplicationDB.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            // TODO: double check for situations with no past auctions
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     Auction auction = new Auction(
@@ -72,5 +72,21 @@ public class AuctionWinnerDAO implements IAuctionWinnerDAO {
         return null;
     }
 
+    @Override
+    public boolean updateEndedAuction(AuctionWinner auctionWinner) {
+        String sql = "UPDATE Auction SET Winner = ?, auction_status = 'completed' WHERE Auction_ID = ?;";
 
+        try (Connection conn = ApplicationDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, auctionWinner.getWinningBid().getUserId());
+            pstmt.setInt(2, auctionWinner.getAuction().getAuctionId());
+
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating auction: " + e.getMessage());
+        }
+        return false;
+    }
 }

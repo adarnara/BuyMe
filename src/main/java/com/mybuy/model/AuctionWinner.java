@@ -1,19 +1,19 @@
 package com.mybuy.model;
 
 public class AuctionWinner {
-    private int auctionId;
-    private int userId;
+    private Auction auction;
+    private Bid winningBid;
 
-    public AuctionWinner(int auctionId, int userId) {
-        this.auctionId = auctionId;
-        this.userId = userId;
+    public AuctionWinner(Auction auction, Bid winningBid) {
+        this.auction = auction;
+        this.winningBid = winningBid;
     }
 
-    public int getAuctionId() {
-        return auctionId;
+    public Auction getAuction() {
+        return auction;
     }
 
-    public int getUserId() {
-        return userId;
+    public Bid getWinningBid() {
+        return winningBid;
     }
 }

@@ -41,15 +41,22 @@ public class AuctionWinnerModel {
                 return;
             }
 
+            AuctionWinner auctionWinner = new AuctionWinner(auction, bid);
+            updateAuctionDetails(auctionWinner);
+            // TODO: add alerts to winner + for seller, reload page
         }
     }
 
-    // TODO: add alerts for winners and sellers, update auction details to completed & with winner userId
     private void auctionWinner() {
-
+        // TODO: add alert here for auction winner + for seller
     }
 
-    private void updateAuctionDetails() {
-
+    // TODO: take out system print lines
+    private void updateAuctionDetails(AuctionWinner auctionWinner) {
+        if(auctionWinnerDAO.updateEndedAuction(auctionWinner)) {
+            System.out.println("Successfully updated auction #" + auctionWinner.getAuction().getAuctionId());
+            return;
+        }
+        System.out.println("Could not update auction #" + auctionWinner.getAuction().getAuctionId());
     }
 }
