@@ -79,13 +79,11 @@
                 <div class="form-group">
                     <label style="color: #5c007a;">Price Range</label>
                     <div class="btn-group" role="group" aria-label="Price Range">
-                        <button type="button" class="btn btn-outline-primary price-btn" style="background-color: #5c007a; color: #ffffff; border-color: #ffffff;" data-value="low">0-49</button>
-                        <button type="button" class="btn btn-outline-primary price-btn" style="background-color: #5c007a; color: #ffffff; border-color: #ffffff;" data-value="medium">50-149</button>
-                        <button type="button" class="btn btn-outline-primary price-btn" style="background-color: #5c007a; color: #ffffff; border-color: #ffffff;" data-value="high"> >= 150 </button>
+                        <button type="button" class="btn btn-outline-primary price-btn" style="background-color: #5c007a; color: #ffffff; border-color: #ffffff;" data-value="low"> 0 to 49</button>
+                        <button type="button" class="btn btn-outline-primary price-btn" style="background-color: #5c007a; color: #ffffff; border-color: #ffffff;" data-value="medium">50 to 149</button>
+                        <button type="button" class="btn btn-outline-primary price-btn" style="background-color: #5c007a; color: #ffffff; border-color: #ffffff;" data-value="high"> 150 <=  </button>
                     </div>
                 </div>
-
-
 
 
 
