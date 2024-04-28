@@ -12,17 +12,18 @@ public class SearchDAO implements ISearchDAO {
     @Override
     public List<Search> searchByCriteria(String query) {
         List<Search> searchResults = new ArrayList<>();
-        String sqlQueryStmt = "SELECT i.Item_ID, i.brand, i.name, c.Category_Name, a.Current_Price, a.Auction_ID, a.auction_status " +
+        String sqlQueryStmt = "SELECT i.Item_ID, i.brand, i.name, c.Category_Name, a.Current_Price, a.Auction_ID, a.auction_status, " +
                 "GREATEST(LEVENSHTEIN_RATIO(i.name, ?), LEVENSHTEIN_RATIO(i.brand, ?), LEVENSHTEIN_RATIO(c.Category_Name, ?)) AS similarity " +
                 "FROM Items i " +
                 "INNER JOIN Category c ON i.Category_ID = c.Category_ID " +
                 "INNER JOIN Auction a ON i.Item_ID = a.Item_ID " +
                 "WHERE (MATCH(i.brand, i.name) AGAINST (? IN BOOLEAN MODE) OR " +
                 "MATCH(c.Category_Name) AGAINST (? IN BOOLEAN MODE)) OR " +
-                "(LEVENSHTEIN_RATIO(i.name, ?) > 30 OR " +
-                "LEVENSHTEIN_RATIO(i.brand, ?) > 30 OR " +
-                "LEVENSHTEIN_RATIO(c.Category_Name, ?) > 30) " +
+                "(LEVENSHTEIN_RATIO(i.name, ?) > 70 OR " +
+                "LEVENSHTEIN_RATIO(i.brand, ?) > 70 OR " +
+                "LEVENSHTEIN_RATIO(c.Category_Name, ?) > 70) " +
                 "ORDER BY similarity DESC;";
+
 
         try (Connection conn = ApplicationDB.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sqlQueryStmt)) {
@@ -43,6 +44,69 @@ public class SearchDAO implements ISearchDAO {
         }
         return searchResults;
     }
+
+    @Override
+    public List<String> fuzzyAutocomplete(String prefix) {
+        List<String> suggestions = new ArrayList<>();
+        int similarityThreshold = 70;
+        String sql = "SELECT i.brand, i.name, c.Category_Name, " +
+                "LEVENSHTEIN_RATIO(i.name, ?) AS name_similarity, " +
+                "LEVENSHTEIN_RATIO(i.brand, ?) AS brand_similarity, " +
+                "LEVENSHTEIN_RATIO(c.Category_Name, ?) AS category_similarity " +
+                "FROM Items i " +
+                "JOIN Category c ON i.Category_ID = c.Category_ID " +
+                "WHERE ((i.name LIKE CONCAT('%', ?, '%') OR " +
+                "i.brand LIKE CONCAT('%', ?, '%') OR " +
+                "c.Category_Name LIKE CONCAT('%', ?, '%')) OR " +
+                "(LEVENSHTEIN_RATIO(i.name, ?) > ? OR " +
+                "LEVENSHTEIN_RATIO(i.brand, ?) > ? OR " +
+                "LEVENSHTEIN_RATIO(c.Category_Name, ?) > ?) OR " +
+                "(MATCH(i.name, i.brand) AGAINST(? IN BOOLEAN MODE) OR " +
+                "MATCH(c.Category_Name) AGAINST(? IN BOOLEAN MODE))) " +
+                "ORDER BY GREATEST(name_similarity, brand_similarity, category_similarity) DESC " +
+                "LIMIT 5;";
+        try (Connection conn = ApplicationDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, prefix);
+            pstmt.setString(2, prefix);
+            pstmt.setString(3, prefix);
+            pstmt.setString(4, prefix);
+            pstmt.setString(5, prefix);
+            pstmt.setString(6, prefix);
+            pstmt.setString(7, prefix);
+            pstmt.setInt(8, similarityThreshold);
+            pstmt.setString(9, prefix);
+            pstmt.setInt(10, similarityThreshold);
+            pstmt.setString(11, prefix);
+            pstmt.setInt(12, similarityThreshold);
+            pstmt.setString(13, '+' + prefix + '*');
+            pstmt.setString(14, '+' + prefix + '*');
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    if (rs.getInt("name_similarity") >= rs.getInt("brand_similarity") && rs.getInt("name_similarity") >= rs.getInt("category_similarity")) {
+                        suggestions.add(rs.getString("i.name"));
+                    } else if (rs.getInt("brand_similarity") >= rs.getInt("category_similarity")) {
+                        suggestions.add(rs.getString("i.brand"));
+                    } else {
+                        suggestions.add(rs.getString("c.Category_Name"));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error during autocomplete search: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return suggestions;
+    }
+
+
+
+
+
+
+
+
 
     private void getAndSetInfo(List<Search> searchResults, PreparedStatement pstmt) throws SQLException {
         try (ResultSet rs = pstmt.executeQuery()) {
@@ -135,6 +199,7 @@ public class SearchDAO implements ISearchDAO {
     }
 
 
+
     private void buildSqlConditions(Map<String, String> filters, List<String> conditions, List<String> parameters) {
         filters.forEach((key, value) -> {
             switch (key) {
@@ -174,5 +239,6 @@ public class SearchDAO implements ISearchDAO {
             }
         });
     }
+
 
 }

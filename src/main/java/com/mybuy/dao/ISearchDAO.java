@@ -8,4 +8,6 @@ public interface ISearchDAO {
     List<Search> searchByCriteria(String query);
     List<Search> filterByFields(Map<String, String> filters);
     List<Search> filterAndFuzzySearch(Map<String, String> filters, String fuzzyQuery);
+    List<String> fuzzyAutocomplete(String prefix);
+
 }

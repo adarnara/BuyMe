@@ -23,4 +23,7 @@ public class SearchModel {
     public List<Search> filterAndFuzzySearchItems(Map<String, String> filters, String fuzzyQuery) {
         return searchDAO.filterAndFuzzySearch(filters, fuzzyQuery);
     }
+    public List<String> autocompleteItems(String prefix) {
+        return searchDAO.fuzzyAutocomplete(prefix);
+    }
 }
