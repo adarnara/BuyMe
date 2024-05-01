@@ -160,10 +160,12 @@ section img#mountains_front{
 
 .header-search-container {
     display: flex;
-    justify-content: space-between;
+    padding-left: 1000px; /* Adds additional padding to shift content to the right */
+    justify-content: space-between; /* Maintains space between elements */
     align-items: center;
-    margin-bottom: 90px; /* Adarsh: edit here for spacing between item lists (just text for now) and the header */
+    margin-bottom: 90px; /* Space below the container */
 }
+
 
 .sec h2 {
     font-size: 3.5em;
@@ -214,6 +216,9 @@ section img#mountains_front{
     position: relative;
     display: flex;
     align-items: center;
+    flex-grow: 1;
+    margin-left: 20px;
+
 }
 
 .search-input {
@@ -256,3 +261,5 @@ section img#mountains_front{
     position: absolute;
     right: 0;
 }
+
+
