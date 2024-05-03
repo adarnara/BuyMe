@@ -53,3 +53,13 @@ h1{
 .auction-details p span{
     font-weight: bold;
 }
+
+.bid-col {
+    padding-bottom: 25px;
+    padding-left: 300px;
+    padding-right: 300px;
+}
+
+.bid-history h1 {
+    color: white;
+}

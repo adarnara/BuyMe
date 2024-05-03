@@ -3,6 +3,8 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="com.mybuy.model.Item" %>
+<%@ page import="com.mybuy.model.Bid" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -50,6 +52,36 @@
             <p><span>Closing Time:</span> <%= timeFormat.format(auction.getAuctionClosingTime()) %> </p>
         </div>
     </div>
+</div>
+
+
+<div class="row">
+    <div class="col align-self-center">
+
+    </div>
+</div>
+
+<div class="bid-history">
+    <% List<Bid> bids = (List<Bid>) request.getAttribute("bids"); %>
+    <% if(!bids.isEmpty()) {%>
+        <h1>Bid History</h1>
+        <% for(Bid bid: bids) {%>
+            <div class="row">
+                <div class="col bid-col">
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="card-text">Bid Amount: <%= currencyFormat.format(bid.getBidAmount())%></p>
+                            <p class="card-text">Bidder Username: <%= bid.getUsername()%></p>
+                            <p class="card-text">Bid Date: <%= dateFormat.format(bid.getBidDate()) %></p>
+                            <p class="card-text">Bid Time: <%= timeFormat.format(bid.getBidTime()) %> </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+    <% } else {%>
+        <h1>No bid history for this auction</h1>
+    <% } %>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

@@ -3,6 +3,7 @@ package com.mybuy.model;
 import com.mybuy.dao.BidDAO;
 import com.mybuy.dao.IBidDAO;
 import java.sql.SQLException;
+import java.util.List;
 
 public class BidModel {
 
@@ -40,5 +41,9 @@ public class BidModel {
         } catch (SQLException e) {
             return "Database error: " + e.getMessage();
         }
+    }
+
+    public List<Bid> getBidsByAuctionId(int auctionId) {
+        return bidDAO.fetchBidsByAuctionId(auctionId);
     }
 }
