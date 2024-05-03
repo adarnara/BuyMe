@@ -87,6 +87,27 @@
         </div>
         <div class="modal-body">
           <form id="new-auction-form" method="post">
+            <select class="form-select mb-3" aria-label="Select category" id="itemCategory" name="itemCategory" required>
+              <option selected>Item category</option>e
+              <option value="Laptop">Laptop</option>
+              <option value="Tablet">Tablet</option>
+              <option value="Desktop">Desktop</option>
+            </select>
+            <select class="form-select mb-3" aria-label="Select brand" id="itemBrand" name="itemBrand" required disabled>
+              <option selected>Item brand</option>
+              <option value="Apple">Apple</option>
+              <option value="Dell">Dell</option>
+              <option value="Lenovo">Lenovo</option>
+            </select>
+            <select class="form-select mb-3" aria-label="Select name" id="itemName" name="itemName" required disabled>
+              <option selected>Item name</option>
+            </select>
+            <select class="form-select mb-3" aria-label="Select color" id="itemColor" name="itemColor" required>
+              <option selected>Item color</option>
+              <option value="Black">Black</option>
+              <option value="Silver">Silver</option>
+              <option value="White">White</option>
+            </select>
             <div class="form-floating mb-3">
               <input type="text" class="form-control" id="initialPrice" placeholder="10" name="initialPrice" required>
               <label for="initialPrice">Initial price</label>
@@ -183,6 +204,111 @@
     });
   });
 
+  let categorySelect = document.getElementById('itemCategory');
+  let brandSelect = document.getElementById('itemBrand');
+  let itemNameSelect = document.getElementById('itemName');
+  let colorSelect = document.getElementById('itemColor');
+
+  let itemNames = {
+    'Apple': {
+      'Laptop': ['MacBook Air', 'MacBook Pro'],
+      'Tablet': ['iPad', 'iPad Pro', 'iPad Air'],
+      'Desktop': ['iMac', 'Mac Mini']
+    },
+    'Dell': {
+      'Laptop': ['XPS', 'Inspiron'],
+      'Tablet': ['Venue', 'Latitude'],
+      'Desktop': ['OptiPlex', 'Precision']
+    },
+    'Lenovo': {
+      'Laptop': ['ThinkPad', 'IdeaPad'],
+      'Tablet': ['Yoga', 'ThinkPad Tablet'],
+      'Desktop': ['ThinkCentre', 'IdeaCentre']
+    }
+  };
+
+  const populateItemNames = () => {
+    let brand = brandSelect.value;
+    let category = categorySelect.value;
+    let itemNamesArr = itemNames[brand][category];
+
+    // Clear existing options
+    itemNameSelect.innerHTML = '';
+
+    itemNamesArr.forEach(function(itemName) {
+      let option = document.createElement('option');
+      option.text = itemName;
+      option.value = itemName;
+      itemNameSelect.add(option);
+    });
+  }
+
+  categorySelect.addEventListener('change', () => {
+    if(categorySelect.value !== 'Item category' && categorySelect.classList.contains('is-invalid')) {
+      categorySelect.classList.remove('is-invalid');
+    }
+
+    if (categorySelect.value !== 'Item category') {
+      brandSelect.removeAttribute('disabled');
+    } else {
+      brandSelect.setAttribute('disabled', 'disabled');
+      brandSelect.selectedIndex = 0;
+      itemNameSelect.innerHTML = '';
+      let option = document.createElement('option');
+      option.text = 'Item name';
+      option.value = 'Item name';
+      itemNameSelect.add(option);
+      itemNameSelect.setAttribute('disabled', 'disabled');
+    }
+  })
+
+  brandSelect.addEventListener('change', () => {
+    if(brandSelect.value !== 'Item brand' && brandSelect.classList.contains('is-invalid')) {
+      brandSelect.classList.remove('is-invalid');
+    }
+
+    if (brandSelect.value !== 'Item brand') {
+      itemNameSelect.removeAttribute('disabled');
+      populateItemNames();
+    } else {
+      itemNameSelect.innerHTML = '';
+      let option = document.createElement('option');
+      option.text = 'Item name';
+      option.value = 'Item name';
+      itemNameSelect.add(option);
+      itemNameSelect.setAttribute('disabled', 'disabled');
+    }
+  });
+
+  itemNameSelect.addEventListener('change', () => {
+    if(itemNameSelect.value !== 'Item name' && itemNameSelect.classList.contains('is-invalid')) {
+      itemNameSelect.classList.remove('is-invalid');
+    }
+  })
+
+  colorSelect.addEventListener('change', () => {
+    if(colorSelect.value !== 'Item color' && colorSelect.classList.contains('is-invalid')) {
+      colorSelect.classList.remove('is-invalid');
+    }
+  })
+
+  const validateItem = () => {
+    if(categorySelect.value === 'Item category') {
+      categorySelect.classList.add('is-invalid');
+      return false;
+    } else if(brandSelect.value === 'Item brand') {
+      brandSelect.classList.add('is-invalid');
+      return false;
+    } else if(itemNameSelect.value === 'Item name') {
+      itemNameSelect.classList.add('is-invalid');
+      return false;
+    } else if(colorSelect.value === 'Item color') {
+      colorSelect.classList.add('is-invalid');
+      return false;
+    }
+    return true;
+  };
+
   let newAuctionForm = document.getElementById('new-auction-form');
   let initialPrice = document.getElementById('initialPrice');
   let bidIncrement = document.getElementById('bidIncrement');
@@ -192,7 +318,7 @@
 
   newAuctionForm.addEventListener('submit', async e => {
     e.preventDefault();
-    if(validatePrice() && validateTime()) {
+    if(validatePrice() && validateTime() && validateItem()) {
       newAuctionForm.submit();
     }
   });
@@ -321,7 +447,6 @@
       element.classList.remove('is-invalid');
     }
   };
-
 
   let stars = document.getElementById('stars');
   let moon = document.getElementById('moon');
