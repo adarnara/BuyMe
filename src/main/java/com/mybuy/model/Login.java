@@ -1,6 +1,7 @@
 package com.mybuy.model;
 
 public class Login {
+	private String userID;
     private String usernameOrEmail;
     private String username;
     private String password;
@@ -59,5 +60,15 @@ public class Login {
     public void setUsername(String username) {
         this.username = username;
     }
+
+
+	public String getUserID() {
+		return userID;
+	}
+
+
+	public void setUserID(String userID) {
+		this.userID = userID;
+	}
 
 }
