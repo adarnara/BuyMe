@@ -3,6 +3,8 @@ package com.mybuy.controller;
 import com.mybuy.model.Auction;
 import com.mybuy.dao.AuctionDAO;
 import com.mybuy.model.AuctionModel;
+import com.mybuy.model.Item;
+import com.mybuy.model.ItemModel;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,10 +17,12 @@ import java.io.IOException;
 @WebServlet(name = "AuctionServlet", urlPatterns = {"/auction/*"})
 public class AuctionServlet extends HttpServlet {
     private AuctionModel auctionModel;
+    private ItemModel itemModel;
 
     @Override
     public void init() throws ServletException{
         auctionModel = new AuctionModel();
+        itemModel = new ItemModel();
     }
 
     @Override
@@ -31,7 +35,7 @@ public class AuctionServlet extends HttpServlet {
             if (pathParts.length == 2) {
                 int auctionId = Integer.parseInt(pathParts[1]);
 
-                Auction auction = auctionModel.getAuction(auctionId);
+                Auction auction = auctionModel.getAuctionById(auctionId);
 
                 req.setAttribute("auction", auction);
 

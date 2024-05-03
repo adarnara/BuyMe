@@ -2,6 +2,7 @@
 <%@ page import="com.mybuy.model.Auction" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="com.mybuy.model.Item" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -31,13 +32,22 @@
 <% Auction auction = (Auction) request.getAttribute("auction"); %>
 <div class="container">
     <div class="auction-card">
-        <h1>Auction Details</h1>
+        <h1>Auction #${auction.auctionId}</h1>
         <div class="auction-details">
-            <p><span>Auction ID:</span> ${auction.auctionId}</p>
-            <p><span>Current Price:</span> <%= currencyFormat.format(auction.getCurrentPrice()) %></p>
+            <p><span>Status:</span> <%= auction.getStatus().substring(0, 1).toUpperCase() + auction.getStatus().substring(1)%></p>
+            <% if(auction.getStatus().equals("completed")) {%>
+            <p><span>Winner:</span> <%= auction.getWinnerUsername()%></p>
+            <% } %>
+            <p><span>Item:</span> ${auction.getItem().getColor()} ${auction.getItem().getBrand()} ${auction.getItem().getName()}</p>
+            <p><span>Initial Price:</span> <%= currencyFormat.format(auction.getInitialPrice())%></p>
+            <p><span>Bid Increment:</span> <%= currencyFormat.format(auction.getBidIncrement())%></p>
+            <% if(auction.getStatus().equals("completed")) {%>
+            <p><span>Selling Price:</span> <%= currencyFormat.format(auction.getCurrentPrice()) %></p>
+            <% } else {%>
+            <p><span>Current Highest Bid:</span> <%= currencyFormat.format(auction.getCurrentPrice()) %></p>
+            <% } %>
             <p><span>Closing Date:</span> <%= dateFormat.format(auction.getAuctionClosingDate()) %></p>
             <p><span>Closing Time:</span> <%= timeFormat.format(auction.getAuctionClosingTime()) %> </p>
-            <!-- Add more auction details as needed -->
         </div>
     </div>
 </div>

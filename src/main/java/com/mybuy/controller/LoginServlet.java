@@ -1,9 +1,7 @@
 package com.mybuy.controller;
 
-import com.mybuy.model.Auction;
-import com.mybuy.model.Login;
-import com.mybuy.model.LoginModel;
-import com.mybuy.model.UserType;
+import com.mybuy.model.*;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,10 +19,14 @@ import java.util.List;
 public class LoginServlet extends HttpServlet {
 
     private LoginModel loginModel;
+    private AuctionModel auctionModel;
+    private ItemModel itemModel;
 
     @Override
     public void init() {
         loginModel = new LoginModel();
+        auctionModel = new AuctionModel();
+        itemModel = new ItemModel();
     }
 
     @Override
@@ -36,7 +39,7 @@ public class LoginServlet extends HttpServlet {
                 String endUserType = loginModel.getEndUserType(session.getAttribute("username").toString());
                 request.setAttribute("userType", endUserType);
                 if(endUserType.equals("seller")) {
-                    List<Auction> auctions = loginModel.getAuctions(session.getAttribute("username").toString());
+                    List<Auction> auctions = auctionModel.getAuctionsByUsername(session.getAttribute("username").toString());
                     request.setAttribute("auctions", auctions);
                     request.getRequestDispatcher("/WEB-INF/view/welcome_page_seller.jsp").forward(request, response);
                 }
@@ -79,7 +82,7 @@ public class LoginServlet extends HttpServlet {
             	break;
             case SELLER:
                 System.out.println("onward to Seller page!");
-                List<Auction> auctions = loginModel.getAuctions(authenticatedUser.getUsername());
+                List<Auction> auctions = auctionModel.getAuctionsByUsername(authenticatedUser.getUsername());
                 request.setAttribute("auctions", auctions);
                 request.getRequestDispatcher("/WEB-INF/view/welcome_page_seller.jsp").forward(request, response);
                 break;
@@ -108,7 +111,20 @@ public class LoginServlet extends HttpServlet {
             minimumPriceValue = Double.parseDouble(request.getParameter("minimumPrice"));
         }
 
+        String itemCategory = request.getParameter("itemCategory");
+        String itemBrand = request.getParameter("itemBrand");
+        String itemName = request.getParameter("itemName");
+        String itemColor = request.getParameter("itemColor");
+
         try {
+            Item newItem = itemModel.createNewItem(itemCategory, itemBrand, itemName, itemColor);
+            if(newItem == null) {
+                System.out.println("Error creating new item");
+                return;
+            }
+
+            int itemId = itemModel.addItem(newItem);
+
             Date closingDate = dateFormat.parse(closingDateStr + " " + closingTimeStr);
 
             Auction newAuction = new Auction(
@@ -118,10 +134,10 @@ public class LoginServlet extends HttpServlet {
                     Double.parseDouble(request.getParameter("bidIncrement")),
                     minimumPriceValue,
                     userId,
-                    1 // TODO: update
+                    itemId
             );
 
-            int newAuctionID = loginModel.addAuction(newAuction);
+            int newAuctionID = auctionModel.addAuction(newAuction);
 
             if (newAuctionID > 0) {
                 response.sendRedirect(request.getContextPath() + "/auction/" + newAuctionID);

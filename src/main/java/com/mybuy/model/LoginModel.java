@@ -17,7 +17,6 @@ public class LoginModel {
     private ILoginDAO loginDAO;
 
     public LoginModel() {
-
         this.loginDAO = new LoginDAO();
     }
 
@@ -42,15 +41,7 @@ public class LoginModel {
         return loginDAO.getEndUserType(username);
     }
 
-    public List<Auction> getAuctions(String username) {
-        return loginDAO.getAuctions(username);
-    }
-
     public int getUserId(String username) {
         return loginDAO.getUserId(username);
-    }
-
-    public int addAuction(Auction auction) {
-        return loginDAO.addAuction(auction);
     }
 }

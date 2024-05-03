@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS Items (
     Item_ID INT AUTO_INCREMENT,
     brand VARCHAR(25),
     name VARCHAR(50),
-    color_variants VARCHAR(50),
+    color VARCHAR(50),
     Category_ID INT,
     image_url VARCHAR(255),
     PRIMARY KEY (Item_ID),
@@ -191,3 +191,9 @@ END$$
 DELIMITER ;
 INSERT INTO Admin (admin_login, email_address, PASSWORD, salt)
 VALUES("One_Admin", "onlyadmin@gmail.com", "e1d0253d7e5ce8c582aa07c01e5cdf6bbd4d97ed7edec1e3921d469e77b0ea7f", "9fcb340a561f0d91148e068d544d94de");
+
+INSERT INTO Category (Category_Name)
+VALUES ("Electronics");
+
+INSERT INTO Category (Category_Name, Parent_Category_ID)
+VALUES ("Laptop", 1), ("Tablet", 1), ("Desktop", 1);

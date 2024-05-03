@@ -14,6 +14,7 @@ public class Auction {
     private int itemId;
     private String status;
     private String winnerUsername;
+    private Item item;
 
     // Retrieving auction details
     public Auction(int auctionId, double initialPrice, double currentPrice, Date closingDate, Date closingTime, double bidIncrement, double minimum, int winner, int userId, int itemId, String status) {
@@ -98,4 +99,11 @@ public class Auction {
         return bidIncrement;
     }
 
+    public Item getItem() {
+        return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
 }
