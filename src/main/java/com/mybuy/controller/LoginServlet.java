@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,11 +19,13 @@ import java.util.List;
 public class LoginServlet extends HttpServlet {
 
     private LoginModel loginModel;
+    private AuctionModel auctionModel;
     private ItemModel itemModel;
 
     @Override
     public void init() {
         loginModel = new LoginModel();
+        auctionModel = new AuctionModel();
         itemModel = new ItemModel();
     }
 
@@ -36,8 +39,14 @@ public class LoginServlet extends HttpServlet {
                 String endUserType = loginModel.getEndUserType(session.getAttribute("username").toString());
                 request.setAttribute("userType", endUserType);
                 if(endUserType.equals("seller")) {
-                    List<Auction> auctions = loginModel.getAuctions(session.getAttribute("username").toString());
+                    List<Auction> auctions = auctionModel.getAuctionsByUsername(session.getAttribute("username").toString());
+                    List<Item> items = new ArrayList<>();
+                    for (Auction auction: auctions) {
+                        items.add(itemModel.getItem(auction.getItemId()));
+                    }
+
                     request.setAttribute("auctions", auctions);
+                    request.setAttribute("items", items);
                     request.getRequestDispatcher("/WEB-INF/view/welcome_page_seller.jsp").forward(request, response);
                 }
                 request.getRequestDispatcher("/WEB-INF/view/welcome_page_buyer.jsp").forward(request, response);
@@ -79,8 +88,13 @@ public class LoginServlet extends HttpServlet {
             	break;
             case SELLER:
                 System.out.println("onward to Seller page!");
-                List<Auction> auctions = loginModel.getAuctions(authenticatedUser.getUsername());
+                List<Auction> auctions = auctionModel.getAuctionsByUsername(authenticatedUser.getUsername());
+                List<Item> items = new ArrayList<>();
+                for (Auction auction: auctions) {
+                    items.add(itemModel.getItem(auction.getItemId()));
+                }
                 request.setAttribute("auctions", auctions);
+                request.setAttribute("items", items);
                 request.getRequestDispatcher("/WEB-INF/view/welcome_page_seller.jsp").forward(request, response);
                 break;
             case ADMIN:
@@ -134,7 +148,7 @@ public class LoginServlet extends HttpServlet {
                     itemId
             );
 
-            int newAuctionID = loginModel.addAuction(newAuction);
+            int newAuctionID = auctionModel.addAuction(newAuction);
 
             if (newAuctionID > 0) {
                 response.sendRedirect(request.getContextPath() + "/auction/" + newAuctionID);

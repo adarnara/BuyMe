@@ -1,6 +1,9 @@
 <%@ page import="com.mybuy.model.Auction" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.text.NumberFormat" %>
+<%@ page import="com.mybuy.model.Item" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Locale" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -52,8 +55,11 @@
 
   <!-- Auction cards -->
   <% NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(); %>
+  <% SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a"); %>
+  <% SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.US); %>
   <div class="row row-cols-1 row-cols-md-2 g-4 auction-grid">
     <% List<Auction> auctions = (List<Auction>) request.getAttribute("auctions"); %>
+    <% List<Item> items = (List<Item>) request.getAttribute("items"); %>
 
     <% if (auctions != null && !auctions.isEmpty()) { %>
     <% for (Auction auction : auctions) { %>
@@ -61,11 +67,18 @@
         <div class="col">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Auction #<%= auction.getAuctionId() %></h5>
-              <p class="card-text">Current price: <%= currencyFormat.format(auction.getCurrentPrice()) %></p>
-              <p class="card-text">Item name</p>
-              <p class="card-text">Brand</p>
-              <p class="card-text">Category name</p>
+              <h5 class="card-title">Auction #<%=auction.getAuctionId()%></h5>
+              <% Item item = null;
+                  for (Item currentItem : items) {
+                      if (currentItem.getItemId() == auction.getItemId()) {
+                          item = currentItem;
+                      }
+                  }
+              %>
+              <p class="card-text">Item: <%= item.getColor()%> <%= item.getBrand()%> <%=item.getName()%></p>
+              <p class="card-text">Current price: <%=currencyFormat.format(auction.getCurrentPrice())%></p>
+              <p class="card-text">Closing Date: <%= dateFormat.format(auction.getAuctionClosingDate()) %></p>
+              <p class="card-text">Closing Time: <%= timeFormat.format(auction.getAuctionClosingTime()) %> </p>
             </div>
           </div>
         </div>
@@ -155,11 +168,18 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Auction #<%= auction.getAuctionId() %></h5>
+            <% Item item = null;
+              for (Item currentItem : items) {
+                if (currentItem.getItemId() == auction.getItemId()) {
+                  item = currentItem;
+                }
+              }
+            %>
+            <p class="card-text">Item: <%= item.getColor()%> <%= item.getBrand()%> <%=item.getName()%></p>
             <p class="card-text">Final price: <%= currencyFormat.format(auction.getCurrentPrice()) %></p>
             <p class="card-text">Winner: <%= auction.getWinnerUsername() %></p>
-            <p class="card-text">Item name</p>
-            <p class="card-text">Brand</p>
-            <p class="card-text">Category name</p>
+            <p class="card-text">Closing Date: <%= dateFormat.format(auction.getAuctionClosingDate()) %></p>
+            <p class="card-text">Closing Time: <%= timeFormat.format(auction.getAuctionClosingTime()) %> </p>
           </div>
         </div>
       </div>

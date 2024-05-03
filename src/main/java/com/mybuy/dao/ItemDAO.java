@@ -5,6 +5,7 @@ import com.mybuy.model.Item;
 import com.mybuy.utils.ApplicationDB;
 
 import java.sql.*;
+import java.util.Date;
 
 public class ItemDAO implements IItemDAO {
     @Override
@@ -27,6 +28,36 @@ public class ItemDAO implements IItemDAO {
         }
 
         return categoryId;
+    }
+
+    @Override
+    public Item getItemById(int itemId) {
+        Item item = null;
+        String sql = "SELECT * FROM Items WHERE Item_ID = ?";
+
+        try (Connection conn = ApplicationDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, itemId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    item = extractItemFromResultSet(rs);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching item by ID: " + e.getMessage());
+        }
+        return item;
+    }
+
+    private Item extractItemFromResultSet(ResultSet rs) throws SQLException {
+        int itemId = rs.getInt("Item_ID");
+        int categoryId = rs.getInt("Category_ID");
+        String brand = rs.getString("brand");
+        String name = rs.getString("name");
+        String color = rs.getString("color");
+
+        return new Item(itemId, categoryId, brand, name, color);
     }
 
     @Override
@@ -56,6 +87,4 @@ public class ItemDAO implements IItemDAO {
 
         return -1;
     }
-
-
 }

@@ -8,6 +8,15 @@ public class Item {
     private int categoryId;
     private String imageUrl;
 
+    // Getting item from table
+    public Item(int itemId, int categoryId, String brand, String name, String color) {
+        this.itemId = itemId;
+        this.categoryId = categoryId;
+        this.brand = brand;
+        this.name = name;
+        this.color = color;
+    }
+
     // Creating new item
     public Item(int categoryId, String brand, String name, String color) {
         this.categoryId = categoryId;

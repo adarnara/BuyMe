@@ -32,4 +32,7 @@ public class ItemModel {
         return itemDAO.addItem(newItem);
     }
 
+    public Item getItem(int itemId) {
+        return itemDAO.getItemById(itemId);
+    }
 }
