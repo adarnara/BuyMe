@@ -17,7 +17,6 @@ public class LoginModel {
     private ILoginDAO loginDAO;
 
     public LoginModel() {
-
         this.loginDAO = new LoginDAO();
     }
 

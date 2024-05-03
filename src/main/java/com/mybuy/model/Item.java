@@ -1,6 +1,6 @@
 package com.mybuy.model;
 
-public class Laptop {
+public class Item {
     private int itemId;
     private String brand;
     private String name;
@@ -9,11 +9,11 @@ public class Laptop {
     private String imageUrl;
 
     // Creating new item
-    public Laptop(String brand, String name, String color, int categoryId) {
+    public Item(int categoryId, String brand, String name, String color) {
+        this.categoryId = categoryId;
         this.brand = brand;
         this.name = name;
         this.color = color;
-        this.categoryId = categoryId;
     }
 
     public int getItemId() {

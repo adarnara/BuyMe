@@ -1,9 +1,7 @@
 package com.mybuy.controller;
 
-import com.mybuy.model.Auction;
-import com.mybuy.model.Login;
-import com.mybuy.model.LoginModel;
-import com.mybuy.model.UserType;
+import com.mybuy.model.*;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,10 +18,12 @@ import java.util.List;
 public class LoginServlet extends HttpServlet {
 
     private LoginModel loginModel;
+    private ItemModel itemModel;
 
     @Override
     public void init() {
         loginModel = new LoginModel();
+        itemModel = new ItemModel();
     }
 
     @Override
@@ -107,7 +107,20 @@ public class LoginServlet extends HttpServlet {
             minimumPriceValue = Double.parseDouble(request.getParameter("minimumPrice"));
         }
 
+        String itemCategory = request.getParameter("itemCategory");
+        String itemBrand = request.getParameter("itemBrand");
+        String itemName = request.getParameter("itemName");
+        String itemColor = request.getParameter("itemColor");
+
         try {
+            Item newItem = itemModel.createNewItem(itemCategory, itemBrand, itemName, itemColor);
+            if(newItem == null) {
+                System.out.println("Error creating new item");
+                return;
+            }
+
+            int itemId = itemModel.addItem(newItem);
+
             Date closingDate = dateFormat.parse(closingDateStr + " " + closingTimeStr);
 
             Auction newAuction = new Auction(
@@ -117,7 +130,7 @@ public class LoginServlet extends HttpServlet {
                     Double.parseDouble(request.getParameter("bidIncrement")),
                     minimumPriceValue,
                     userId,
-                    1 // TODO: update
+                    itemId
             );
 
             int newAuctionID = loginModel.addAuction(newAuction);

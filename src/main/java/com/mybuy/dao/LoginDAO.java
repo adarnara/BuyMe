@@ -184,7 +184,7 @@ public class LoginDAO implements ILoginDAO {
                 pstmt.setDouble(5, auction.getInitialPrice());
                 pstmt.setDouble(6, auction.getMinimum());
                 pstmt.setInt(7, auction.getUserId());
-                pstmt.setInt(8, 1); // TODO change with item ID
+                pstmt.setInt(8, auction.getItemId());
 
                 int rowsInserted = pstmt.executeUpdate();
 
