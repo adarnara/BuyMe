@@ -8,13 +8,19 @@ import java.util.List;
 
 public class AuctionModel {
     private IAuctionDAO auctionDAO;
+    private ItemModel itemModel;
 
     public AuctionModel() {
         this.auctionDAO = new AuctionDAO();
+        this.itemModel = new ItemModel();
     }
 
     public List<Auction> getAuctionsByUsername(String username) {
-        return auctionDAO.getAuctionsByUsername(username);
+        List<Auction> auctions = auctionDAO.getAuctionsByUsername(username);
+        for(Auction auction : auctions) {
+            auction.setItem(itemModel.getItem(auction.getItemId()));
+        }
+        return auctions;
     }
 
     public int addAuction(Auction auction) {
@@ -22,6 +28,8 @@ public class AuctionModel {
     }
 
     public Auction getAuctionById(int auctionId) {
-        return auctionDAO.getAuctionById(auctionId);
+        Auction auction = auctionDAO.getAuctionById(auctionId);
+        auction.setItem(itemModel.getItem(auction.getItemId()));
+        return auction;
     }
 }

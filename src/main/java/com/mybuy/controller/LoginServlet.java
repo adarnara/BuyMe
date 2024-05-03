@@ -40,13 +40,7 @@ public class LoginServlet extends HttpServlet {
                 request.setAttribute("userType", endUserType);
                 if(endUserType.equals("seller")) {
                     List<Auction> auctions = auctionModel.getAuctionsByUsername(session.getAttribute("username").toString());
-                    List<Item> items = new ArrayList<>();
-                    for (Auction auction: auctions) {
-                        items.add(itemModel.getItem(auction.getItemId()));
-                    }
-
                     request.setAttribute("auctions", auctions);
-                    request.setAttribute("items", items);
                     request.getRequestDispatcher("/WEB-INF/view/welcome_page_seller.jsp").forward(request, response);
                 }
                 request.getRequestDispatcher("/WEB-INF/view/welcome_page_buyer.jsp").forward(request, response);
@@ -89,12 +83,7 @@ public class LoginServlet extends HttpServlet {
             case SELLER:
                 System.out.println("onward to Seller page!");
                 List<Auction> auctions = auctionModel.getAuctionsByUsername(authenticatedUser.getUsername());
-                List<Item> items = new ArrayList<>();
-                for (Auction auction: auctions) {
-                    items.add(itemModel.getItem(auction.getItemId()));
-                }
                 request.setAttribute("auctions", auctions);
-                request.setAttribute("items", items);
                 request.getRequestDispatcher("/WEB-INF/view/welcome_page_seller.jsp").forward(request, response);
                 break;
             case ADMIN:

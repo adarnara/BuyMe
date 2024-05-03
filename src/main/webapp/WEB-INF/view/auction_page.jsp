@@ -30,7 +30,6 @@
 <% SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a"); %>
 <% SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.US); %>
 <% Auction auction = (Auction) request.getAttribute("auction"); %>
-<% Item item = (Item) request.getAttribute("item"); %>
 <div class="container">
     <div class="auction-card">
         <h1>Auction #${auction.auctionId}</h1>
@@ -39,7 +38,7 @@
             <% if(auction.getStatus().equals("completed")) {%>
             <p><span>Winner:</span> <%= auction.getWinnerUsername()%></p>
             <% } %>
-            <p><span>Item:</span> ${item.getColor()} ${item.getBrand()} ${item.getName()}</p>
+            <p><span>Item:</span> ${auction.getItem().getColor()} ${auction.getItem().getBrand()} ${auction.getItem().getName()}</p>
             <p><span>Initial Price:</span> <%= currencyFormat.format(auction.getInitialPrice())%></p>
             <p><span>Bid Increment:</span> <%= currencyFormat.format(auction.getBidIncrement())%></p>
             <% if(auction.getStatus().equals("completed")) {%>

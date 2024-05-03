@@ -36,10 +36,8 @@ public class AuctionServlet extends HttpServlet {
                 int auctionId = Integer.parseInt(pathParts[1]);
 
                 Auction auction = auctionModel.getAuctionById(auctionId);
-                Item item = itemModel.getItem(auction.getItemId());
 
                 req.setAttribute("auction", auction);
-                req.setAttribute("item", item);
 
                 req.getRequestDispatcher("/WEB-INF/view/auction_page.jsp").forward(req, resp);
             } else {
