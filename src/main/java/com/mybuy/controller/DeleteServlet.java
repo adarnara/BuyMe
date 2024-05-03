@@ -25,10 +25,17 @@ public class DeleteServlet extends HttpServlet {
 		String id = request.getParameter("id");
 		String type = request.getParameter("type");
 		
-		Delete deleteForm = new Delete(id, UserType.fromString(type));
-		System.out.println("Here1");
-		boolean deletedUser = deleteModel.deleteUser(deleteForm);
-		System.out.println("Here2");
+		if (type.equals("auction")) {
+			Delete deleteForm = new Delete(id, null);
+			boolean deletedAuction = deleteModel.deleteAuction(deleteForm);
+		} else if (type.equals("bid")) {
+			Delete deleteForm = new Delete(id, null);
+			boolean deletedAuction = deleteModel.deleteBid(deleteForm);
+		}
+		else {
+			Delete deleteForm = new Delete(id, UserType.fromString(type));
+			boolean deletedUser = deleteModel.deleteUser(deleteForm);
+		}
 //		if (!deletedUser) {
 //			request.setAttribute("deleteMessage", "Deletion Invalid");
 //		} else {

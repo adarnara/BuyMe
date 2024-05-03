@@ -87,6 +87,7 @@ public class LoginServlet extends HttpServlet {
             	request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
             	break;
             case CUSTOMER_REP:
+            	request.getSession().setAttribute("rep_id", authenticatedUser.getUserID());
             	request.getRequestDispatcher("/WEB-INF/view/customerRep.jsp").forward(request, response);
             	break;
             default:

@@ -42,6 +42,9 @@ public class LoginDAO implements ILoginDAO {
                     if (tableName.equals("EndUser")) {
                         String userType = rs.getString("user_type");
                         login.setUserType(UserType.fromString(userType));
+                    } else if (tableName.equals("CustomerRep")) {
+                    	login.setUserID(rs.getString("CustomerRep_ID"));
+                    	login.setUserType(UserType.fromString(tableName));
                     } else {
                     	login.setUserType(UserType.fromString(tableName));
                     }
@@ -69,7 +72,7 @@ public class LoginDAO implements ILoginDAO {
         }
         else if ("CustomerRep".equals(tableName)) {
             loginColumn = "CustomerRep_login";
-            usernameColumn = "CustomerRep_login";
+            usernameColumn = "CustomerRep_ID, CustomerRep_login";
             userTypeColumn = " ";
         }
         else if ("EndUser".equals(tableName)) {

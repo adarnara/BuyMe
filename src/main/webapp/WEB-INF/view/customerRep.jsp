@@ -44,6 +44,129 @@
     </style>
 </head>
 <body>
+	<button onclick="showQuestions()">Show Questions</button>
+    <button onclick="showAuctions()">Show Auctions</button>
+    <button onclick="showBids()">Show Bids</button>
+    <button onclick="showUsers()">Show Users</button>
+    <div id="questions" style="display: none;">
+    	<table border="1">
+    		<tr>
+    			<th>Question Asker</th>
+    			<th>Question</th>
+    			<th>Response</th>
+    		</tr>
+			<%
+				try (Connection conn = ApplicationDB.getConnection(); Statement stmt = conn.createStatement()) {
+					String sql = "Select q.question_ID, e.endUser_login, q.question_text FROM Question q JOIN endUser e on e.User_Id = q.User_Id WHERE q.answer_text IS NULL";
+					ResultSet rs = stmt.executeQuery(sql);
+	        		while(rs.next()) {
+	        			%>
+	        				<tr>
+	        					<td><%= rs.getString("e.endUser_login") %></td>
+	        					<td><%= rs.getString("q.question_text") %></td>
+    							<td contenteditable="true" data-id=<%= rs.getInt("q.question_ID") %>></td>
+    							<td>   
+        							<form id="responseForm<%= rs.getInt("q.question_ID") %>" method="POST" action="<%= request.getContextPath() + "/response?origin=customerRep" %>">
+            							<input type="hidden" name="id" value="<%= rs.getInt("q.question_ID") %>">
+            							<input type="hidden" name="answer" value="">
+            							<button type="button" onclick="submitResponseForm(this)">Submit Response</button>
+        							</form>
+   								</td>
+	        				</tr>
+	        			<%
+	        		}
+	        		conn.close();
+	        		stmt.close();
+	        		rs.close();
+	        	} catch (SQLException e) {
+	        		e.printStackTrace();
+	        	}
+			%>
+
+    	</table>
+    	</div>
+	<div id="bids" style="display: none;">
+		<table border="1">
+			<tr>
+				<th>Bid Creator</th>
+				<th>Auction Creator</th>
+				<th>Item</th>
+				<th>Bid Date</th>
+				<th>Bid Time</th>
+				<th>Bid Amount</th>
+			</tr>
+			<%
+				try (Connection conn = ApplicationDB.getConnection(); Statement stmt = conn.createStatement()) {
+					String sql = "Select b.bid_id, e.endUser_login, u.endUser_login, i.name, b.bid_date, b.bid_time, b.bid_amount FROM Bid b JOIN EndUser e ON b.User_ID = e.User_ID JOIN Auction a ON b.Auction_ID = a.Auction_ID JOIN EndUser u ON a.User_ID = u.User_ID JOIN Items i ON a.Item_ID = i.Item_ID";
+					ResultSet rs = stmt.executeQuery(sql);
+	        		while(rs.next()) {
+	        			%>
+	        				<tr>
+	        					<td><%= rs.getString("e.endUser_login") %></td>
+	        					<td><%= rs.getString("u.endUser_login") %></td>
+	        					<td><%= rs.getString("i.name") %></td>
+	        					<td><%= rs.getString("b.bid_date") %></td>
+	        					<td><%= rs.getString("b.bid_time") %></td>
+	        					<td><%= rs.getString("b.bid_amount") %></td>
+        						<td>	
+        							<form id="deleteForm" method="POST" action="<%= request.getContextPath() + "/delete?origin=customerRep" %>">
+  										<input type="hidden" name="id" value="<%= rs.getInt("b.bid_id") %>">
+  										<input type="hidden" name="type" value="bid">
+  										<button type="button" onclick="submitDeleteForm(this);">Delete Bid</button>
+									</form>
+								</td>
+	        				</tr>
+	        			<%
+	        		}
+	        		conn.close();
+	        		stmt.close();
+	        		rs.close();
+	        	} catch (SQLException e) {
+	        		e.printStackTrace();
+	        	}
+			%>
+		</table>
+
+	</div>
+	<div id="auctions" style="display: none;">
+		<table border="1">
+			<tr>
+				<th>Auction Creator</th>
+				<th>Item</th>
+				<th>Current Price</th>
+				<th>Status</th>
+			</tr>
+			<%
+				try (Connection conn = ApplicationDB.getConnection(); Statement stmt = conn.createStatement()) {
+					String sql = "Select a.Auction_ID, e.endUser_login, i.name, a.Current_Price, a.auction_status FROM Auction a JOIN Items i on a.Item_ID = i.Item_ID JOIN EndUser e on a.User_ID = e.User_ID";
+					ResultSet rs = stmt.executeQuery(sql);
+	        		while(rs.next()) {
+	        			%>
+	        				<tr>
+	        					<td><%= rs.getString("e.endUser_login") %></td>
+	        					<td><%= rs.getString("i.name") %></td>
+	        					<td><%= rs.getString("a.Current_Price") %></td>
+	        					<td><%= rs.getString("a.auction_status") %></td>
+        						<td>	
+        							<form id="deleteForm" method="POST" action="<%= request.getContextPath() + "/delete?origin=customerRep" %>">
+  										<input type="hidden" name="id" value="<%= rs.getInt("a.Auction_ID") %>">
+  										<input type="hidden" name="type" value="auction">
+  										<button type="button" onclick="submitDeleteForm(this);">Delete Auction</button>
+									</form>
+								</td>
+	        				</tr>
+	        			<%
+	        		}
+	        		conn.close();
+	        		stmt.close();
+	        		rs.close();
+	        	} catch (SQLException e) {
+	        		e.printStackTrace();
+	        	}
+			%>
+		</table>
+	</div>
+	<div id="main" style="display: block;">
 	<h1>You can edit usernames, passwords directly in the table. Click Save Changes to confirm.</h1>
     <table border="1">
         <tr>
@@ -83,6 +206,7 @@
   		<input type="hidden" id="editedData" name="editedData" value="">
   		<button type="button" onclick="sendEditedData()">Save Changes</button>
 	</form>
+	</div>
 	<form method="POST" action="<%= request.getContextPath() + "/logout" %>">
     	<input type="hidden" name="logout" value="true"/>
     	<button type="submit" class="logoutButton">Logout</button>
@@ -111,6 +235,41 @@
   	function submitDeleteForm(button) {
   	    button.closest('form').submit();
   	}
+  	
+  	function submitResponseForm(button) {
+        const editedValue = button.parentElement.parentElement.previousElementSibling.innerText.trim();
+        button.previousElementSibling.value = editedValue;
+        
+        button.closest('form').submit();
+	}
+  	
+  	function showQuestions() {
+  		document.getElementById('questions').style.display = 'block';
+        document.getElementById('auctions').style.display = 'none';
+        document.getElementById('bids').style.display = 'none';
+        document.getElementById('main').style.display = 'none';
+  	}
+  	
+  	function showAuctions() {
+  		document.getElementById('questions').style.display = 'none';
+        document.getElementById('auctions').style.display = 'block';
+        document.getElementById('bids').style.display = 'none';
+        document.getElementById('main').style.display = 'none';
+    }
+  	
+  	function showBids() {
+  		document.getElementById('questions').style.display = 'none';
+        document.getElementById('auctions').style.display = 'none';
+        document.getElementById('bids').style.display = 'block';
+        document.getElementById('main').style.display = 'none';
+    }
+  	
+  	function showUsers() {
+  		document.getElementById('questions').style.display = 'none';
+        document.getElementById('auctions').style.display = 'none';
+        document.getElementById('bids').style.display = 'none';
+        document.getElementById('main').style.display = 'block';
+    }
   	</script>
 </body>
 </html>

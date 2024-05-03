@@ -17,8 +17,6 @@ public class DeleteDAO implements IDeleteDAO {
 			id = "CustomerRep_id";
 		}
 		String sql = "DELETE FROM " + user.getType().toName() + " WHERE " + id + " = " + user.getId();
-		System.out.println(sql);
-		System.out.println("Here4");
         try (Connection conn = ApplicationDB.getConnection();
             	PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 int rowsAffected = pstmt.executeUpdate();
@@ -27,5 +25,29 @@ public class DeleteDAO implements IDeleteDAO {
                 System.out.println("Couldn't delete user");
                 return false;
             }
+	}
+	
+	public boolean deleteAuction(Delete auction) {
+		String sql = "DELETE FROM Auction WHERE Auction_id = " + auction.getId(); 
+        try (Connection conn = ApplicationDB.getConnection();
+            	PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                int rowsAffected = pstmt.executeUpdate();
+                return rowsAffected > 0;
+        } catch (SQLException e) {
+        	System.out.println("Couldn't delete auction");
+            return false;
+        }
+	}
+	
+	public boolean deleteBid(Delete bid) {
+		String sql = "DELETE FROM Bid WHERE Bid_id = " + bid.getId(); 
+        try (Connection conn = ApplicationDB.getConnection();
+            	PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                int rowsAffected = pstmt.executeUpdate();
+                return rowsAffected > 0;
+        } catch (SQLException e) {
+        	System.out.println("Couldn't delete bid");
+            return false;
+        }
 	}
 }
