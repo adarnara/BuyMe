@@ -12,7 +12,14 @@ public class DeleteModel {
 	}
 	
 	public boolean deleteUser(Delete user) {
-		System.out.println("Here3");
 		return deleteDAO.delete(user);
+	}
+	
+	public boolean deleteAuction(Delete auction) {
+		return deleteDAO.deleteAuction(auction);
+	}
+	
+	public boolean deleteBid(Delete bid) {
+		return deleteDAO.deleteBid(bid);
 	}
 }
