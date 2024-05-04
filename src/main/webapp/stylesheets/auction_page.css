@@ -69,3 +69,7 @@ h1{
 .card-body span{
     font-weight: bold;
 }
+
+.auction-link {
+    color: #666666;
+}

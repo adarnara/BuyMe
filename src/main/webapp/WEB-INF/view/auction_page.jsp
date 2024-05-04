@@ -84,7 +84,9 @@
                     <div class="col bid-col">
                         <div class="card">
                             <div class="card-body">
-                                <p><span>Auction #<%= simAuction.getAuctionId()%></span></p>
+                                <a href="${pageContext.request.contextPath}/auction/<%= simAuction.getAuctionId() %>" class="auction-link">
+                                    <h5 class="card-title">Auction #<%= simAuction.getAuctionId() %></h5>
+                                </a>
                                 <p><span>Item:</span> <%= simAuction.getItem().getColor()%> <%= simAuction.getItem().getBrand()%> <%= simAuction.getItem().getName()%></p>
                                 <p><span>Initial Price:</span> <%= currencyFormat.format(simAuction.getInitialPrice())%></p>
                                 <p><span>Bid Increment:</span> <%= currencyFormat.format(simAuction.getBidIncrement())%></p>
