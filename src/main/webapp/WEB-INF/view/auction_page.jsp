@@ -2,7 +2,8 @@
 <%@ page import="com.mybuy.model.Auction" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="com.mybuy.model.Item" %>
+<%@ page import="com.mybuy.model.Bid" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -44,11 +45,60 @@
             <% if(auction.getStatus().equals("completed")) {%>
             <p><span>Selling Price:</span> <%= currencyFormat.format(auction.getCurrentPrice()) %></p>
             <% } else {%>
-            <p><span>Current Highest Bid:</span> <%= currencyFormat.format(auction.getCurrentPrice()) %></p>
+            <p><span>Current Price:</span> <%= currencyFormat.format(auction.getCurrentPrice()) %></p>
             <% } %>
             <p><span>Closing Date:</span> <%= dateFormat.format(auction.getAuctionClosingDate()) %></p>
             <p><span>Closing Time:</span> <%= timeFormat.format(auction.getAuctionClosingTime()) %> </p>
         </div>
+    </div>
+
+    <div class="bid-history">
+        <% List<Bid> bids = (List<Bid>) request.getAttribute("bids"); %>
+        <% if(!bids.isEmpty()) {%>
+        <h1>Bid History</h1>
+        <% for(Bid bid: bids) {%>
+        <div class="row">
+            <div class="col bid-col">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text"><span>Bid Amount:</span> <%= currencyFormat.format(bid.getBidAmount())%></p>
+                        <p class="card-text"><span>Bidder Username:</span> <%= bid.getUsername()%></p>
+                        <p class="card-text"><span>Bid Date:</span> <%= dateFormat.format(bid.getBidDate()) %></p>
+                        <p class="card-text"><span>Bid Time:</span> <%= timeFormat.format(bid.getBidTime()) %> </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% } %>
+        <% } else {%>
+        <h1>No bid history for this auction</h1>
+        <% } %>
+    </div>
+
+    <div class="similar-items">
+        <% List<Auction> similarAuctions = (List<Auction>) request.getAttribute("similarAuctions");%>
+        <% if(!similarAuctions.isEmpty()) {%>
+            <h1>Similar Items for Auction</h1>
+            <% for(Auction simAuction : similarAuctions) {%>
+                <div class="row">
+                    <div class="col bid-col">
+                        <div class="card">
+                            <div class="card-body">
+                                <p><span>Auction #<%= simAuction.getAuctionId()%></span></p>
+                                <p><span>Item:</span> <%= simAuction.getItem().getColor()%> <%= simAuction.getItem().getBrand()%> <%= simAuction.getItem().getName()%></p>
+                                <p><span>Initial Price:</span> <%= currencyFormat.format(simAuction.getInitialPrice())%></p>
+                                <p><span>Bid Increment:</span> <%= currencyFormat.format(simAuction.getBidIncrement())%></p>
+                                <p><span>Current Price:</span> <%= currencyFormat.format(simAuction.getCurrentPrice()) %></p>
+                                <p><span>Closing Date:</span> <%= dateFormat.format(simAuction.getAuctionClosingDate()) %></p>
+                                <p><span>Closing Time:</span> <%= timeFormat.format(simAuction.getAuctionClosingTime()) %> </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        <% } else {%>
+            <h1>No similar items for auction</h1>
+        <% } %>
     </div>
 </div>
 

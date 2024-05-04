@@ -1,10 +1,7 @@
 package com.mybuy.controller;
 
-import com.mybuy.model.Auction;
+import com.mybuy.model.*;
 import com.mybuy.dao.AuctionDAO;
-import com.mybuy.model.AuctionModel;
-import com.mybuy.model.Item;
-import com.mybuy.model.ItemModel;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,16 +10,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(name = "AuctionServlet", urlPatterns = {"/auction/*"})
 public class AuctionServlet extends HttpServlet {
     private AuctionModel auctionModel;
-    private ItemModel itemModel;
+    private BidModel bidModel;
 
     @Override
     public void init() throws ServletException{
         auctionModel = new AuctionModel();
-        itemModel = new ItemModel();
+        bidModel = new BidModel();
     }
 
     @Override
@@ -36,8 +34,12 @@ public class AuctionServlet extends HttpServlet {
                 int auctionId = Integer.parseInt(pathParts[1]);
 
                 Auction auction = auctionModel.getAuctionById(auctionId);
+                List<Bid> bids = bidModel.getBidsByAuctionId(auctionId);
+                List<Auction> similarAuctions = auctionModel.getSimilarAuctions(auction.getItemId());
 
                 req.setAttribute("auction", auction);
+                req.setAttribute("bids", bids);
+                req.setAttribute("similarAuctions", similarAuctions);
 
                 req.getRequestDispatcher("/WEB-INF/view/auction_page.jsp").forward(req, resp);
             } else {

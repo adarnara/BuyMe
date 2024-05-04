@@ -1,8 +1,11 @@
 package com.mybuy.dao;
 
+import com.mybuy.model.Auction;
 import com.mybuy.model.Bid;
 import com.mybuy.utils.ApplicationDB;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BidDAO implements IBidDAO {
 
@@ -163,5 +166,36 @@ public class BidDAO implements IBidDAO {
                 conn.close();
             }
         }
+    }
+
+    @Override
+    public List<Bid> fetchBidsByAuctionId(int auctionId) {
+        String sql = "SELECT b.*, eu.endUser_login " +
+                "FROM Bid AS b " +
+                "INNER JOIN EndUser as eu ON b.User_Id = eu.User_Id " +
+                "WHERE b.Auction_ID = ? " +
+                "ORDER BY b.Bid_Date DESC, b.Bid_Time DESC";
+
+        List<Bid> bids = new ArrayList<>();
+
+        try (Connection conn = ApplicationDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, auctionId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while(rs.next()) {
+                    bids.add(new Bid(
+                            rs.getString("endUser_login"),
+                            rs.getDate("Bid_Date"),
+                            rs.getTime("Bid_Time"),
+                            rs.getDouble("Bid_Amount")
+                    ));
+                }
+                return bids;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching list of bids by auction ID: " + e.getMessage());
+        }
+        return null;
     }
 }

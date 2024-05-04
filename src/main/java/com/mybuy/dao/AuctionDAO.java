@@ -126,4 +126,47 @@ public class AuctionDAO implements IAuctionDAO {
 
         return -1;
     }
+
+    @Override
+    public List<Auction> getSimilarAuctionsByItemId(int itemId) {
+        List<Auction> auctions = new ArrayList<>();
+        String sql = "SELECT a.*\n" +
+                "FROM Items AS i\n" +
+                "INNER JOIN Auction AS a ON a.Item_ID = i.Item_ID\n" +
+                "WHERE brand = (SELECT brand FROM Items WHERE Item_ID = ?)\n" +
+                "  AND Category_ID = (SELECT Category_ID FROM Items WHERE Item_ID = ?)\n" +
+                "  AND a.Auction_ID <> (SELECT Auction_ID FROM Auction WHERE Item_ID = ?)\n" +
+                "  AND a.auction_status = \"active\"\n" +
+                "  AND DATE(a.Auction_Closing_Date) >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH);";
+
+        try (Connection conn = ApplicationDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, itemId);
+            pstmt.setInt(2, itemId);
+            pstmt.setInt(3, itemId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while(rs.next()) {
+                    Auction auction = new Auction(
+                            rs.getInt("Auction_ID"),
+                            rs.getDouble("Initial_Price"),
+                            rs.getDouble("Current_Price"),
+                            rs.getDate("Auction_Closing_Date"),
+                            rs.getTime("Auction_Closing_Time"),
+                            rs.getDouble("Bid_Increment"),
+                            rs.getDouble("Minimum"),
+                            rs.getInt("Winner"),
+                            rs.getInt("User_Id"),
+                            rs.getInt("Item_ID"),
+                            rs.getString("auction_status")
+                    );
+                    auctions.add(auction);
+                }
+                return auctions;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching list of auctions by username: " + e.getMessage());
+        }
+        return auctions;
+    }
 }
