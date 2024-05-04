@@ -59,4 +59,24 @@ public class AutoBidDAO implements IAutoBidDAO {
             pstmt.executeUpdate();
         }
     }
+
+    @Override
+    public double fetchCurrentPriceIfNotByUser(int auctionId, int userId) throws SQLException {
+        double currentPrice = -1;  // Adarsh: set to -1 to lmk no valid bid.
+        String sql = "SELECT a.Current_Price FROM Auction a " +
+                "JOIN Bid b ON a.Auction_ID = b.Auction_ID " +
+                "WHERE a.Auction_ID = ? AND b.User_Id != ? AND b.Bid_Amount = a.Current_Price " +
+                "ORDER BY b.Bid_ID DESC LIMIT 1";
+
+        try (Connection conn = ApplicationDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, auctionId);
+            pstmt.setInt(2, userId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                currentPrice = rs.getDouble("Current_Price");
+            }
+        }
+        return currentPrice;
+    }
 }

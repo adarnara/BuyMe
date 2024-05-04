@@ -8,4 +8,6 @@ public interface IAutoBidDAO {
     double[] fetchAuctionDetails(int auctionId) throws SQLException;
 
     void updateCurrentPrice(int auctionId, double nextBid) throws SQLException;
+
+    double fetchCurrentPriceIfNotByUser(int auctionId, int userId) throws SQLException;
 }
