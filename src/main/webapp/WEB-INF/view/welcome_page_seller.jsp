@@ -9,8 +9,8 @@
   <meta charset="UTF-8">
   <title>Welcome Page</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/stylesheets/welcome_style_seller.css">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet"/>
+  <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/stylesheets/welcome_style_seller.css">
 </head>
 <body>
 <%
@@ -65,7 +65,9 @@
           <div class="col">
             <div class="card">
               <div class="card-body">
-                <h5 class="card-title">Auction #<%=auction.getAuctionId()%></h5>
+                <a href="${pageContext.request.contextPath}/auction/<%= auction.getAuctionId() %>" class="auction-link">
+                  <h5 class="card-title">Auction #<%=auction.getAuctionId()%></h5>
+                </a>
                 <p class="card-text">Item: <%= auction.getItem().getColor()%> <%= auction.getItem().getBrand()%> <%= auction.getItem().getName()%></p>
                 <p class="card-text">Current price: <%=currencyFormat.format(auction.getCurrentPrice())%></p>
                 <p class="card-text">Closing Date: <%= dateFormat.format(auction.getAuctionClosingDate()) %></p>
@@ -158,7 +160,9 @@
       <div class="col">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Auction #<%= auction.getAuctionId() %></h5>
+            <a href="${pageContext.request.contextPath}/auction/<%= auction.getAuctionId() %>" class="auction-link">
+              <h5 class="card-title">Auction #<%= auction.getAuctionId() %></h5>
+            </a>
             <p class="card-text">Item: <%= auction.getItem().getColor()%> <%= auction.getItem().getBrand()%> <%=auction.getItem().getName()%></p>
             <p class="card-text">Final price: <%= currencyFormat.format(auction.getCurrentPrice()) %></p>
             <p class="card-text">Winner: <%= auction.getWinnerUsername() %></p>

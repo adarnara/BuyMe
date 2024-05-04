@@ -281,3 +281,7 @@ section img#mountains_front{
 p.card-text{
     margin-bottom: 2px;
 }
+
+.auction-link {
+    color: white;
+}
