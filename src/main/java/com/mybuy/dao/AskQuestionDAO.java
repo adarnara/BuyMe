@@ -11,7 +11,7 @@ public class AskQuestionDAO implements IAskQuestionDAO {
 
 	@Override
 	public boolean askQuestion(Question question) {
-		String sql = "INSERT INTO Question (question_text, User_ID) VALUES ? ?";
+		String sql = "INSERT INTO Question (question_text, User_ID) VALUES (?, ?)";
 		try (Connection conn = ApplicationDB.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1,  question.getQuestion());
 			pstmt.setString(2,  question.getUserID());
