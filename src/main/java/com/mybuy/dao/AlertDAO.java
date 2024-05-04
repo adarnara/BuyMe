@@ -1,46 +1,27 @@
 package com.mybuy.dao;
 
-import com.mybuy.model.Alert;
 import com.mybuy.utils.ApplicationDB;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.*;
 
 public class AlertDAO implements IAlertDAO {
+
     @Override
-    public List<Alert> checkAndNotify(int userId) {
-        List<Alert> alerts = new ArrayList<>();
-        String checkUserHighestBid = "SELECT MAX(Bid_Amount) as UserMaxBid FROM Bid WHERE User_Id = ?";
-        String checkOtherUsersHigherBids = "SELECT User_Id, Auction_ID, MAX(Bid_Amount) as MaxBid FROM Bid WHERE User_Id != ? AND Bid_Amount > (SELECT MAX(Bid_Amount) FROM Bid WHERE User_Id = ?) GROUP BY User_Id, Auction_ID";
+    public void postAuctionWinnerAlert(int userID, String message, int auctionID) {
+        String sql = "INSERT INTO Alerts (User_ID, Message, Alert_Type, Auction_ID) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = ApplicationDB.getConnection();
-             PreparedStatement pstmtUserMax = conn.prepareStatement(checkUserHighestBid)) {
-            pstmtUserMax.setInt(1, userId);
-            ResultSet rsUserMax = pstmtUserMax.executeQuery();
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            if (rsUserMax.next()) {
-                double userMaxBid = rsUserMax.getDouble("UserMaxBid");
+            pstmt.setInt(1, userID);
+            pstmt.setString(2, message);
+            pstmt.setString(3, "Auction Winner");
+            pstmt.setInt(4, auctionID);
 
-                try (PreparedStatement pstmtOtherUsers = conn.prepareStatement(checkOtherUsersHigherBids)) {
-                    pstmtOtherUsers.setInt(1, userId);
-                    pstmtOtherUsers.setInt(2, userId);
-                    ResultSet rsOtherUsers = pstmtOtherUsers.executeQuery();
-
-                    while (rsOtherUsers.next()) {
-                        int otherUserId = rsOtherUsers.getInt("User_Id");
-                        double otherUserMaxBid = rsOtherUsers.getDouble("MaxBid");
-                        int auctionId = rsOtherUsers.getInt("Auction_ID");
-                        alerts.add(new Alert(otherUserId, otherUserMaxBid, auctionId));
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            pstmt.executeUpdate();
         }
-        return alerts;
+        catch (SQLException e) {
+            System.out.println("Error adding alert: " + e.getMessage());
+        }
     }
 }
