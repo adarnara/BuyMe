@@ -2,6 +2,7 @@ package com.mybuy.controller;
 
 import com.mybuy.model.BidModel;
 import com.mybuy.model.Bid;
+import com.mybuy.model.LoginModel;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,23 +14,25 @@ import java.io.IOException;
 public class PlaceBidServlet extends HttpServlet {
 
     private BidModel bidModel;
+    private LoginModel loginModel;
 
     @Override
     public void init() {
         bidModel = new BidModel();
+        loginModel = new LoginModel();
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            int userId = Integer.parseInt(request.getParameter("userId"));
+            int userId = loginModel.getUserId((String) request.getSession().getAttribute("username"));
             int auctionId = Integer.parseInt(request.getParameter("auctionId"));
-            double bidAmount = Double.parseDouble(request.getParameter("bidAmount"));
+            Double bidAmount = Double.parseDouble(request.getParameter("bidAmount"));
 
             Bid bid = new Bid(userId, auctionId, bidAmount);
-            String result = bidModel.placeBid(bid);
-
-            response.getWriter().println(result);
+            if(bidModel.placeBid(bid)) {
+                response.sendRedirect(request.getContextPath() + "/auction/" + auctionId);
+            }
         } catch (NumberFormatException e) {
             response.getWriter().println("Invalid bid data: " + e.getMessage());
         } catch (NullPointerException e) {

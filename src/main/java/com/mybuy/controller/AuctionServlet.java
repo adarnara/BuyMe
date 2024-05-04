@@ -3,6 +3,7 @@ package com.mybuy.controller;
 import com.mybuy.model.*;
 import com.mybuy.dao.AuctionDAO;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,11 +17,13 @@ import java.util.List;
 public class AuctionServlet extends HttpServlet {
     private AuctionModel auctionModel;
     private BidModel bidModel;
+    private LoginModel loginModel;
 
     @Override
     public void init() throws ServletException{
         auctionModel = new AuctionModel();
         bidModel = new BidModel();
+        loginModel = new LoginModel();
     }
 
     @Override
@@ -29,6 +32,9 @@ public class AuctionServlet extends HttpServlet {
         HttpSession session = req.getSession(false); // Don't create a new session if it doesn't exist
         if (session != null && session.getAttribute("username") != null) {
             // User is authenticated, allow access to the requested resource
+            String endUserType = loginModel.getEndUserType((String) session.getAttribute("username"));
+            req.setAttribute("endUserType", endUserType);
+
             String[] pathParts = req.getPathInfo().split("/");
             if (pathParts.length == 2) {
                 int auctionId = Integer.parseInt(pathParts[1]);
@@ -49,5 +55,11 @@ public class AuctionServlet extends HttpServlet {
             // User is not authenticated, redirect to the login page
             resp.sendRedirect(req.getContextPath() + "/login");
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+        RequestDispatcher dispatcher = req.getRequestDispatcher("/placeBid");
+        dispatcher.forward(req, res);
     }
 }
