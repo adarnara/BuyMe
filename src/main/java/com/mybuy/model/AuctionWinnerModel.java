@@ -1,15 +1,24 @@
 package com.mybuy.model;
 
 import com.mybuy.dao.AuctionWinnerDAO;
+import com.mybuy.utils.AlertScheduler;
+import java.util.concurrent.TimeUnit;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AuctionWinnerModel {
     private AuctionWinnerDAO auctionWinnerDAO;
+    private AlertScheduler alertScheduler;
+    private int winnerAuctionId = -1;
+
 
     public AuctionWinnerModel() {
+
         auctionWinnerDAO = new AuctionWinnerDAO();
+        alertScheduler = new AlertScheduler();
+        alertScheduler.scheduleTask(this::updateAuctions, 0, 1, TimeUnit.MINUTES);
     }
 
     public void getEndedAuctionsAndWinners() {
@@ -47,8 +56,23 @@ public class AuctionWinnerModel {
         }
     }
 
-    private void auctionWinner() {
-        // TODO: add alert here for auction winner + for seller
+    private void updateAuctions() {
+        List<Auction> auctions = auctionWinnerDAO.getEndedAuctions();
+        for (Auction auction : auctions) {
+            int auctionId = auctionWinnerDAO.isUserWinner(auction.getWinner());
+            if (auctionId != -1) {
+                winnerAuctionId = auctionId;
+                break;
+            }
+        }
+    }
+
+    public int getAuctionIdIfUserWon(int userId) {
+        return auctionWinnerDAO.isUserWinner(userId);
+    }
+
+    public void shutdownScheduler() {
+        alertScheduler.shutdown();
     }
 
     // TODO: take out system print lines
