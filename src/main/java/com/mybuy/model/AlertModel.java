@@ -2,7 +2,6 @@ package com.mybuy.model;
 
 import com.mybuy.dao.AlertDAO;
 import com.mybuy.dao.IAlertDAO;
-import com.mybuy.utils.AlertScheduler;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
