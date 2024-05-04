@@ -69,3 +69,25 @@ h1{
 .card-body span{
     font-weight: bold;
 }
+
+.auction-link {
+    color: #666666;
+}
+
+.new-bid-btn {
+    margin-bottom: 15px;
+}
+
+#new-bid-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.cancelOrSubmit {
+    display: flex;
+}
+
+.bid-form-btn {
+    margin: 5px;
+}

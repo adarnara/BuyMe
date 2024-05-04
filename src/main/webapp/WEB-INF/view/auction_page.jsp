@@ -41,14 +41,70 @@
             <% } %>
             <p><span>Item:</span> ${auction.getItem().getColor()} ${auction.getItem().getBrand()} ${auction.getItem().getName()}</p>
             <p><span>Initial Price:</span> <%= currencyFormat.format(auction.getInitialPrice())%></p>
-            <p><span>Bid Increment:</span> <%= currencyFormat.format(auction.getBidIncrement())%></p>
+            <p id="auctionBidIncrement"><span>Bid Increment:</span> <%= currencyFormat.format(auction.getBidIncrement())%></p>
             <% if(auction.getStatus().equals("completed")) {%>
             <p><span>Selling Price:</span> <%= currencyFormat.format(auction.getCurrentPrice()) %></p>
             <% } else {%>
-            <p><span>Current Price:</span> <%= currencyFormat.format(auction.getCurrentPrice()) %></p>
+            <p id="currentPrice"><span>Current Price:</span> <%= currencyFormat.format(auction.getCurrentPrice()) %></p>
             <% } %>
             <p><span>Closing Date:</span> <%= dateFormat.format(auction.getAuctionClosingDate()) %></p>
             <p><span>Closing Time:</span> <%= timeFormat.format(auction.getAuctionClosingTime()) %> </p>
+        </div>
+    </div>
+
+    <!-- Button for new bid modal -->
+    <% if(request.getAttribute("endUserType").equals("buyer") && auction.getStatus().equals("active")) { %>
+        <button type="button" class="btn btn-outline-light new-bid-btn" data-bs-toggle="modal" data-bs-target="#new-bid-modal">Create New Bid</button>
+    <% } %>
+
+    <!-- New bid modal -->
+    <div class="modal fade" id="new-bid-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create a New Bid</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="new-bid-form" method="post">
+                        <div class="mb-3">
+                            <input type="radio" class="btn-check" name="options-base" id="newBid" autocomplete="off" checked>
+                            <label class="btn" for="newBid">Bid</label>
+                        </div>
+
+                        <div class="mb-3">
+                            <input type="radio" class="btn-check" name="options-base" id="newAutoBid" autocomplete="off">
+                            <label class="btn" for="newAutoBid">Autobid</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="bidAmount" name="bidAmount">
+                            <label for="bidAmount">Bid amount</label>
+                            <div class="error"></div>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="maxBidAmount" name="maxBidAmount" disabled>
+                            <label for="maxBidAmount">Max bid amount</label>
+                            <div class="error"></div>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="bidIncrement" disabled>
+                            <label for="bidIncrement">Bid increment (optional)</label>
+                            <div class="error"></div>
+                        </div>
+                        <input type="hidden" name="auctionId" value="<%= auction.getAuctionId() %>">
+                        <input type="hidden" id="bidType" name="bidType" value="bid">
+                        <input type="hidden" id="hiddenBidIncrement" name="bidIncrement" value="<%= auction.getBidIncrement() %>">
+
+                        <div class="cancelOrSubmit">
+                            <button type="button" class="btn btn-outline-secondary bid-form-btn" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-outline-primary bid-form-btn">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -84,7 +140,9 @@
                     <div class="col bid-col">
                         <div class="card">
                             <div class="card-body">
-                                <p><span>Auction #<%= simAuction.getAuctionId()%></span></p>
+                                <a href="${pageContext.request.contextPath}/auction/<%= simAuction.getAuctionId() %>" class="auction-link">
+                                    <h5 class="card-title">Auction #<%= simAuction.getAuctionId() %></h5>
+                                </a>
                                 <p><span>Item:</span> <%= simAuction.getItem().getColor()%> <%= simAuction.getItem().getBrand()%> <%= simAuction.getItem().getName()%></p>
                                 <p><span>Initial Price:</span> <%= currencyFormat.format(simAuction.getInitialPrice())%></p>
                                 <p><span>Bid Increment:</span> <%= currencyFormat.format(simAuction.getBidIncrement())%></p>
@@ -102,6 +160,7 @@
     </div>
 </div>
 
+<script src="${pageContext.request.contextPath}/js/auction_page_script.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>

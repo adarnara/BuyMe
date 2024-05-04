@@ -13,34 +13,13 @@ public class BidModel {
         this.bidDAO = new BidDAO();
     }
 
-    public String placeBid(Bid newBid) {
+    public boolean placeBid(Bid newBid) {
         try {
-            Bid currentHighestBid = bidDAO.fetchCurrentHighestBid(newBid.getAuctionId());
-            double currentBidAmount = currentHighestBid != null ? currentHighestBid.getBidAmount() : 0;
-
-            double userHighestBid = bidDAO.fetchUserHighestBid(newBid.getAuctionId(), newBid.getUserId());
-            double auctionBidIncrement = bidDAO.fetchAuctionBidIncrement(newBid.getAuctionId());
-
-            if (newBid.getBidAmount() <= currentBidAmount) {
-                return "Bid must be higher than the current highest bid of " + currentBidAmount;
-            }
-
-            if (newBid.getBidAmount() <= userHighestBid) {
-                return "Bid must be greater than your last highest bid of " + userHighestBid;
-            }
-
-            if (newBid.getBidAmount() < currentBidAmount + auctionBidIncrement) {
-                return "Bid increment too low; must be at least " + auctionBidIncrement + " more than the current highest bid.";
-            }
-
-            if (bidDAO.placeBid(newBid)) {
-                return "Bid placed successfully.";
-            } else {
-                return "Failed to place bid.";
-            }
+            return bidDAO.placeBid(newBid);
         } catch (SQLException e) {
-            return "Database error: " + e.getMessage();
+            System.out.println("Database error: " + e.getMessage());
         }
+        return false;
     }
 
     public List<Bid> getBidsByAuctionId(int auctionId) {

@@ -38,7 +38,7 @@ public class FilterDAO implements IFilterDAO {
             case "ItemBrand":
                 return "SELECT DISTINCT brand FROM Items ORDER BY brand";
             case "ColorVariants":
-                return "SELECT DISTINCT color_variants FROM Items ORDER BY color_variants";
+                return "SELECT DISTINCT color FROM Items ORDER BY color";
             case "AuctionStatus":
                 return "SELECT DISTINCT auction_status FROM Auction ORDER BY auction_status";
             default:
