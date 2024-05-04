@@ -35,9 +35,11 @@ public class AuctionServlet extends HttpServlet {
 
                 Auction auction = auctionModel.getAuctionById(auctionId);
                 List<Bid> bids = bidModel.getBidsByAuctionId(auctionId);
+                List<Auction> similarAuctions = auctionModel.getSimilarAuctions(auction.getItemId());
 
                 req.setAttribute("auction", auction);
                 req.setAttribute("bids", bids);
+                req.setAttribute("similarAuctions", similarAuctions);
 
                 req.getRequestDispatcher("/WEB-INF/view/auction_page.jsp").forward(req, resp);
             } else {

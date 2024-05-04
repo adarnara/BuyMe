@@ -32,4 +32,12 @@ public class AuctionModel {
         auction.setItem(itemModel.getItem(auction.getItemId()));
         return auction;
     }
+
+    public List<Auction> getSimilarAuctions(int itemId) {
+        List<Auction> auctions = auctionDAO.getSimilarAuctionsByItemId(itemId);
+        for(Auction auction : auctions) {
+            auction.setItem(itemModel.getItem(auction.getItemId()));
+        }
+        return auctions;
+    }
 }

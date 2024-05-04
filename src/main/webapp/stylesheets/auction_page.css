@@ -6,6 +6,7 @@
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
     scroll-behavior: smooth;
+    color: #666666;
 }
 
 body{
@@ -21,6 +22,7 @@ body{
 
 .container{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 90vh;
@@ -28,7 +30,7 @@ body{
 }
 
 .auction-card{
-    max-width: 800px;
+    width: 90vh;
     margin: 20px auto;
     padding: 20px;
     background-color: #fff;
@@ -56,10 +58,14 @@ h1{
 
 .bid-col {
     padding-bottom: 25px;
-    padding-left: 300px;
-    padding-right: 300px;
+    width: 90vh;
 }
 
-.bid-history h1 {
+.bid-history h1,
+.similar-items h1 {
     color: white;
+}
+
+.card-body span{
+    font-weight: bold;
 }
