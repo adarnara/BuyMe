@@ -5,10 +5,15 @@ let bidIncrement = document.getElementById('auctionBidIncrement');
 let bidOption = document.getElementById('newBid');
 let autoBidOption = document.getElementById('newAutoBid');
 let bidTypeInput = document.getElementById('bidType');
+let autoBidIncrement = document.getElementById('bidIncrement');
+let hiddenBidIncrement = document.getElementById('hiddenBidIncrement');
 
 newBidForm.addEventListener('submit', async e => {
     e.preventDefault();
     if(bidOption.checked && validateBidPrice() || autoBidOption.checked && validateAutoBidPrice()) {
+        if(autoBidOption.checked && autoBidIncrement.value !== "") {
+            hiddenBidIncrement.value = autoBidIncrement.value;
+        }
         newBidForm.submit();
     }
 });
@@ -83,7 +88,6 @@ const resetForm = (element) => {
 };
 
 let maxBidAmount = document.getElementById('maxBidAmount');
-let autoBidIncrement = document.getElementById('bidIncrement');
 
 const disableBidInputs = () => {
     bidAmount.value = ''

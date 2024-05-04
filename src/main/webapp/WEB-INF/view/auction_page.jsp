@@ -78,24 +78,25 @@
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="bidAmount" placeholder="10" name="bidAmount">
+                            <input type="text" class="form-control" id="bidAmount" name="bidAmount">
                             <label for="bidAmount">Bid amount</label>
                             <div class="error"></div>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="maxBidAmount" placeholder="5" name="maxBidAmount" disabled>
+                            <input type="text" class="form-control" id="maxBidAmount" name="maxBidAmount" disabled>
                             <label for="maxBidAmount">Max bid amount</label>
                             <div class="error"></div>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="bidIncrement" placeholder="5" name="bidIncrement" disabled>
+                            <input type="text" class="form-control" id="bidIncrement" disabled>
                             <label for="bidIncrement">Bid increment (optional)</label>
                             <div class="error"></div>
                         </div>
                         <input type="hidden" name="auctionId" value="<%= auction.getAuctionId() %>">
                         <input type="hidden" id="bidType" name="bidType" value="bid">
+                        <input type="hidden" id="hiddenBidIncrement" name="bidIncrement" value="<%= auction.getBidIncrement() %>">
 
                         <div class="cancelOrSubmit">
                             <button type="button" class="btn btn-outline-secondary bid-form-btn" data-bs-dismiss="modal">Cancel</button>

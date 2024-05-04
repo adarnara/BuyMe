@@ -2,6 +2,8 @@ package com.mybuy.controller;
 
 import com.mybuy.model.AutoBid;
 import com.mybuy.model.AutoBidModel;
+import com.mybuy.model.LoginModel;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,24 +14,26 @@ import java.io.IOException;
 public class AutoBidServlet extends HttpServlet {
 
     private AutoBidModel autoBidModel;
+    private LoginModel loginModel;
 
     @Override
     public void init() {
         autoBidModel = new AutoBidModel();
+        loginModel = new LoginModel();
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            int userId = Integer.parseInt(request.getParameter("userId"));
+            int userId = loginModel.getUserId((String) request.getSession().getAttribute("username"));
             int auctionId = Integer.parseInt(request.getParameter("auctionId"));
-            double maxAutoBidAmount = Double.parseDouble(request.getParameter("maxAutoBidAmount"));
-            Double userBidIncrement = request.getParameter("bidIncrement") != null ? Double.parseDouble(request.getParameter("bidIncrement")) : null;
+            double maxAutoBidAmount = Double.parseDouble(request.getParameter("maxBidAmount"));
+            double userBidIncrement = Double.parseDouble(request.getParameter("bidIncrement"));
 
             AutoBid autoBid = new AutoBid(userId, auctionId, maxAutoBidAmount, userBidIncrement);
-            boolean result = autoBidModel.processAutoBid(autoBid);
-
-            response.getWriter().println(result ? "AutoBid process initiated successfully." : "Failed to place AutoBid.");
+            if(autoBidModel.processAutoBid(autoBid)) {
+                response.sendRedirect(request.getContextPath() + "/auction/" + auctionId);
+            }
         } catch (NumberFormatException | NullPointerException e) {
             response.getWriter().println("Error processing AutoBid: " + e.getMessage());
         }

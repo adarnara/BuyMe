@@ -27,7 +27,7 @@ public class PlaceBidServlet extends HttpServlet {
         try {
             int userId = loginModel.getUserId((String) request.getSession().getAttribute("username"));
             int auctionId = Integer.parseInt(request.getParameter("auctionId"));
-            Double bidAmount = Double.parseDouble(request.getParameter("bidAmount"));
+            double bidAmount = Double.parseDouble(request.getParameter("bidAmount"));
 
             Bid bid = new Bid(userId, auctionId, bidAmount);
             if(bidModel.placeBid(bid)) {

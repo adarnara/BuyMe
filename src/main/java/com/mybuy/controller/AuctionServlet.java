@@ -59,7 +59,12 @@ public class AuctionServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-        RequestDispatcher dispatcher = req.getRequestDispatcher("/placeBid");
-        dispatcher.forward(req, res);
+        if(req.getParameter("bidType").equals("bid")) {
+            RequestDispatcher dispatcher = req.getRequestDispatcher("/placeBid");
+            dispatcher.forward(req, res);
+        } else {
+            RequestDispatcher dispatcher = req.getRequestDispatcher("/autoBid");
+            dispatcher.forward(req, res);
+        }
     }
 }
