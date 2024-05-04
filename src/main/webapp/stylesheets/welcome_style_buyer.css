@@ -160,10 +160,10 @@ section img#mountains_front{
 
 .header-search-container {
     display: flex;
-    padding-left: 1000px; /* Adds additional padding to shift content to the right */
-    justify-content: space-between; /* Maintains space between elements */
+    justify-content: space-between; /* Ensures the title and search bar are spaced out */
     align-items: center;
-    margin-bottom: 90px; /* Space below the container */
+    width: 100%; /* Uses the full width of its container */
+    padding: 0 20px; /* Add padding on both sides */
 }
 
 
@@ -218,6 +218,8 @@ section img#mountains_front{
     align-items: center;
     flex-grow: 1;
     margin-left: 20px;
+    justify-content: flex-end; /* Aligns the search components to the right */
+
 
 }
 
