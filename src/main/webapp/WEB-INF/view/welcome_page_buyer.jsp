@@ -49,10 +49,12 @@
 </section>
 <div class="sec" id="sec">
     <div class="header-search-container">
-        <h2 style="width: 100%; color: #fff; font-family: 'Poppins', sans-serif; font-size: 3em; font-weight: bold; z-index: 9;">Auction/Item Listings</h2>
+        <h2 style="color: #fff; font-family: 'Poppins', sans-serif; font-size: 3em; font-weight: bold;">Auction/Item Listings</h2>
         <div class="search-container">
             <input type="text" id="search-input" class="search-input" placeholder="Search auctions" />
-            <a href="#" class="search-icon" id="search-icon"><i class="ri-search-line"></i></a>
+            <a href="#" class="search-icon" id="search-icon">
+                <i class="ri-search-line" style="font-size: 1.5em;"></i>
+            </a>
         </div>
     </div>
     <div class="card filter-card my-4" style="width: 100%; max-width: 300px; position: absolute; left: 0; top: 100px;">
