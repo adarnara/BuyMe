@@ -264,4 +264,6 @@ section img#mountains_front{
     right: 0;
 }
 
-
+#auction-cards-container {
+    margin-top: 25px;
+}
