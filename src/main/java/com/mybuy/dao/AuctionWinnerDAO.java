@@ -9,8 +9,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AuctionWinnerDAO implements IAuctionWinnerDAO {
     @Override
@@ -97,6 +95,23 @@ public class AuctionWinnerDAO implements IAuctionWinnerDAO {
 
             pstmt.setInt(1, auctionWinner.getWinningBid().getUserId());
             pstmt.setInt(2, auctionWinner.getAuction().getAuctionId());
+
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating auction: " + e.getMessage());
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateEndedAuctionNoWinner(Auction auction) {
+        String sql = "UPDATE Auction SET auction_status = 'completed' WHERE Auction_ID = ?;";
+
+        try (Connection conn = ApplicationDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, auction.getAuctionId());
 
             int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0;
