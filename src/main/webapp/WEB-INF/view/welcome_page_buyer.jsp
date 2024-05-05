@@ -358,8 +358,8 @@
                 'category': 'Category_name',
                 'item-name': 'Item_name',
                 'brand': 'Item_brand',
-                'color': 'Color_variants',
-                'status': 'Auction_status'
+                'color': 'color_variants',
+                'status': 'auction_status'
             };
 
             // Map the selected values to their corresponding keys
