@@ -474,8 +474,6 @@
                         return;
                     }
 
-                    console.log(details);
-
                     // Generate HTML for the auction card with inline styling and grid placement using '+' for concatenation
                     const cardHtml =
                         '<div class="col-md-4 mb-4">' +
