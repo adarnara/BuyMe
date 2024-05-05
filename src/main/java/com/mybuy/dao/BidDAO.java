@@ -133,6 +133,7 @@ public class BidDAO implements IBidDAO {
             String sqlInsert = "INSERT INTO Bid (User_Id, Auction_ID, Bid_Amount, Bid_Date, Bid_Time) VALUES (?, ?, ?, CURRENT_DATE, CURRENT_TIME)";
             pstmt = conn.prepareStatement(sqlInsert);
             pstmt.setInt(1, bid.getUserId());
+            System.out.println(bid.getUserId());
             pstmt.setInt(2, bid.getAuctionId());
             pstmt.setDouble(3, bid.getBidAmount());
             int result = pstmt.executeUpdate();

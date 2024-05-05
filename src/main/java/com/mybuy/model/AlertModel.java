@@ -3,6 +3,8 @@ package com.mybuy.model;
 import com.mybuy.dao.AlertDAO;
 import com.mybuy.dao.IAlertDAO;
 
+import java.util.List;
+
 public class AlertModel {
     private IAlertDAO alertDAO;
     private LoginModel loginModel;
@@ -40,5 +42,12 @@ public class AlertModel {
         }
 
         return alert;
+    }
+
+    public List<Alert> getBidAlertsForUser(int userId) {
+        return alertDAO.getBidAlertsForUser(userId);
+    }
+    public void postBidAlert(int auctionId, String message, int userId) {
+        alertDAO.postBidAlert(auctionId, message, userId);
     }
 }

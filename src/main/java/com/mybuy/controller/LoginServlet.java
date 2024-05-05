@@ -75,6 +75,8 @@ public class LoginServlet extends HttpServlet {
         }
         else {
             request.getSession().setAttribute("username", authenticatedUser.getUsername());
+            System.out.println("BAHHHHH: " + authenticatedUser.getUserID());
+            request.getSession().setAttribute("userId", Integer.parseInt(authenticatedUser.getUserID()));
             switch(authenticatedUser.getUserType()) {
             case BUYER:
                 System.out.println("onward to Buyer page!");

@@ -1,5 +1,6 @@
 package com.mybuy.controller;
 
+import com.mybuy.model.AlertModel;
 import com.mybuy.model.BidModel;
 import com.mybuy.model.Bid;
 import com.mybuy.model.LoginModel;
@@ -15,11 +16,13 @@ public class PlaceBidServlet extends HttpServlet {
 
     private BidModel bidModel;
     private LoginModel loginModel;
+    private AlertModel alertModel;
 
     @Override
     public void init() {
         bidModel = new BidModel();
         loginModel = new LoginModel();
+        alertModel = new AlertModel();
     }
 
     @Override
@@ -31,6 +34,7 @@ public class PlaceBidServlet extends HttpServlet {
 
             Bid bid = new Bid(userId, auctionId, bidAmount);
             if(bidModel.placeBid(bid)) {
+                alertModel.postBidAlert(auctionId, "A higher bid has been placed on Auction ID " + auctionId + ".", userId);
                 response.sendRedirect(request.getContextPath() + "/auction/" + auctionId);
             }
         } catch (NumberFormatException e) {
