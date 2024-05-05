@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS Auction (
                                        Bid_Increment DOUBLE,
                                        Initial_Price DOUBLE,
                                        Minimum DOUBLE,
-                                       Winner VARCHAR(50),
+                                       Winner INT,
     auction_status ENUM ('active',
                          'completed',
                          'cancelled') NOT NULL DEFAULT 'active',
