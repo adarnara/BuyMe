@@ -131,7 +131,7 @@
     </div>
 
     <div class="past-auctions">
-        <h2 id="past-auctions-header">Past Auctions</h2>
+        <h2 id="past-auctions-header"><%= userName %>'s Past Auctions</h2>
 
         <!-- Auction cards -->
         <% NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(); %>
@@ -152,6 +152,11 @@
                                 <p class="card-text">Item: <%= auction.getItem().getColor()%> <%= auction.getItem().getBrand()%> <%= auction.getItem().getName()%></p>
                                 <% if(auction.getStatus().equals("completed")) { %>
                                     <p class="card-text">Final price: <%= currencyFormat.format(auction.getCurrentPrice()) %></p>
+                                    <% if(auction.getWinner() != 0) {%>
+                                        <p class="card-text">Winner: <%= auction.getWinnerUsername() %></p>
+                                    <% } else {%>
+                                        <p class="card-text">No winner</p>
+                                    <% }%>
                                 <% } else { %>
                                     <p class="card-text">Current price: <%=currencyFormat.format(auction.getCurrentPrice())%></p>
                                 <% } %>

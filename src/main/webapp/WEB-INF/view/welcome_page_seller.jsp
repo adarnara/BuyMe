@@ -165,7 +165,11 @@
             </a>
             <p class="card-text">Item: <%= auction.getItem().getColor()%> <%= auction.getItem().getBrand()%> <%=auction.getItem().getName()%></p>
             <p class="card-text">Final price: <%= currencyFormat.format(auction.getCurrentPrice()) %></p>
-            <p class="card-text">Winner: <%= auction.getWinnerUsername() %></p>
+            <% if(auction.getWinner() != 0) {%>
+              <p class="card-text">Winner: <%= auction.getWinnerUsername() %></p>
+            <% } else {%>
+              <p class="card-text">No winner</p>
+            <% }%>
             <p class="card-text">Closing Date: <%= dateFormat.format(auction.getAuctionClosingDate()) %></p>
             <p class="card-text">Closing Time: <%= timeFormat.format(auction.getAuctionClosingTime()) %> </p>
           </div>
