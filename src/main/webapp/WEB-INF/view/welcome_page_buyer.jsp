@@ -34,6 +34,7 @@
     </div>
     <ul>
         <li><a href="#" class="active">Home</a></li>
+        <li><a href="#" onclick="document.getElementById('item-alerts-form').submit(); return false;">Wish to Set Item Alerts?</a></li>
         <li><a href="#" onclick="document.getElementById('contact-form').submit(); return false;">Contact</a></li>
         <li><a href="#" onclick="document.getElementById('logout-form').submit(); return false;">Logout</a></li>
     </ul>
@@ -42,6 +43,8 @@
     <input type="hidden" name="logout" value="true">
 </form>
 <form id="contact-form" action="${pageContext.request.contextPath}/contactQuestions" method="post" style="display: none;"></form>
+<form id="item-alerts-form" action="${pageContext.request.contextPath}/itemAlerts" method="post" style="display: none;"></form>
+
 
 <section>
     <img src="${pageContext.request.contextPath}/Images/stars.png" id="stars">

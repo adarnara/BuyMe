@@ -2,6 +2,7 @@ package com.mybuy.dao;
 
 import com.mybuy.model.Alert;
 import com.mybuy.model.Auction;
+import com.mybuy.model.Item;
 import com.mybuy.utils.ApplicationDB;
 
 import java.sql.*;
@@ -211,5 +212,80 @@ public class AlertDAO implements IAlertDAO {
         }
         return alerts;
     }
+
+    @Override
+    public void updateAlertsForNewAuction(Auction auction) {
+        try (Connection conn = ApplicationDB.getConnection()) {
+            String sql = "UPDATE Alerts SET Message = ?, Status = 'Unread' " +
+                    "WHERE Alert_ID IN (" +
+                    "SELECT Alert_ID FROM (" +
+                    "SELECT a.Alert_ID FROM Alerts a " +
+                    "WHERE a.Status = 'Pending' AND (" +
+                    "(a.Item_Name IS NOT NULL AND LEVENSHTEIN_RATIO(a.Item_Name, ?) >= 20) OR " +
+                    "(a.Item_Brand IS NOT NULL AND LEVENSHTEIN_RATIO(a.Item_Brand, ?) >= 20) OR " +
+                    "(a.Category_Name IS NOT NULL AND LEVENSHTEIN_RATIO(a.Category_Name, ?) >= 20) OR " +
+                    "(a.Color IS NOT NULL AND LEVENSHTEIN_RATIO(a.Color, ?) >= 20)" +
+                    ")) as subquery)";
+
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                Item item = auction.getItem(); // Ensure item is properly initialized and not null
+                String categoryName = getCategoryNameById(item.getCategoryId(), conn);
+                String message = constructAlertMessage(item, categoryName);
+
+                // Setting parameters for the prepared statement
+                pstmt.setString(1, message);
+                pstmt.setString(2, item.getName());
+                pstmt.setString(3, item.getBrand());
+                pstmt.setString(4, categoryName);
+                pstmt.setString(5, item.getColor());
+
+                int updatedRows = pstmt.executeUpdate();
+                System.out.println("Updated " + updatedRows + " alerts.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error updating alerts for new auction: " + e.getMessage());
+        }
+    }
+
+    private String constructAlertMessage(Item item, String categoryName) {
+        StringBuilder message = new StringBuilder("The requested ");
+        boolean previousAttribute = false;
+
+        if (item.getName() != null && !item.getName().isEmpty()) {
+            message.append("item '").append(item.getName()).append("'");
+            previousAttribute = true;
+        }
+        if (item.getBrand() != null && !item.getBrand().isEmpty()) {
+            if (previousAttribute) message.append(" and");
+            message.append(" brand '").append(item.getBrand()).append("'");
+            previousAttribute = true;
+        }
+        if (categoryName != null && !categoryName.equals("N/A")) {
+            if (previousAttribute) message.append(" and");
+            message.append(" category '").append(categoryName).append("'");
+            previousAttribute = true;
+        }
+        if (item.getColor() != null && !item.getColor().isEmpty()) {
+            if (previousAttribute) message.append(" and");
+            message.append(" color '").append(item.getColor()).append("'");
+        }
+        message.append(" has been posted!");
+        return message.toString();
+    }
+
+    private String getCategoryNameById(int categoryId, Connection conn) throws SQLException {
+        String sql = "SELECT Category_Name FROM Category WHERE Category_ID = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, categoryId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("Category_Name");
+                }
+            }
+        }
+        return "N/A";
+    }
+
+
 
 }
