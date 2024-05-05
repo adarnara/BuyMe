@@ -184,6 +184,29 @@
     var xhr = new XMLHttpRequest();
     xhr.open('GET', "${pageContext.request.contextPath}" + '/auctionWinner', true);
     xhr.send();
+
+    const checkForAlert = () => {
+      fetch(`${pageContext.request.contextPath}/alert`)
+              .then(response => response.json())
+              .then(data => {
+                if (data && data.alertID) {
+                  const message = data.message;
+
+                  showAlert(message);
+                }
+              })
+              .catch(error => {
+                console.error('Error fetching alert:', error);
+              });
+    }
+
+    checkForAlert();
+
+    setInterval(checkForAlert, 30000); // 30000 milliseconds = 30 seconds
+
+    const showAlert = (message) => {
+      alert(message);
+    }
   })
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

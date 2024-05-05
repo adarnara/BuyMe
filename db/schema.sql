@@ -125,8 +125,6 @@ CREATE TABLE IF NOT EXISTS Alerts (
     Alert_ID INT AUTO_INCREMENT,
     User_ID INT NOT NULL,
     Message VARCHAR(255) NOT NULL,
-    Alert_Type ENUM ('Auction Winner', 'Auction Closed') NOT NULL,
-    Created_At TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     Status ENUM ('Unread', 'Read') NOT NULL DEFAULT 'Unread',
     Auction_ID INT,
     PRIMARY KEY (Alert_ID, User_ID),

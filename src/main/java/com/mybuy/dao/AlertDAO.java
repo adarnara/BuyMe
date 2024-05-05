@@ -9,15 +9,14 @@ import java.sql.*;
 public class AlertDAO implements IAlertDAO {
     @Override
     public void postAuctionWinnerAlert(int userID, String message, int auctionID) {
-        String sql = "INSERT INTO Alerts (User_ID, Message, Alert_Type, Auction_ID) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Alerts (User_ID, Message,Auction_ID) VALUES (?, ?, ?)";
 
         try (Connection conn = ApplicationDB.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setInt(1, userID);
             pstmt.setString(2, message);
-            pstmt.setString(3, "Auction Winner");
-            pstmt.setInt(4, auctionID);
+            pstmt.setInt(3, auctionID);
 
             pstmt.executeUpdate();
         }
@@ -25,6 +24,24 @@ public class AlertDAO implements IAlertDAO {
             System.out.println("Error adding alert: " + e.getMessage());
         }
     }
+
+//    @Override
+//    public void postAuctionCloseAlert(int userID, String message, Auction auction) {
+//        String sql = "INSERT INTO Alerts (User_ID, Message, Auction_ID) VALUES (?, ?, ?)";
+//
+//        try (Connection conn = ApplicationDB.getConnection();
+//             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+//
+//            pstmt.setInt(1, userID);
+//            pstmt.setString(2, message);
+//            pstmt.setInt(3, auction.getAuctionId());
+//
+//            pstmt.executeUpdate();
+//        }
+//        catch (SQLException e) {
+//            System.out.println("Error adding alert: " + e.getMessage());
+//        }
+//    }
 
     @Override
     public Alert getNewAlert(int userID) {
@@ -43,8 +60,6 @@ public class AlertDAO implements IAlertDAO {
                     alert = new Alert(
                             rs.getInt("Alert_ID"),
                             rs.getString("Message"),
-                            rs.getString("Alert_Type"),
-                            rs.getTimestamp("Created_At"),
                             rs.getInt("Auction_ID")
                     );
                 }

@@ -1,6 +1,7 @@
 package com.mybuy.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.mybuy.model.*;
 
 import javax.servlet.RequestDispatcher;
@@ -29,7 +30,11 @@ public class AlertServlet extends HttpServlet {
         int userId = loginModel.getUserId((String) request.getSession().getAttribute("username"));
         Alert alert = alertModel.newAlertById(userId);
 
-        String jsonAlert = gson.toJson(alert);
+        JsonObject json = new JsonObject();
+        String jsonAlert = json.toString();
+        if(alert != null) {
+            jsonAlert = gson.toJson(alert);
+        }
 
         // Send the alert message as JSON response
         response.setContentType("application/json");
