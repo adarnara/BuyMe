@@ -38,7 +38,7 @@ public class LoginDAO implements ILoginDAO {
                     String username = rs.getString("username");
                     String password = rs.getString("password");
                     String salt = rs.getString("salt");
-                    String userID = rs.getString("User_Id");  // Make sure this column name matches your table schema
+                    String userID = rs.getString("id");  // Make sure this column name matches your table schema
                     Login login = new Login(usernameOrEmail, username, password, salt);
                     login.setUserID(userID);
                     if (tableName.equals("EndUser")) {
@@ -66,18 +66,22 @@ public class LoginDAO implements ILoginDAO {
         String loginColumn;
         String usernameColumn;
         String userTypeColumn;
+        String idColumn;
 
         if ("Admin".equals(tableName)) {
+        	idColumn = "Admin_ID";
             loginColumn = "admin_login";
             usernameColumn = "admin_login";
             userTypeColumn = " ";
         }
         else if ("CustomerRep".equals(tableName)) {
+            idColumn = "CustomerRep_ID";
             loginColumn = "CustomerRep_login";
             usernameColumn = "CustomerRep_ID, CustomerRep_login";
             userTypeColumn = " ";
         }
         else if ("EndUser".equals(tableName)) {
+        	idColumn = "User_ID";
             loginColumn = "endUser_login";
             usernameColumn = "endUser_login";
             userTypeColumn = ", user_type ";
@@ -86,7 +90,7 @@ public class LoginDAO implements ILoginDAO {
             throw new IllegalArgumentException("Invalid table name");
         }
         
-        String sqlQueryStmt = "SELECT User_Id, password, salt, " + usernameColumn + " AS username" + userTypeColumn + "FROM " + tableName + " WHERE " + loginColumn + " = ? OR email_address = ?";
+        String sqlQueryStmt = "SELECT " + idColumn + " AS id, password, salt, " + usernameColumn + " AS username" + userTypeColumn + "FROM " + tableName + " WHERE " + loginColumn + " = ? OR email_address = ?";
         return sqlQueryStmt;
     }
 
