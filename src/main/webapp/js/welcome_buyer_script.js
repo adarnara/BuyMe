@@ -32,11 +32,36 @@ const checkForBidAlerts = () => {
         .catch(error => console.error('Error fetching bid alerts:', error));
 };
 
+const checkForExceedAutoBidAlerts = () => {
+    if (userId === null) {
+        console.error("UserId is null");
+        return;
+    }
+    const url = `${contextPath}/autoBidAlert?userId=${userId}`;
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.length > 0) {
+                data.forEach(alert => {
+                    if (alert && alert.message) {
+                        showAlert(alert.message);
+                    }
+                });
+            }
+        })
+        .catch(error => console.error('Error fetching exceed auto-bid alerts:', error));
+};
 
-checkForBidAlerts();
+
+
 checkForAlert();
+checkForExceedAutoBidAlerts();
+
+
 setInterval(checkForAlert, 30000);
-setInterval(checkForBidAlerts, 30000);
+setInterval(checkForExceedAutoBidAlerts, 10000);
+
+
 
 const showAlert = (message) => {
     alert(message);

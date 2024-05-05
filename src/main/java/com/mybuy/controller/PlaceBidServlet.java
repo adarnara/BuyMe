@@ -35,6 +35,7 @@ public class PlaceBidServlet extends HttpServlet {
             Bid bid = new Bid(userId, auctionId, bidAmount);
             if(bidModel.placeBid(bid)) {
                 alertModel.postBidAlert(auctionId, "A higher bid has been placed on Auction ID " + auctionId + ".", userId);
+                alertModel.handleAutoBidExceedAlert(auctionId, bidAmount,userId);
                 response.sendRedirect(request.getContextPath() + "/auction/" + auctionId);
             }
         } catch (NumberFormatException e) {

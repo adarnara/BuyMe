@@ -10,11 +10,13 @@ public class AutoBidDAO implements IAutoBidDAO {
     public boolean placeAutoBid(AutoBid autoBid, double bidAmount) throws SQLException {
         try (Connection conn = ApplicationDB.getConnection()) {
             conn.setAutoCommit(false);
-            String sql = "INSERT INTO Bid (User_Id, Auction_ID, Bid_Amount, Bid_Date, Bid_time) VALUES (?, ?, ?, CURDATE(), CURTIME())";
+            String sql = "INSERT INTO Bid (User_Id, Auction_ID, Bid_Amount, MaxBidAmount, Bid_Date, Bid_Time) "
+                    + "VALUES (?, ?, ?, ?, CURDATE(), CURTIME())";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setInt(1, autoBid.getUserId());
                 pstmt.setInt(2, autoBid.getAuctionId());
                 pstmt.setDouble(3, bidAmount);
+                pstmt.setDouble(4, autoBid.getMaxAutoBidAmount());
 
                 int result = pstmt.executeUpdate();
                 if (result > 0) {
@@ -29,6 +31,7 @@ public class AutoBidDAO implements IAutoBidDAO {
             throw new SQLException("Failed to place auto bid: " + e.getMessage(), e);
         }
     }
+
 
     public double[] fetchAuctionDetails(int auctionId) throws SQLException {
         try (Connection conn = ApplicationDB.getConnection();
