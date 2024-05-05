@@ -1,5 +1,6 @@
 package com.mybuy.model;
 
+import com.mybuy.dao.AlertDAO;
 import com.mybuy.dao.AutoBidDAO;
 import com.mybuy.dao.IAutoBidDAO;
 import com.mybuy.utils.AutoBidScheduler;
@@ -10,11 +11,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class AutoBidModel {
     private IAutoBidDAO autoBidDAO;
+    private AlertDAO alertDAO;
     private AutoBidScheduler scheduler;
     private ConcurrentHashMap<Integer, Future<?>> scheduledTasks;
 
     public AutoBidModel() {
         this.autoBidDAO = new AutoBidDAO();
+        this.alertDAO = new AlertDAO();
         this.scheduler = new AutoBidScheduler();
         this.scheduledTasks = new ConcurrentHashMap<>();
     }
@@ -33,6 +36,9 @@ public class AutoBidModel {
                         }
                         autoBidDAO.placeAutoBid(autoBid, nextBid);
                         autoBidDAO.updateCurrentPrice(autoBid.getAuctionId(), nextBid);
+
+                        alertDAO.postExceedAutoBidAlert(autoBid.getAuctionId(), nextBid, autoBid.getUserId());
+
                     }
                 } catch (SQLException e) {
                     System.err.println("Error in auto-bidding: " + e.getMessage());

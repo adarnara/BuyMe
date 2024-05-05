@@ -50,4 +50,12 @@ public class AlertModel {
     public void postBidAlert(int auctionId, String message, int userId) {
         alertDAO.postBidAlert(auctionId, message, userId);
     }
+
+    public void handleAutoBidExceedAlert(int auctionId, double bidAmount, int userId) {
+        alertDAO.postExceedAutoBidAlert(auctionId, bidAmount, userId);
+    }
+
+    public List<Alert> getExceedAutoBidAlertsForUser(int userId) {
+        return alertDAO.getExceedAutoBidAlertsForUser(userId);
+    }
 }

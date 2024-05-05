@@ -12,4 +12,6 @@ public interface IAlertDAO {
     void closeAlert(Alert alert);
     void postBidAlert(int auctionId, String message, int userIdWhoPlacedBid);
     List<Alert> getBidAlertsForUser(int userId);
+    void postExceedAutoBidAlert(int auctionId, double bidAmount, int excludingUserId);
+    List<Alert> getExceedAutoBidAlertsForUser(int userId);
 }

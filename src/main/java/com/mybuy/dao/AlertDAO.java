@@ -154,4 +154,62 @@ public class AlertDAO implements IAlertDAO {
             System.out.println("Error posting bid alert: " + e.getMessage());
         }
     }
+
+    @Override
+    public void postExceedAutoBidAlert(int auctionId, double bidAmount, int excludingUserId) {
+        String sql = "INSERT INTO Alerts (User_ID, Message, Auction_ID, Status) "
+                + "SELECT DISTINCT b.User_Id, "
+                + "CONCAT('Your auto-bid limit of ', CAST(b.MaxBidAmount AS CHAR), ' has been exceeded by a new bid of ', CAST(? AS CHAR), ' on auction #', CAST(b.Auction_ID AS CHAR)), "
+                + "b.Auction_ID, 'Unread' "
+                + "FROM Bid b "
+                + "WHERE b.Auction_ID = ? "
+                + "AND b.MaxBidAmount IS NOT NULL "
+                + "AND b.MaxBidAmount < ? "
+                + "AND b.User_Id != ?";
+
+        try (Connection conn = ApplicationDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setDouble(1, bidAmount);
+            pstmt.setInt(2, auctionId);
+            pstmt.setDouble(3, bidAmount);
+            pstmt.setInt(4, excludingUserId);
+
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("Alerts posted successfully for users whose auto-bid limits were exceeded.");
+            } else {
+                System.out.println("No alerts needed, no auto-bid limits were exceeded.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error posting auto-bid exceed alert: " + e.getMessage());
+        }
+    }
+
+
+    @Override
+    public List<Alert> getExceedAutoBidAlertsForUser(int userId) {
+        List<Alert> alerts = new ArrayList<>();
+        String sql = "SELECT Alert_ID, User_ID, Message, Auction_ID, Status "
+                + "FROM Alerts "
+                + "WHERE User_ID = ? AND Status = 'Unread' AND Message LIKE 'Your auto-bid limit%';";
+
+        try (Connection conn = ApplicationDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Alert alert = new Alert(
+                        rs.getInt("Alert_ID"),
+                        rs.getString("Message"),
+                        rs.getString("Status"),
+                        rs.getInt("Auction_ID")
+                );
+                alerts.add(alert);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching exceed auto-bid alerts for user: " + e.getMessage());
+        }
+        return alerts;
+    }
+
 }

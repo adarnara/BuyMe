@@ -121,6 +121,7 @@ CREATE TABLE IF NOT EXISTS Bid (
                                    Bid_Date DATE DEFAULT CURRENT_DATE,
                                    Bid_Time TIME DEFAULT CURRENT_TIME,
                                    Bid_Amount DOUBLE,
+                                   MaxBidAmount DOUBLE DEFAULT NULL,
                                    Auction_ID INT NOT NULL,
                                    User_Id INT NOT NULL,
                                    PRIMARY KEY(Bid_ID),
