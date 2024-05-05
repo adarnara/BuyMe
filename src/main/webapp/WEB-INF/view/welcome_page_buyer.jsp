@@ -67,7 +67,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4 mb-4">
-                <div class="card filter-card my-4">
+                <div class="card filter-card my-4" style="width: 100%; max-width: 300px; right: 60px">
                     <div class="card-body">
                         <h4 class="card-title text-center" style="color: #5c007a;">Filters</h4>
                         <form>
@@ -443,13 +443,11 @@
 // Event listener for price range buttons
         document.querySelectorAll('.price-btn').forEach(button => {
             button.addEventListener('click', function() {
-                // Remove 'active' class from all buttons
+                console.log('Button clicked'); // Debugging output
                 document.querySelectorAll('.price-btn').forEach(btn => {
                     btn.classList.remove('active');
                 });
-                // Add 'active' class to clicked button
                 this.classList.add('active');
-
             });
         });
 
