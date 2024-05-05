@@ -11,4 +11,6 @@ public interface IAuctionWinnerDAO {
     Bid getHighestBid(int auctionId);
     boolean updateEndedAuction(AuctionWinner auctionWinner);
     int isUserWinner(int userId);
+
+    boolean updateEndedAuctionNoWinner(Auction auction);
 }

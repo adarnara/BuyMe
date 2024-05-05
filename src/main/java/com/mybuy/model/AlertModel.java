@@ -23,7 +23,14 @@ public class AlertModel {
     }
 
     public void auctionCloseAlert(Auction auction) {
+        int userID = auction.getUserId();
+        String message = "Your action #" + auction.getAuctionId() + " has closed. There was no winner.";
 
+        if(auction.getWinnerUsername() != null) {
+            message = "Your action #" + auction.getAuctionId() + " has closed. The winner was " + auction.getWinnerUsername() + "!";
+        }
+
+        alertDAO.postAuctionCloseAlert(userID, message, auction);
     }
 
     public Alert newAlertById(int userId) {

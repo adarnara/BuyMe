@@ -9,10 +9,9 @@ public class Alert {
     private String status;
     private int auctionId;
 
-    public Alert(int alertID, String message, int auctionId) {
+    public Alert(int alertID, String message) {
         this.alertID = alertID;
         this.message = message;
-        this.auctionId = auctionId;
     }
 
     public int getAlertID() {

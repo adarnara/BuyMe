@@ -23,6 +23,7 @@ public class AuctionWinnerModel {
         Bid bid = auctionWinnerDAO.getHighestBid(auctionWinnerDAO.getEndedAuction().getAuctionId());
 
         if(bid == null || auction.getMinimum() > bid.getBidAmount()) {
+            auctionWinnerDAO.updateEndedAuctionNoWinner(auction);
             return null;
         }
 

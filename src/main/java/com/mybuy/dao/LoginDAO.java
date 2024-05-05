@@ -127,4 +127,25 @@ public class LoginDAO implements ILoginDAO {
         }
         return -1;
     }
+
+    @Override
+    public String getUsername(int userId) {
+        String sql = "SELECT endUser_login FROM EndUser WHERE User_Id = ?";
+
+        try (Connection conn = ApplicationDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, userId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("endUser_login");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching end user by username: " + e.getMessage());
+        }
+        return "";
+    }
+
+
 }

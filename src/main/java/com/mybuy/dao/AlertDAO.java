@@ -25,23 +25,23 @@ public class AlertDAO implements IAlertDAO {
         }
     }
 
-//    @Override
-//    public void postAuctionCloseAlert(int userID, String message, Auction auction) {
-//        String sql = "INSERT INTO Alerts (User_ID, Message, Auction_ID) VALUES (?, ?, ?)";
-//
-//        try (Connection conn = ApplicationDB.getConnection();
-//             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-//
-//            pstmt.setInt(1, userID);
-//            pstmt.setString(2, message);
-//            pstmt.setInt(3, auction.getAuctionId());
-//
-//            pstmt.executeUpdate();
-//        }
-//        catch (SQLException e) {
-//            System.out.println("Error adding alert: " + e.getMessage());
-//        }
-//    }
+    @Override
+    public void postAuctionCloseAlert(int userID, String message, Auction auction) {
+        String sql = "INSERT INTO Alerts (User_ID, Message, Auction_ID) VALUES (?, ?, ?)";
+
+        try (Connection conn = ApplicationDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            pstmt.setInt(1, userID);
+            pstmt.setString(2, message);
+            pstmt.setInt(3, auction.getAuctionId());
+
+            pstmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            System.out.println("Error adding alert: " + e.getMessage());
+        }
+    }
 
     @Override
     public Alert getNewAlert(int userID) {
@@ -59,8 +59,7 @@ public class AlertDAO implements IAlertDAO {
                 if (rs.next()) {
                     alert = new Alert(
                             rs.getInt("Alert_ID"),
-                            rs.getString("Message"),
-                            rs.getInt("Auction_ID")
+                            rs.getString("Message")
                     );
                 }
             }
