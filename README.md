@@ -20,6 +20,9 @@ Usage of MVC architecture to provide stable architecture for code readability:
 - Model: contains the logic for DAO layer
 - DAO: JDBC SQL query to database, has a interface to encapsulate/abstract logic
 - SHA-256 Hashing Encryption Algorithm for hashing passwords into MySQL Database.
+- Levenshtien Distance Algorithm for Fuzzy Search: https://www.goplardb.com/post/dedupe-mysql-data-using-levenshtein-distance 
+- FULLTEXT Indexes for NLP/Query Expansion/N-Gram tokenizers for better fuzzy search: https://dev.mysql.com/doc/refman/8.0/en/fulltext-natural-language.html
+- REGEXP in MySQL for Regular Expression usage since more powerful the LIKE
 
 ## How to setup/run this:
 1. First configure **_config.properties_** located in *src/main/resources/* with your localhost usernmae and password for your database connection:
@@ -58,43 +61,148 @@ and this should get you to the entry point of the website which is the login/reg
 *Note*: once the *.war* file is exploded, you should see a tree structure similar to this:
 ```shell
 .
+├── BuyMe.war
 ├── Images
-│   └── 1.jpg
+│   ├── 1.jpg
+│   ├── moon.png
+│   ├── mountains_behind.png
+│   ├── mountains_front.png
+│   └── stars.png
 ├── META-INF
-│   ├── MANIFEST.MF
-│   └── war-tracker
+│   └── MANIFEST.MF
 ├── WEB-INF
 │   ├── classes
 │   │   ├── com
 │   │   │   └── mybuy
 │   │   │       ├── controller
+│   │   │       │   ├── AlertServlet.class
+│   │   │       │   ├── AskQuestionServlet.class
+│   │   │       │   ├── AuctionServlet.class
+│   │   │       │   ├── AuctionWinnerServlet.class
+│   │   │       │   ├── AutoBidAlertServlet.class
+│   │   │       │   ├── AutoBidServlet.class
+│   │   │       │   ├── AutoCompleteServlet.class
+│   │   │       │   ├── BidAlertServlet.class
+│   │   │       │   ├── ContactQuestionsServlet.class
+│   │   │       │   ├── CustomerRepServlet.class
+│   │   │       │   ├── DeleteServlet.class
+│   │   │       │   ├── FilterOptionsServlet.class
+│   │   │       │   ├── ItemAlertServlet.class
 │   │   │       │   ├── LoginServlet.class
 │   │   │       │   ├── LogoutServlet.class
-│   │   │       │   └── RegisterServlet.class
+│   │   │       │   ├── PlaceBidServlet.class
+│   │   │       │   ├── QuestionResponseServlet.class
+│   │   │       │   ├── RandomItemServlet.class
+│   │   │       │   ├── RedirectItemAlertsServlet.class
+│   │   │       │   ├── RegisterServlet.class
+│   │   │       │   ├── SalesReportServlet.class
+│   │   │       │   ├── SearchQuestionAndAnswerServlet.class
+│   │   │       │   ├── SearchServlet.class
+│   │   │       │   └── UpdateUserServlet.class
 │   │   │       ├── dao
+│   │   │       │   ├── AlertDAO.class
+│   │   │       │   ├── AskQuestionDAO.class
+│   │   │       │   ├── AuctionDAO.class
+│   │   │       │   ├── AuctionWinnerDAO.class
+│   │   │       │   ├── AutoBidDAO.class
+│   │   │       │   ├── BidDAO.class
+│   │   │       │   ├── DeleteDAO.class
+│   │   │       │   ├── FilterDAO.class
+│   │   │       │   ├── IAlertDAO.class
+│   │   │       │   ├── IAskQuestionDAO.class
+│   │   │       │   ├── IAuctionDAO.class
+│   │   │       │   ├── IAuctionWinnerDAO.class
+│   │   │       │   ├── IAutoBidDAO.class
+│   │   │       │   ├── IBidDAO.class
+│   │   │       │   ├── IDeleteDAO.class
+│   │   │       │   ├── IFilterDAO.class
+│   │   │       │   ├── IItemAlertDAO.class
+│   │   │       │   ├── IItemDAO.class
 │   │   │       │   ├── ILoginDAO.class
+│   │   │       │   ├── IQuestionResponseDAO.class
+│   │   │       │   ├── IRandomItemDAO.class
 │   │   │       │   ├── IRegisterDAO.class
+│   │   │       │   ├── ISalesReportDAO.class
+│   │   │       │   ├── ISearchDAO.class
+│   │   │       │   ├── ISearchQuestionAndAnswerDAO.class
+│   │   │       │   ├── IUpdateUserDAO.class
+│   │   │       │   ├── ItemAlertDAO.class
+│   │   │       │   ├── ItemDAO.class
 │   │   │       │   ├── LoginDAO.class
-│   │   │       │   └── RegisterDAO.class
+│   │   │       │   ├── QuestionResponseDAO.class
+│   │   │       │   ├── RandomItemDAO.class
+│   │   │       │   ├── RegisterDAO.class
+│   │   │       │   ├── SalesReportDAO.class
+│   │   │       │   ├── SearchDAO.class
+│   │   │       │   ├── SearchQuestionAndAnswerDAO.class
+│   │   │       │   └── UpdateUserDAO.class
 │   │   │       ├── model
+│   │   │       │   ├── Alert.class
+│   │   │       │   ├── AlertModel.class
+│   │   │       │   ├── AskQuestionModel.class
+│   │   │       │   ├── Auction.class
+│   │   │       │   ├── AuctionModel.class
+│   │   │       │   ├── AuctionWinner.class
+│   │   │       │   ├── AuctionWinnerModel.class
+│   │   │       │   ├── AutoBid.class
+│   │   │       │   ├── AutoBidModel.class
+│   │   │       │   ├── Bid.class
+│   │   │       │   ├── BidModel.class
+│   │   │       │   ├── Delete.class
+│   │   │       │   ├── DeleteModel.class
+│   │   │       │   ├── FilterModel.class
+│   │   │       │   ├── FilterOption.class
+│   │   │       │   ├── Item.class
+│   │   │       │   ├── ItemAlert.class
+│   │   │       │   ├── ItemAlertModel.class
+│   │   │       │   ├── ItemModel.class
 │   │   │       │   ├── Login.class
 │   │   │       │   ├── LoginModel.class
+│   │   │       │   ├── Question.class
+│   │   │       │   ├── QuestionResponse.class
+│   │   │       │   ├── QuestionResponseModel.class
+│   │   │       │   ├── RandomItemModel.class
 │   │   │       │   ├── Register.class
-│   │   │       │   └── RegisterModel.class
+│   │   │       │   ├── RegisterModel.class
+│   │   │       │   ├── SalesReportModel.class
+│   │   │       │   ├── Search.class
+│   │   │       │   ├── SearchModel.class
+│   │   │       │   ├── SearchQuestionAndAnswer.class
+│   │   │       │   ├── SearchQuestionAndAnswerModel.class
+│   │   │       │   ├── TopThings.class
+│   │   │       │   ├── UpdateUser.class
+│   │   │       │   ├── UpdateUserModel.class
+│   │   │       │   └── UserType.class
 │   │   │       └── utils
+│   │   │           ├── AlertScheduler.class
 │   │   │           ├── ApplicationDB.class
+│   │   │           ├── AutoBidScheduler.class
 │   │   │           └── HashingUtility.class
 │   │   └── config.properties
 │   ├── lib
+│   │   ├── gson-2.10.1.jar
 │   │   └── mysql-connector-java-8.0.23.jar
 │   ├── view
-│   │   └── welcome_page_buyer.jsp
+│   │   ├── admin.jsp
+│   │   ├── auction_page.jsp
+│   │   ├── contact.jsp
+│   │   ├── customerRep.jsp
+│   │   ├── item_alerts.jsp
+│   │   ├── welcome_page_buyer.jsp
+│   │   └── welcome_page_seller.jsp
 │   └── web.xml
 ├── index.jsp
+├── js
+│   ├── auction_page_script.js
+│   ├── welcome_buyer_script.js
+│   └── welcome_script.js
 └── stylesheets
-    └── loginAndRegisterStyle.css
+    ├── auction_page.css
+    ├── loginAndRegisterStyle.css
+    ├── welcome_style_buyer.css
+    └── welcome_style_seller.css
 
-14 directories, 22 files
+15 directories, 126 files
 ```
 ## What Website does (so far):
 1. Once you've deployed the *.war* file, you will be greeted with the following display:
@@ -132,5 +240,6 @@ VALUES ("One_Admin", "onlyadmin@gmail.com", "e1d0253d7e5ce8c582aa07c01e5cdf6bbd4
 ```
 This password is obviously hashed using the algorithms expressed prior. The code should use the Salt stored in the database to decrypt and verify login details!
 Due to the trigger added for Admin table, this will be the only one admin to be inserted. If you try to insert or register another admin (of course you can't register on frontend for an Admin or CustomerRep. account) it will give you database error from the database objet.
+
 
    

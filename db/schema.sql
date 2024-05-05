@@ -85,8 +85,7 @@ CREATE TABLE IF NOT EXISTS Question (
                                         CustomerRep_ID INT,
                                         User_Id INT,
                                         PRIMARY KEY (question_ID),
-    FULLTEXT (question_text,
-              answer_text),
+    FULLTEXT (question_text, answer_text),
     FOREIGN KEY (CustomerRep_ID) REFERENCES CustomerRep (CustomerRep_ID) ON UPDATE CASCADE ON DELETE SET NULL,
     FOREIGN KEY (User_Id) REFERENCES EndUser (User_Id) ON UPDATE CASCADE ON DELETE SET NULL) ENGINE = InnoDB;
 

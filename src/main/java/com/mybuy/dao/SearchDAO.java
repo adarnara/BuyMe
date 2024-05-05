@@ -229,7 +229,7 @@ public class SearchDAO implements ISearchDAO {
                     }
                     break;
                 case "color_variants":
-                    conditions.add("i.color_variants LIKE ?");
+                    conditions.add("i.color LIKE ?");
                     parameters.add("%" + value + "%");
                     break;
                 case "auction_status":
