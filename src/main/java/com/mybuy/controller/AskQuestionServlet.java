@@ -27,17 +27,18 @@ public class AskQuestionServlet extends HttpServlet {
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        String username = (String) session.getAttribute("username");
+		HttpSession session = request.getSession();
+		String username = (String) session.getAttribute("username");
 		String question = request.getParameter("question");
 		int userId = loginModel.getUserId(username);
-		
+
 		Question q = new Question(question, String.valueOf(userId));
 		askQuestionModel.askQuestion(q);
-		
-        String origin = request.getParameter("origin");
-        request.getRequestDispatcher("/WEB-INF/view/" + origin + ".jsp").forward(request, response);
+
+		String origin = request.getParameter("origin");
+		request.getRequestDispatcher("/WEB-INF/view/" + origin + ".jsp").forward(request, response);
 	}
+
 
 
 }
