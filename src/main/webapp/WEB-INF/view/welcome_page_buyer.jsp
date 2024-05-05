@@ -21,6 +21,7 @@
 <body>
 <%
     String userName = (String) session.getAttribute("username");
+
     if (userName == null) {
         response.sendRedirect("index.jsp");
         return;
@@ -179,7 +180,7 @@
 
         fetchRandomItems();
 
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         xhr.open('GET', "${pageContext.request.contextPath}" + '/auctionWinner', true);
         xhr.send();
 
@@ -511,6 +512,9 @@
     });
 </script>
 
+<script type="text/javascript">
+    var userId = '<%= session.getAttribute("userId") != null ? session.getAttribute("userId") : "null" %>';
+</script>
 <script src="${pageContext.request.contextPath}/js/welcome_buyer_script.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>

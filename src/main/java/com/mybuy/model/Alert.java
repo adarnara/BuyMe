@@ -14,6 +14,9 @@ public class Alert {
         this.message = message;
     }
 
+    public Alert(int alertId, String message, String status, int auctionId) {
+    }
+
     public int getAlertID() {
         return alertID;
     }
