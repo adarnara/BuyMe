@@ -9,4 +9,5 @@ public interface IAuctionDAO {
     List<Auction> getAuctionsByUsername(String username);
     int addAuction(Auction auction);
     List<Auction> getSimilarAuctionsByItemId(int itemId);
+    List<Auction> getBiddedOnAuctions(int userId);
 }

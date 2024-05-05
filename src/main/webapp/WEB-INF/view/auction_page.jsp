@@ -37,7 +37,11 @@
         <div class="auction-details">
             <p><span>Status:</span> <%= auction.getStatus().substring(0, 1).toUpperCase() + auction.getStatus().substring(1)%></p>
             <% if(auction.getStatus().equals("completed")) {%>
-            <p><span>Winner:</span> <%= auction.getWinnerUsername()%></p>
+            <% if(auction.getWinner() != 0) {%>
+            <p class="card-text"><span>Winner:</span> <%= auction.getWinnerUsername() %></p>
+            <% } else {%>
+            <p class="card-text"><span>No winner</span></p>
+            <% }%>
             <% } %>
             <p><span>Item:</span> ${auction.getItem().getColor()} ${auction.getItem().getBrand()} ${auction.getItem().getName()}</p>
             <p><span>Initial Price:</span> <%= currencyFormat.format(auction.getInitialPrice())%></p>

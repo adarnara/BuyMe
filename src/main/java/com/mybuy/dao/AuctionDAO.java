@@ -169,4 +169,46 @@ public class AuctionDAO implements IAuctionDAO {
         }
         return auctions;
     }
+
+    @Override
+    public List<Auction> getBiddedOnAuctions(int userId) {
+        String sql = "SELECT b.*, a.*, eu_winner.endUser_login AS winner_username\n" +
+                "FROM Bid AS b \n" +
+                "INNER JOIN Auction AS a ON a.Auction_ID = b.Auction_ID\n" +
+                "LEFT JOIN EndUser AS eu_winner ON a.Winner = eu_winner.User_Id\n" +
+                "WHERE b.User_Id = ?;";
+
+        List<Auction> auctions = new ArrayList<>();
+
+        try (Connection conn = ApplicationDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, userId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while(rs.next()) {
+                    Auction auction = new Auction(
+                            rs.getInt("Auction_ID"),
+                            rs.getDouble("Initial_Price"),
+                            rs.getDouble("Current_Price"),
+                            rs.getDate("Auction_Closing_Date"),
+                            rs.getTime("Auction_Closing_Time"),
+                            rs.getDouble("Bid_Increment"),
+                            rs.getDouble("Minimum"),
+                            rs.getInt("Winner"),
+                            rs.getInt("User_Id"),
+                            rs.getInt("Item_ID"),
+                            rs.getString("auction_status")
+                    );
+                    if(auction.getWinner() != 0) {
+                        auction.setWinnerUsername(rs.getString("winner_username"));
+                    }
+                    auctions.add(auction);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching list of bidded on auctions by username: " + e.getMessage());
+        }
+
+        return auctions;
+    }
 }

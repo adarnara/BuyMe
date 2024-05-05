@@ -40,4 +40,12 @@ public class AuctionModel {
         }
         return auctions;
     }
+
+    public List<Auction> getBiddedOnAuctions(int userId) {
+        List<Auction> auctions = auctionDAO.getBiddedOnAuctions(userId);
+        for(Auction auction : auctions) {
+            auction.setItem(itemModel.getItem(auction.getItemId()));
+        }
+        return auctions;
+    }
 }

@@ -1,6 +1,9 @@
 <%@ page import="com.mybuy.model.FilterOption" %>
 <%@ page import="com.mybuy.model.Auction" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Locale" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 
@@ -51,7 +54,7 @@
 </section>
 <div class="sec" id="sec">
     <div class="header-search-container">
-        <h2 style="color: #fff; font-family: 'Poppins', sans-serif; font-size: 3em; font-weight: bold;">Auction/Item Listings</h2>
+        <h2>Auction/Item Listings</h2>
         <div class="search-container">
             <input type="text" id="search-input" class="search-input" placeholder="Search auctions" />
             <a href="#" class="search-icon" id="search-icon">
@@ -59,67 +62,113 @@
             </a>
         </div>
     </div>
-    <div class="card filter-card my-4" style="width: 100%; max-width: 300px; position: absolute; left: 0; top: 100px;">
-        <div class="card-body">
-            <h4 class="card-title text-center" style="color: #5c007a;">Filters</h4>
-            <form>
-                <div class="form-group">
-                    <label for="category" style="color: #5c007a;">Category Name</label>
-                    <select id="category" class="form-control">
-                        <option>Choose...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="item-name" style="color: #5c007a;">Item Name</label>
-                    <select id="item-name" class="form-control">
-                        <option>Choose...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="brand" style="color: #5c007a;">Item Brand</label>
-                    <select id="brand" class="form-control">
-                        <option>Choose...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label style="color: #5c007a;">Price Range</label>
-                    <div class="btn-group" role="group" aria-label="Price Range">
-                        <button type="button" class="btn btn-outline-primary price-btn" style="background-color: #5c007a; color: #ffffff; border-color: #ffffff;" data-value="low"> 0 to 49</button>
-                        <button type="button" class="btn btn-outline-primary price-btn" style="background-color: #5c007a; color: #ffffff; border-color: #ffffff;" data-value="medium">50 to 149</button>
-                        <button type="button" class="btn btn-outline-primary price-btn" style="background-color: #5c007a; color: #ffffff; border-color: #ffffff;" data-value="high"> 150 <=  </button>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="color" style="color: #5c007a;">Color Variants</label>
-                    <select id="color" class="form-control">
-                        <option>Choose...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="status" style="color: #5c007a;">Auction Status</label>
-                    <select id="status" class="form-control">
-                        <option>Choose...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <div class="text-center">
-                        <button type="button" id="clear-filters" class="btn btn-secondary" style="background-color: #f8f9fa; border-color: #6c757d; color: #6c757d;">Clear Filters</button>
-                        <button type="button" id="apply-filters" class="btn btn-primary" style="background-color: #5c007a; border-color: #ffffff; color: #ffffff;">Apply Filters</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <div class="container">
-        <div id="auction-cards-container" class="row">
-            <!-- Dynamic auction cards will be inserted here -->
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card filter-card my-4">
+                    <div class="card-body">
+                        <h4 class="card-title text-center" style="color: #5c007a;">Filters</h4>
+                        <form>
+                            <div class="form-group">
+                                <label for="category" style="color: #5c007a;">Category Name</label>
+                                <select id="category" class="form-control">
+                                    <option>Choose...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="item-name" style="color: #5c007a;">Item Name</label>
+                                <select id="item-name" class="form-control">
+                                    <option>Choose...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="brand" style="color: #5c007a;">Item Brand</label>
+                                <select id="brand" class="form-control">
+                                    <option>Choose...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label style="color: #5c007a;">Price Range</label>
+                                <div class="btn-group" role="group" aria-label="Price Range">
+                                    <button type="button" class="btn btn-outline-primary price-btn" style="background-color: #5c007a; color: #ffffff; border-color: #ffffff;" data-value="low"> 0 to 49</button>
+                                    <button type="button" class="btn btn-outline-primary price-btn" style="background-color: #5c007a; color: #ffffff; border-color: #ffffff;" data-value="medium">50 to 149</button>
+                                    <button type="button" class="btn btn-outline-primary price-btn" style="background-color: #5c007a; color: #ffffff; border-color: #ffffff;" data-value="high"> 150 <=  </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="color" style="color: #5c007a;">Color Variants</label>
+                                <select id="color" class="form-control">
+                                    <option>Choose...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="status" style="color: #5c007a;">Auction Status</label>
+                                <select id="status" class="form-control">
+                                    <option>Choose...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <div class="text-center">
+                                    <button type="button" id="clear-filters" class="btn btn-secondary" style="background-color: #f8f9fa; border-color: #6c757d; color: #6c757d;">Clear Filters</button>
+                                    <button type="button" id="apply-filters" class="btn btn-primary" style="background-color: #5c007a; border-color: #ffffff; color: #ffffff;">Apply Filters</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="container">
+                    <div id="auction-cards-container" class="row">
+                        <!-- Dynamic auction cards will be inserted here -->
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <div class="past-auctions">
+        <h2 id="past-auctions-header"><%= userName %>'s Past Auctions</h2>
 
-    <div class="spacer" style="height: 300px;"></div>
+        <!-- Auction cards -->
+        <% NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(); %>
+        <% SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a"); %>
+        <% SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.US); %>
+        <div class="row row-cols-1 row-cols-md-2 g-4 auction-grid">
+            <% List<Auction> auctions = (List<Auction>) request.getAttribute("auctions"); %>
+
+            <% if (auctions != null && !auctions.isEmpty()) { %>
+                <% for (Auction auction : auctions) { %>
+                    <div class="col">
+                        <div class="card past-auction-cards">
+                            <div class="card-body">
+                                <a href="${pageContext.request.contextPath}/auction/<%= auction.getAuctionId() %>" class="auction-link">
+                                    <h5 class="card-title">Auction #<%=auction.getAuctionId()%></h5>
+                                </a>
+
+                                <p class="card-text">Item: <%= auction.getItem().getColor()%> <%= auction.getItem().getBrand()%> <%= auction.getItem().getName()%></p>
+                                <% if(auction.getStatus().equals("completed")) { %>
+                                    <p class="card-text">Final price: <%= currencyFormat.format(auction.getCurrentPrice()) %></p>
+                                    <% if(auction.getWinner() != 0) {%>
+                                        <p class="card-text">Winner: <%= auction.getWinnerUsername() %></p>
+                                    <% } else {%>
+                                        <p class="card-text">No winner</p>
+                                    <% }%>
+                                <% } else { %>
+                                    <p class="card-text">Current price: <%=currencyFormat.format(auction.getCurrentPrice())%></p>
+                                <% } %>
+                                <p class="card-text">Closing Date: <%= dateFormat.format(auction.getAuctionClosingDate()) %></p>
+                                <p class="card-text">Closing Time: <%= timeFormat.format(auction.getAuctionClosingTime()) %> </p>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            <% } %>
+        </div>
+    </div>
 
 </div>
 
@@ -406,8 +455,6 @@
         function renderAuctionCards(data) {
             const container = document.getElementById('auction-cards-container');
             container.innerHTML = '';  // Clear existing cards
-            container.style.marginTop = '55px';  // Adds space from the top
-            container.style.marginLeft = '130px';  // Adds space from the left
 
             // Split data into lines and process each line
             const lines = data.trim().split('\n');
@@ -427,12 +474,16 @@
                         return;
                     }
 
+                    console.log(details);
+
                     // Generate HTML for the auction card with inline styling and grid placement using '+' for concatenation
                     const cardHtml =
                         '<div class="col-md-4 mb-4">' +
                         '<div class="card" style="background-color: #342c63; border: none; border-radius: 10px; color: #fff;">' +
                         '<div class="card-body" style="padding: 15px;">' +
+                        '<a href="${pageContext.request.contextPath}/auction/' + details['Auction ID'] + '" style="color: #fff;">' +
                         '<h5 class="card-title">' + details.Name + ' - ' + details.Brand + '</h5>' +
+                        '</a>' +
                         '<p class="card-text">Category: ' + details.Category + '</p>' +
                         '<p class="card-text">Current Price: ' + details['Current Price'] + '</p>' +
                         '<p class="card-text">Status: ' + details['Auction Status'] + '</p>' +

@@ -78,12 +78,15 @@ public class LoginServlet extends HttpServlet {
             switch(authenticatedUser.getUserType()) {
             case BUYER:
                 System.out.println("onward to Buyer page!");
+                int userId = loginModel.getUserId(authenticatedUser.getUsername());
+                List<Auction> buyerAuctions = auctionModel.getBiddedOnAuctions(userId);
+                request.setAttribute("auctions", buyerAuctions);
                 request.getRequestDispatcher("/WEB-INF/view/welcome_page_buyer.jsp").forward(request, response);
             	break;
             case SELLER:
                 System.out.println("onward to Seller page!");
-                List<Auction> auctions = auctionModel.getAuctionsByUsername(authenticatedUser.getUsername());
-                request.setAttribute("auctions", auctions);
+                List<Auction> sellerAuctions = auctionModel.getAuctionsByUsername(authenticatedUser.getUsername());
+                request.setAttribute("auctions", sellerAuctions);
                 request.getRequestDispatcher("/WEB-INF/view/welcome_page_seller.jsp").forward(request, response);
                 break;
             case ADMIN:
