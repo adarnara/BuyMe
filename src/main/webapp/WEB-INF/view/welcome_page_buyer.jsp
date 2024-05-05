@@ -34,8 +34,6 @@
     </div>
     <ul>
         <li><a href="#" class="active">Home</a></li>
-        <li><a href="#">Alerts</a></li>
-        <li><a href="#">Current Auctions</a></li>
         <li><a href="#" onclick="document.getElementById('contact-form').submit(); return false;">Contact</a></li>
         <li><a href="#" onclick="document.getElementById('logout-form').submit(); return false;">Logout</a></li>
     </ul>

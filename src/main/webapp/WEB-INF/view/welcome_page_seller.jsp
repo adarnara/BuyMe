@@ -27,14 +27,14 @@
   </div>
   <ul>
     <li><a href="#" class="active">Home</a></li>
-    <li><a href="#">Create Auction</a></li>
-    <li><a href="#">Contact</a></li>
+    <li><a href="#" onclick="document.getElementById('contact-form').submit(); return false;">Contact</a></li>
     <li><a href="#" onclick="document.getElementById('logout-form').submit(); return false;">Logout</a></li>
   </ul>
 </header>
 <form id="logout-form" action="${pageContext.request.contextPath}/logout" method="post" style="display: none;">
   <input type="hidden" name="logout" value="true">
 </form>
+<form id="contact-form" action="${pageContext.request.contextPath}/contactQuestions" method="post" style="display: none;"></form>
 <section>
   <img src="${pageContext.request.contextPath}/Images/stars.png" id="stars">
   <img src="${pageContext.request.contextPath}/Images/moon.png" id="moon">
