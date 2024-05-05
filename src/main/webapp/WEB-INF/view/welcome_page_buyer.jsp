@@ -133,6 +133,9 @@
     const contextPath = "${pageContext.request.contextPath}";
 
     document.addEventListener('DOMContentLoaded', function() {
+
+        fetchRandomItems();
+
         var xhr = new XMLHttpRequest();
         xhr.open('GET', "${pageContext.request.contextPath}" + '/auctionWinner', true);
         xhr.send();
@@ -148,6 +151,8 @@
         const searchIcon = document.getElementById('search-icon');
         let isSearchExpanded = false;
         let autocompleteList = document.createElement('div');
+
+
 
         window.addEventListener('scroll', function() {
             let value = window.scrollY;
@@ -407,6 +412,8 @@
         function renderAuctionCards(data) {
             const container = document.getElementById('auction-cards-container');
             container.innerHTML = '';  // Clear existing cards
+            container.style.marginTop = '55px';  // Adds space from the top
+            container.style.marginLeft = '130px';  // Adds space from the left
 
             // Split data into lines and process each line
             const lines = data.trim().split('\n');
@@ -448,6 +455,20 @@
                 }
             });
         }
+
+
+        function fetchRandomItems() {
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', contextPath + '/random-items', true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    renderAuctionCards(xhr.responseText);
+                }
+            };
+            xhr.send();
+        }
+
+
     });
 </script>
 
