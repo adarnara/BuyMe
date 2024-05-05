@@ -59,67 +59,73 @@
             </a>
         </div>
     </div>
-    <div class="card filter-card my-4" style="width: 100%; max-width: 300px; position: absolute; left: 0; top: 100px;">
-        <div class="card-body">
-            <h4 class="card-title text-center" style="color: #5c007a;">Filters</h4>
-            <form>
-                <div class="form-group">
-                    <label for="category" style="color: #5c007a;">Category Name</label>
-                    <select id="category" class="form-control">
-                        <option>Choose...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="item-name" style="color: #5c007a;">Item Name</label>
-                    <select id="item-name" class="form-control">
-                        <option>Choose...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="brand" style="color: #5c007a;">Item Brand</label>
-                    <select id="brand" class="form-control">
-                        <option>Choose...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label style="color: #5c007a;">Price Range</label>
-                    <div class="btn-group" role="group" aria-label="Price Range">
-                        <button type="button" class="btn btn-outline-primary price-btn" style="background-color: #5c007a; color: #ffffff; border-color: #ffffff;" data-value="low"> 0 to 49</button>
-                        <button type="button" class="btn btn-outline-primary price-btn" style="background-color: #5c007a; color: #ffffff; border-color: #ffffff;" data-value="medium">50 to 149</button>
-                        <button type="button" class="btn btn-outline-primary price-btn" style="background-color: #5c007a; color: #ffffff; border-color: #ffffff;" data-value="high"> 150 <=  </button>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="color" style="color: #5c007a;">Color Variants</label>
-                    <select id="color" class="form-control">
-                        <option>Choose...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="status" style="color: #5c007a;">Auction Status</label>
-                    <select id="status" class="form-control">
-                        <option>Choose...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <div class="text-center">
-                        <button type="button" id="clear-filters" class="btn btn-secondary" style="background-color: #f8f9fa; border-color: #6c757d; color: #6c757d;">Clear Filters</button>
-                        <button type="button" id="apply-filters" class="btn btn-primary" style="background-color: #5c007a; border-color: #ffffff; color: #ffffff;">Apply Filters</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <div class="container">
-        <div id="auction-cards-container" class="row">
-            <!-- Dynamic auction cards will be inserted here -->
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card filter-card my-4">
+                    <div class="card-body">
+                        <h4 class="card-title text-center" style="color: #5c007a;">Filters</h4>
+                        <form>
+                            <div class="form-group">
+                                <label for="category" style="color: #5c007a;">Category Name</label>
+                                <select id="category" class="form-control">
+                                    <option>Choose...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="item-name" style="color: #5c007a;">Item Name</label>
+                                <select id="item-name" class="form-control">
+                                    <option>Choose...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="brand" style="color: #5c007a;">Item Brand</label>
+                                <select id="brand" class="form-control">
+                                    <option>Choose...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label style="color: #5c007a;">Price Range</label>
+                                <div class="btn-group" role="group" aria-label="Price Range">
+                                    <button type="button" class="btn btn-outline-primary price-btn" style="background-color: #5c007a; color: #ffffff; border-color: #ffffff;" data-value="low"> 0 to 49</button>
+                                    <button type="button" class="btn btn-outline-primary price-btn" style="background-color: #5c007a; color: #ffffff; border-color: #ffffff;" data-value="medium">50 to 149</button>
+                                    <button type="button" class="btn btn-outline-primary price-btn" style="background-color: #5c007a; color: #ffffff; border-color: #ffffff;" data-value="high"> 150 <=  </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="color" style="color: #5c007a;">Color Variants</label>
+                                <select id="color" class="form-control">
+                                    <option>Choose...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="status" style="color: #5c007a;">Auction Status</label>
+                                <select id="status" class="form-control">
+                                    <option>Choose...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <div class="text-center">
+                                    <button type="button" id="clear-filters" class="btn btn-secondary" style="background-color: #f8f9fa; border-color: #6c757d; color: #6c757d;">Clear Filters</button>
+                                    <button type="button" id="apply-filters" class="btn btn-primary" style="background-color: #5c007a; border-color: #ffffff; color: #ffffff;">Apply Filters</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="container">
+                    <div id="auction-cards-container" class="row">
+                        <!-- Dynamic auction cards will be inserted here -->
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-
-    <div class="spacer" style="height: 850px;"></div>
 
 </div>
 
@@ -420,12 +426,16 @@
                         return;
                     }
 
+                    console.log(details);
+
                     // Generate HTML for the auction card with inline styling and grid placement using '+' for concatenation
                     const cardHtml =
                         '<div class="col-md-4 mb-4">' +
                         '<div class="card" style="background-color: #342c63; border: none; border-radius: 10px; color: #fff;">' +
                         '<div class="card-body" style="padding: 15px;">' +
+                        '<a href="${pageContext.request.contextPath}/auction/' + details['Auction ID'] + '" style="color: #fff;">' +
                         '<h5 class="card-title">' + details.Name + ' - ' + details.Brand + '</h5>' +
+                        '</a>' +
                         '<p class="card-text">Category: ' + details.Category + '</p>' +
                         '<p class="card-text">Current Price: ' + details['Current Price'] + '</p>' +
                         '<p class="card-text">Status: ' + details['Auction Status'] + '</p>' +
