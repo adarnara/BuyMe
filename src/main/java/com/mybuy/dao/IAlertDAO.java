@@ -5,7 +5,7 @@ import com.mybuy.model.Auction;
 
 public interface IAlertDAO {
     void postAuctionWinnerAlert(int userID, String message, int auctionID);
-//    void postAuctionCloseAlert(Auction auction);
+    void postAuctionCloseAlert(int userID, String message, Auction auction);
     Alert getNewAlert(int userID);
     void closeAlert(Alert alert);
 }

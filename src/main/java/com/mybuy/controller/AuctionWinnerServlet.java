@@ -1,9 +1,6 @@
 package com.mybuy.controller;
 
-import com.mybuy.model.AlertModel;
-import com.mybuy.model.Auction;
-import com.mybuy.model.AuctionWinner;
-import com.mybuy.model.AuctionWinnerModel;
+import com.mybuy.model.*;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -23,11 +20,13 @@ public class AuctionWinnerServlet extends HttpServlet {
     private ScheduledExecutorService scheduler;
     private AuctionWinnerModel auctionWinnerModel;
     private AlertModel alertModel;
+    private LoginModel loginModel;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         auctionWinnerModel = new AuctionWinnerModel();
         alertModel = new AlertModel();
+        loginModel = new LoginModel();
         super.init(config);
         scheduler = Executors.newSingleThreadScheduledExecutor();
     }
@@ -54,12 +53,12 @@ public class AuctionWinnerServlet extends HttpServlet {
             AuctionWinner auctionWinner = auctionWinnerModel.doesAuctionHaveWinner(auction);
 
             if(auctionWinner != null) {
+                auction.setWinnerUsername(loginModel.getUsername(auctionWinner.getWinningBid().getUserId()));
                 auctionWinnerModel.updateAuctionDetails(auctionWinner);
                 alertModel.auctionWinnerAlert(auctionWinner);
             }
 
-            // TODO: alert for seller for closed auction
-            // TODO: alert for no highest bid or bid above reserve
+            alertModel.auctionCloseAlert(auction);
         }
     }
 }

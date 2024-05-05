@@ -44,4 +44,8 @@ public class LoginModel {
     public int getUserId(String username) {
         return loginDAO.getUserId(username);
     }
+
+    public String getUsername(int userId) {
+        return loginDAO.getUsername(userId);
+    }
 }

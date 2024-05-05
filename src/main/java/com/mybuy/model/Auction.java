@@ -43,14 +43,6 @@ public class Auction {
         this.itemId = itemId;
     }
 
-    public void setCurrentPrice(double currentPrice) {
-        this.currentPrice = currentPrice;
-    }
-
-    public void setMinimum(double minimum) {
-        this.minimum = minimum;
-    }
-
     public int getAuctionId() {
         return auctionId;
     }

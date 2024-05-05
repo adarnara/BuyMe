@@ -9,4 +9,5 @@ public interface ILoginDAO {
     Login getUserByUsernameOrEmail(String usernameOrEmail);
     String getEndUserType(String username);
     int getUserId(String username);
+    String getUsername(int userId);
 }
