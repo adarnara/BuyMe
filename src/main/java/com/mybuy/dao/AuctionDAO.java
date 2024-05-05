@@ -172,9 +172,9 @@ public class AuctionDAO implements IAuctionDAO {
 
     @Override
     public List<Auction> getBiddedOnAuctions(int userId) {
-        String sql = "SELECT b.*, a.*, eu_winner.endUser_login AS winner_username\n" +
-                "FROM Bid AS b \n" +
-                "INNER JOIN Auction AS a ON a.Auction_ID = b.Auction_ID\n" +
+        String sql = "SELECT DISTINCT a.*, eu_winner.endUser_login AS winner_username\n" +
+                "FROM Auction AS a\n" +
+                "INNER JOIN Bid AS b ON b.Auction_ID = a.Auction_ID\n" +
                 "LEFT JOIN EndUser AS eu_winner ON a.Winner = eu_winner.User_Id\n" +
                 "WHERE b.User_Id = ?;";
 
