@@ -103,10 +103,19 @@ and this should get you to the entry point of the website which is the login/reg
    ![register unsuccessful page](docs/Images/unsuccessful_registration.png)
    If your login was unsuccessful:
    ![login unsuccessful page](docs/Images/unsuccessful_login.png)
-4. Now if login is successful, you will be sent to a Welcome Page:
-   ![login unsuccessful page](docs/Images/welcome_page.png)
+4. Now if registration is successful, you can choose to make a buyer or seller account:
+   ![reg_successfull_page](docs/Images/reg_successful.png)
+5. Now if login is successful, you will be sent to the main page:
+   ![login successful page](docs/Images/login_successful.png)
    Here if you click the *logout* button, it will send you back to the register/login page.
-
+6. If you want to sign in as an Admin, you can use these credentials:
+   ![admin_login_page](docs/Images/admin_login.png)
+7. This will take you to the Admin page, which you can see here:
+   ![admin_page](docs/Images/admin_page.png)
+   From here you can create customer reps and see sales reports
+8. If you login as a customer rep, it will take you to this page:
+   ![rep_page](docs/Images/rep_page.png)
+   Have fun exploring our site!
 
 ## Login and Password Credentials for atleast one user:
 
