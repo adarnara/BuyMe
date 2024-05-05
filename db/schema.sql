@@ -62,7 +62,6 @@ CREATE TABLE IF NOT EXISTS Items (
                                      name VARCHAR(50),
                                      color VARCHAR(50),
                                      Category_ID INT,
-                                     image_url VARCHAR(255),
                                      PRIMARY KEY (Item_ID),
                                      FOREIGN KEY (Category_ID) REFERENCES Category(Category_ID) ON UPDATE CASCADE ON DELETE SET NULL
 ) ENGINE=InnoDB; -- Make sure you use a storage engine that supports FULLTEXT indexes, such as InnoDB
