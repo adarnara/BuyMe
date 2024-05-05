@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS Question (
                                         answer_text TEXT,
                                         question_text TEXT,
                                         CustomerRep_ID INT,
-                                        User_Id INT NOT NULL,
+                                        User_Id INT,
                                         PRIMARY KEY(question_ID),
                                         FULLTEXT(question_text, answer_text),
                                         FOREIGN KEY (CustomerRep_ID) REFERENCES CustomerRep(CustomerRep_ID) ON UPDATE CASCADE ON DELETE SET NULL,
