@@ -70,7 +70,9 @@ public class AuctionWinnerDAO implements IAuctionWinnerDAO {
 
     @Override
     public int isUserWinner(int userId) {
-        String sql = "SELECT Auction_ID FROM Auction WHERE Winner = ? AND Auction_Closing_Date <= CURDATE() AND (Auction_Closing_Time <= CURTIME() OR Auction_Closing_Date < CURDATE()) AND auction_status = 'completed' LIMIT 1";
+        String sql = "SELECT Auction_ID FROM Auction WHERE Winner = ? AND " +
+                "Auction_Closing_Date <= CURDATE() AND (Auction_Closing_Time <= CURTIME() OR Auction_Closing_Date < CURDATE()) " +
+                "AND auction_status = 'completed' LIMIT 1";
         try (Connection conn = ApplicationDB.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, userId);
