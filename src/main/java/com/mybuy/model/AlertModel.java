@@ -22,9 +22,15 @@ public class AlertModel {
         alertDAO.postAuctionWinnerAlert(userID, message, auctionId);
     }
 
+    public void auctionCloseAlert(Auction auction) {
+
+    }
+
     public Alert newAlertById(int userId) {
         Alert alert = alertDAO.getNewAlert(userId);
-        alertDAO.closeAlert(alert);
+        if(alert != null) {
+            alertDAO.closeAlert(alert);
+        }
 
         return alert;
     }
