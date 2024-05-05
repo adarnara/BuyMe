@@ -34,7 +34,7 @@ public class AuctionWinnerServlet extends HttpServlet {
 
     public void startTimer() {
         // Schedule the run() method to run every X seconds
-        scheduler.scheduleAtFixedRate(this::run, 0, 60, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::run, 0, 10, TimeUnit.SECONDS);
     }
 
     @Override

@@ -11,13 +11,11 @@ public class Alert {
     private String status;
     private int auctionId;
 
-    public Alert(int alertID, int userID, String message, String alertType, Date createdDate, String status, int auctionId) {
+    public Alert(int alertID, String message, String alertType, Date createdDate, int auctionId) {
         this.alertID = alertID;
-        this.userID = userID;
         this.message = message;
         this.alertType = alertType;
         this.createdDate = createdDate;
-        this.status = status;
         this.auctionId = auctionId;
     }
 
