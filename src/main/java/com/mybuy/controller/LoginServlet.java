@@ -43,6 +43,9 @@ public class LoginServlet extends HttpServlet {
                     request.setAttribute("auctions", auctions);
                     request.getRequestDispatcher("/WEB-INF/view/welcome_page_seller.jsp").forward(request, response);
                 }
+                int userId = loginModel.getUserId(session.getAttribute("username").toString());
+                List<Auction> buyerAuctions = auctionModel.getBiddedOnAuctions(userId);
+                request.setAttribute("auctions", buyerAuctions);
                 request.getRequestDispatcher("/WEB-INF/view/welcome_page_buyer.jsp").forward(request, response);
             }
         } else {
