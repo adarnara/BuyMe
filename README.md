@@ -7,6 +7,8 @@
 - JDK 21.0.2
 - JDBC 8.0.23
 - Gson 2.8.8
+- Bootstrap 5.3
+- jQuery 3.7
 
 ## Concept:
 
