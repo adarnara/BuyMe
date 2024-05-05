@@ -21,12 +21,16 @@ public class LoginServlet extends HttpServlet {
     private LoginModel loginModel;
     private AuctionModel auctionModel;
     private ItemModel itemModel;
+    private AlertModel alertModel;
+
 
     @Override
     public void init() {
         loginModel = new LoginModel();
         auctionModel = new AuctionModel();
         itemModel = new ItemModel();
+        alertModel = new AlertModel();
+
     }
 
     @Override
@@ -60,6 +64,7 @@ public class LoginServlet extends HttpServlet {
 
         if (modalSubmit != null && modalSubmit.equals("true")) {
             handleFormModalSubmission(request, response);
+
             return;
         }
 
@@ -72,13 +77,12 @@ public class LoginServlet extends HttpServlet {
         System.out.println("2");
         
         if (authenticatedUser == null) {
-        	System.out.println("fucked");
             request.setAttribute("loginMessage", "Invalid Credentials");
             request.getRequestDispatcher("/index.jsp").forward(request, response);
         }
         else {
             request.getSession().setAttribute("username", authenticatedUser.getUsername());
-            System.out.println("BAHHHHH: " + authenticatedUser.getUserID());
+            System.out.println("Userid: " + authenticatedUser.getUserID());
             request.getSession().setAttribute("userId", Integer.parseInt(authenticatedUser.getUserID()));
             switch(authenticatedUser.getUserType()) {
             case BUYER:
@@ -102,7 +106,6 @@ public class LoginServlet extends HttpServlet {
             	request.getRequestDispatcher("/WEB-INF/view/customerRep.jsp").forward(request, response);
             	break;
             default:
-            	System.out.println("Weird shit happened here");
             	request.getRequestDispatcher("/index.jsp").forward(request, response);
             	break;
             }
@@ -124,6 +127,11 @@ public class LoginServlet extends HttpServlet {
         String itemName = request.getParameter("itemName");
         String itemColor = request.getParameter("itemColor");
 
+        System.out.println("A: "+ itemCategory);
+        System.out.println("B: "+ itemBrand);
+        System.out.println("C: "+ itemName);
+        System.out.println("D: "+ itemColor);
+
         try {
             Item newItem = itemModel.createNewItem(itemCategory, itemBrand, itemName, itemColor);
             if(newItem == null) {
@@ -132,6 +140,7 @@ public class LoginServlet extends HttpServlet {
             }
 
             int itemId = itemModel.addItem(newItem);
+            newItem.setItemId(itemId);
 
             Date closingDate = dateFormat.parse(closingDateStr + " " + closingTimeStr);
 
@@ -144,10 +153,12 @@ public class LoginServlet extends HttpServlet {
                     userId,
                     itemId
             );
+            newAuction.setItem(newItem);
 
             int newAuctionID = auctionModel.addAuction(newAuction);
 
             if (newAuctionID > 0) {
+                alertModel.checkAndNotifyAlerts(newAuction);
                 response.sendRedirect(request.getContextPath() + "/auction/" + newAuctionID);
             }
         } catch (ParseException e) {

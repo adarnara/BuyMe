@@ -76,8 +76,6 @@ CREATE TABLE IF NOT EXISTS EndUser (
                                        password VARCHAR(255) NOT NULL,
                                        salt VARCHAR(255) NOT NULL,
                                        user_type ENUM('buyer', 'seller') NOT NULL DEFAULT 'buyer',
-                                       alert_threshold_price DOUBLE DEFAULT NULL,
-                                       wants_auction_close_alert BOOLEAN NOT NULL DEFAULT '0',
                                        PRIMARY KEY(User_Id)
 );
 
@@ -85,7 +83,7 @@ CREATE TABLE IF NOT EXISTS Question (
                                         question_ID INT AUTO_INCREMENT,
                                         answer_text TEXT,
                                         question_text TEXT,
-                                        CustomerRep_ID INT NOT NULL,
+                                        CustomerRep_ID INT,
                                         User_Id INT NOT NULL,
                                         PRIMARY KEY(question_ID),
                                         FULLTEXT(question_text, answer_text),
@@ -108,10 +106,25 @@ CREATE TABLE IF NOT EXISTS Auction (
                                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                                        PRIMARY KEY(Auction_ID),
-                                       FOREIGN KEY (Item_ID) REFERENCES Items(Item_ID) ON UPDATE CASCADE ON DELETE SET NULL,
+                                       FOREIGN KEY (Item_ID) REFERENCES Items(Item_ID) ON UPDATE CASCADE ON DELETE CASCADE,
                                        FOREIGN KEY (User_Id) REFERENCES EndUser(User_Id) ON UPDATE CASCADE
 );
 
+
+CREATE TABLE IF NOT EXISTS Alerts (
+                                      Alert_ID INT AUTO_INCREMENT,
+                                      User_ID INT NOT NULL,
+                                      Message VARCHAR(255),
+                                      Status ENUM ('Unread', 'Read', 'Pending') NOT NULL DEFAULT 'Unread',
+                                      Auction_ID INT,
+                                      Item_Name VARCHAR(50) DEFAULT NULL,
+                                      Item_Brand VARCHAR(25) DEFAULT NULL,
+                                      Category_Name VARCHAR(255) DEFAULT NULL,
+                                      Color VARCHAR(255) DEFAULT NULL,
+                                      PRIMARY KEY (Alert_ID, User_ID),
+                                      FOREIGN KEY (User_ID) REFERENCES EndUser(User_Id) ON UPDATE CASCADE ON DELETE CASCADE,
+                                      FOREIGN KEY (Auction_ID) REFERENCES Auction(Auction_ID) ON UPDATE CASCADE ON DELETE CASCADE
+    );
 
 
 
@@ -138,23 +151,14 @@ CREATE TABLE IF NOT EXISTS ItemsSubattributes (
 );
 
 CREATE TABLE IF NOT EXISTS Posts (
-    Item_ID INT,
-    User_Id INT,
-    PRIMARY KEY (Item_ID, User_Id),
-    FOREIGN KEY (Item_ID) REFERENCES Items (Item_ID) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (User_Id) REFERENCES EndUser (User_Id) ON UPDATE CASCADE
-    );
-
-CREATE TABLE IF NOT EXISTS Alerts (
-    Alert_ID INT AUTO_INCREMENT,
-    User_ID INT NOT NULL,
-    Message VARCHAR(255) NOT NULL,
-    Status ENUM ('Unread', 'Read') NOT NULL DEFAULT 'Unread',
-    Auction_ID INT,
-    PRIMARY KEY (Alert_ID, User_ID),
-    FOREIGN KEY (User_ID) REFERENCES EndUser(User_Id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (Auction_ID) REFERENCES Auction(Auction_ID) ON UPDATE CASCADE ON DELETE CASCADE
+                                     Item_ID INT,
+                                     User_Id INT,
+                                     PRIMARY KEY (Item_ID, User_Id),
+                                     FOREIGN KEY (Item_ID) REFERENCES Items(Item_ID) ON UPDATE CASCADE ON DELETE CASCADE,
+                                     FOREIGN KEY (User_Id) REFERENCES EndUser(User_Id) ON UPDATE CASCADE
 );
+
+
 
 DELIMITER $$
 
@@ -221,4 +225,5 @@ DELIMITER ;
 
 INSERT INTO Admin (admin_login, email_address, password, salt)
 VALUES ("One_Admin", "onlyadmin@gmail.com", "e1d0253d7e5ce8c582aa07c01e5cdf6bbd4d97ed7edec1e3921d469e77b0ea7f", "9fcb340a561f0d91148e068d544d94de");
+
 

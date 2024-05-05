@@ -58,4 +58,8 @@ public class AlertModel {
     public List<Alert> getExceedAutoBidAlertsForUser(int userId) {
         return alertDAO.getExceedAutoBidAlertsForUser(userId);
     }
+
+    public void checkAndNotifyAlerts(Auction auction) {
+        alertDAO.updateAlertsForNewAuction(auction);
+    }
 }
