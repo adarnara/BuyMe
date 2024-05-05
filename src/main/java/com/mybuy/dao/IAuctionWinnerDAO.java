@@ -7,7 +7,7 @@ import com.mybuy.model.Bid;
 import java.util.List;
 
 public interface IAuctionWinnerDAO {
-    List<Auction> getEndedAuctions();
+    Auction getEndedAuction();
     Bid getHighestBid(int auctionId);
     boolean updateEndedAuction(AuctionWinner auctionWinner);
     int isUserWinner(int userId);
