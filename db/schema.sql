@@ -138,14 +138,23 @@ CREATE TABLE IF NOT EXISTS ItemsSubattributes (
 );
 
 CREATE TABLE IF NOT EXISTS Posts (
-                                     Item_ID INT,
-                                     User_Id INT,
-                                     PRIMARY KEY (Item_ID, User_Id),
-                                     FOREIGN KEY (Item_ID) REFERENCES Items(Item_ID) ON UPDATE CASCADE ON DELETE CASCADE,
-                                     FOREIGN KEY (User_Id) REFERENCES EndUser(User_Id) ON UPDATE CASCADE ON DELETE SET NULL
+    Item_ID INT,
+    User_Id INT,
+    PRIMARY KEY (Item_ID, User_Id),
+    FOREIGN KEY (Item_ID) REFERENCES Items (Item_ID) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (User_Id) REFERENCES EndUser (User_Id) ON UPDATE CASCADE
+    );
+
+CREATE TABLE IF NOT EXISTS Alerts (
+    Alert_ID INT AUTO_INCREMENT,
+    User_ID INT NOT NULL,
+    Message VARCHAR(255) NOT NULL,
+    Status ENUM ('Unread', 'Read') NOT NULL DEFAULT 'Unread',
+    Auction_ID INT,
+    PRIMARY KEY (Alert_ID, User_ID),
+    FOREIGN KEY (User_ID) REFERENCES EndUser(User_Id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (Auction_ID) REFERENCES Auction(Auction_ID) ON UPDATE CASCADE ON DELETE CASCADE
 );
-
-
 
 DELIMITER $$
 

@@ -2,28 +2,36 @@ package com.mybuy.model;
 
 import com.mybuy.dao.AlertDAO;
 import com.mybuy.dao.IAlertDAO;
-import com.mybuy.utils.AlertScheduler;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class AlertModel {
-    private IAlertDAO alertDAO = new AlertDAO();
-    private AlertScheduler scheduler;
+    private IAlertDAO alertDAO;
+    private LoginModel loginModel;
 
     public AlertModel() {
-        this.scheduler = new AlertScheduler();
+        this.alertDAO = new AlertDAO();
+        loginModel = new LoginModel();
     }
 
-    public void startAlertScheduler(int userId) {
-        scheduler.scheduleTask(() -> runAlertCheck(userId), 0, 5, TimeUnit.MINUTES);
+    public void auctionWinnerAlert(AuctionWinner auctionWinner) {
+        Auction auction = auctionWinner.getAuction();
+
+        int userID = auctionWinner.getWinningBid().getUserId();
+        String message = "Congratulations! You have won auction #" + auction.getAuctionId();
+        int auctionId = auction.getAuctionId();
+
+        alertDAO.postAuctionWinnerAlert(userID, message, auctionId);
     }
 
-    public List<Alert> runAlertCheck(int userId) {
-        return alertDAO.checkAndNotify(userId);
+    public void auctionCloseAlert(Auction auction) {
+
     }
 
-    public void shutdownScheduler() {
-        scheduler.shutdown();
+    public Alert newAlertById(int userId) {
+        Alert alert = alertDAO.getNewAlert(userId);
+        if(alert != null) {
+            alertDAO.closeAlert(alert);
+        }
+
+        return alert;
     }
 }

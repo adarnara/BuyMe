@@ -14,15 +14,15 @@ import java.util.List;
 
 public class AuctionWinnerDAO implements IAuctionWinnerDAO {
     @Override
-    public List<Auction> getEndedAuctions() {
-        List<Auction> endedAuctions = new ArrayList<>();
-        String sql = "SELECT * FROM Auction WHERE (Auction_Closing_Date < CURDATE() OR (Auction_Closing_Date = CURDATE() AND Auction_Closing_Time < CURTIME())) AND auction_status = 'active';";
+    public Auction getEndedAuction() {
+        Auction endedAuction = null;
+        String sql = "SELECT * FROM Auction WHERE (Auction_Closing_Date < CURDATE() OR (Auction_Closing_Date = CURDATE() AND Auction_Closing_Time < CURTIME())) AND auction_status = 'active' ORDER BY Auction_Closing_Date, Auction_Closing_Time ASC LIMIT 1;;";
 
         try (Connection conn = ApplicationDB.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    Auction auction = new Auction(
+                if (rs.next()) {
+                    endedAuction = new Auction(
                             rs.getInt("Auction_ID"),
                             rs.getDouble("Initial_Price"),
                             rs.getDouble("Current_Price"),
@@ -35,15 +35,13 @@ public class AuctionWinnerDAO implements IAuctionWinnerDAO {
                             rs.getInt("Item_ID"),
                             rs.getString("auction_status")
                     );
-
-                    endedAuctions.add(auction);
                 }
             }
         } catch (SQLException e) {
             System.out.println("Error getting ended auctions: " + e.getMessage());
         }
 
-        return endedAuctions;
+        return endedAuction;
     }
 
     @Override

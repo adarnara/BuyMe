@@ -1,9 +1,11 @@
 package com.mybuy.dao;
 
 import com.mybuy.model.Alert;
-
-import java.util.List;
+import com.mybuy.model.Auction;
 
 public interface IAlertDAO {
-    List<Alert> checkAndNotify(int userId);
+    void postAuctionWinnerAlert(int userID, String message, int auctionID);
+//    void postAuctionCloseAlert(Auction auction);
+    Alert getNewAlert(int userID);
+    void closeAlert(Alert alert);
 }

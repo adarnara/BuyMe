@@ -1,46 +1,90 @@
 package com.mybuy.dao;
 
 import com.mybuy.model.Alert;
+import com.mybuy.model.Auction;
 import com.mybuy.utils.ApplicationDB;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.*;
 
 public class AlertDAO implements IAlertDAO {
     @Override
-    public List<Alert> checkAndNotify(int userId) {
-        List<Alert> alerts = new ArrayList<>();
-        String checkUserHighestBid = "SELECT MAX(Bid_Amount) as UserMaxBid FROM Bid WHERE User_Id = ?";
-        String checkOtherUsersHigherBids = "SELECT User_Id, Auction_ID, MAX(Bid_Amount) as MaxBid FROM Bid WHERE User_Id != ? AND Bid_Amount > (SELECT MAX(Bid_Amount) FROM Bid WHERE User_Id = ?) GROUP BY User_Id, Auction_ID";
+    public void postAuctionWinnerAlert(int userID, String message, int auctionID) {
+        String sql = "INSERT INTO Alerts (User_ID, Message,Auction_ID) VALUES (?, ?, ?)";
 
         try (Connection conn = ApplicationDB.getConnection();
-             PreparedStatement pstmtUserMax = conn.prepareStatement(checkUserHighestBid)) {
-            pstmtUserMax.setInt(1, userId);
-            ResultSet rsUserMax = pstmtUserMax.executeQuery();
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            if (rsUserMax.next()) {
-                double userMaxBid = rsUserMax.getDouble("UserMaxBid");
+            pstmt.setInt(1, userID);
+            pstmt.setString(2, message);
+            pstmt.setInt(3, auctionID);
 
-                try (PreparedStatement pstmtOtherUsers = conn.prepareStatement(checkOtherUsersHigherBids)) {
-                    pstmtOtherUsers.setInt(1, userId);
-                    pstmtOtherUsers.setInt(2, userId);
-                    ResultSet rsOtherUsers = pstmtOtherUsers.executeQuery();
+            pstmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            System.out.println("Error adding alert: " + e.getMessage());
+        }
+    }
 
-                    while (rsOtherUsers.next()) {
-                        int otherUserId = rsOtherUsers.getInt("User_Id");
-                        double otherUserMaxBid = rsOtherUsers.getDouble("MaxBid");
-                        int auctionId = rsOtherUsers.getInt("Auction_ID");
-                        alerts.add(new Alert(otherUserId, otherUserMaxBid, auctionId));
-                    }
+//    @Override
+//    public void postAuctionCloseAlert(int userID, String message, Auction auction) {
+//        String sql = "INSERT INTO Alerts (User_ID, Message, Auction_ID) VALUES (?, ?, ?)";
+//
+//        try (Connection conn = ApplicationDB.getConnection();
+//             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+//
+//            pstmt.setInt(1, userID);
+//            pstmt.setString(2, message);
+//            pstmt.setInt(3, auction.getAuctionId());
+//
+//            pstmt.executeUpdate();
+//        }
+//        catch (SQLException e) {
+//            System.out.println("Error adding alert: " + e.getMessage());
+//        }
+//    }
+
+    @Override
+    public Alert getNewAlert(int userID) {
+        Alert alert = null;
+        String sql = "SELECT *\n" +
+                "FROM Alerts as a\n" +
+                "WHERE a.User_ID = ?\n" +
+                "AND a.Status = \"Unread\";";
+
+        try (Connection conn = ApplicationDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, userID);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    alert = new Alert(
+                            rs.getInt("Alert_ID"),
+                            rs.getString("Message"),
+                            rs.getInt("Auction_ID")
+                    );
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error fetching list of auctions by username: " + e.getMessage());
         }
-        return alerts;
+
+        return alert;
+    }
+
+    @Override
+    public void closeAlert(Alert alert) {
+        String sql = "UPDATE Alerts\n" +
+                "SET Status = 'Read'\n" +
+                "WHERE Alert_ID = ?;";
+
+        try (Connection conn = ApplicationDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, alert.getAlertID());
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Error closing alert: " + e.getMessage());
+        }
     }
 }
