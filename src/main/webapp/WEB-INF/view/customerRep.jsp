@@ -202,7 +202,7 @@
         	}
         %>
     </table>
-	<form id="editForm" method="POST" action="<%= request.getContextPath() + "/updateUser?origin=customerrep" %>">
+	<form id="editForm" method="POST" action="<%= request.getContextPath() + "/updateUser?origin=customerRep" %>">
   		<input type="hidden" id="editedData" name="editedData" value="">
   		<button type="button" onclick="sendEditedData()">Save Changes</button>
 	</form>
